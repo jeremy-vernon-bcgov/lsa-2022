@@ -19,9 +19,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 /** RECIPIENTS */
-Route::get('/recipients', [RecipientController::class, 'index']);
-Route::get('/recipients/archived/{email}', [RecipientController::class, 'showArchivedRecipientByEmail']);
+
 Route::get('/recipients/{guid}', [RecipientController::class, 'show']);
+Route::get('/recipients/archived/{email}', [RecipientController::class, 'showArchivedRecipientByEmail']);
 Route::post('/recipients', [RecipientController::class, 'store']);
 Route::put('/recipients/{guid}', [RecipientController::class, 'update']);
 
