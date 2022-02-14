@@ -104,6 +104,7 @@ class RecipientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function storeIdentification(Request $request, $guid) {
+        $recipient = $this->getByGUID($request, $guid);
 
     }
 
@@ -195,6 +196,12 @@ class RecipientController extends Controller
 
     }
 
+    /**
+     * @param \Illuminate\HttpRequest $request
+     * @param String $guid
+     * @return \App\Models\Recipient
+     */
+
     private function getByGUID(Request $request, $guid) {
         //TODO : Model Organizational contact
         $recipient = Recipient::where('guid', $guid)->firstOrFail();
@@ -202,8 +209,7 @@ class RecipientController extends Controller
             return $recipient;
         }
         else {
-            GUIDMismatchException $exception;
-            return back()->withErrors($exception->getMessage()->withInput());
+           //TODO : Handle GUID mismatch exception
         }
     }
 
