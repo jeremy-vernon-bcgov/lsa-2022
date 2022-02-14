@@ -25,6 +25,18 @@ Route::get('/recipients/{guid}', [RecipientController::class, 'show']);
 Route::post('/recipients', [RecipientController::class, 'store']);
 Route::put('/recipients/{guid}', [RecipientController::class, 'update']);
 
+/** Registration Phases */
+Route::post('/recipients/{guid}/identification', [RecipientController::class,'storeIdentification']);
+Route::post('/recipients/{guid}/milestone', [RecipientController::class, 'storeMilestone']);
+Route::post('/recipients/{guid}/retirement', [RecipientController::class, 'storeRetirement']);
+Route::post('/recipients/{guid}/award', [RecipientController::class, 'storeAward']);
+Route::post('/recipients/{guid}/awardOptions', [RecipientController::class, 'storeAwardOptions']);
+Route::post('/recipients/{guid}/servicePins', [RecipientController::class, 'storeServicePins']);
+Route::post('/recipients/{guid}/declarations', [RecipientController::class, 'storeDeclarations']);
+Route::post('/recipients/{guid}/contact', [RecipientController::class, 'storeContactInfo']);
+Route::put('/recipients/{guid}/confirm', [RecipientController::class, 'updateConfirmation']);
+
 
 /** AWARDS */
-Route::get('/milestones/{milestone}/awards', [AwardController::class, 'api_getByMilestone']);
+Route::get('/milestones/{milestone}/awards', [AwardController::class, 'getByMilestone']);
+Route::get('/awards/{id}/options', [AwardController::class, 'getAwardOptions']);
