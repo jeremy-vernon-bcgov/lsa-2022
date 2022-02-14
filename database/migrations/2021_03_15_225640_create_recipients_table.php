@@ -21,26 +21,26 @@ class CreateRecipientsTable extends Migration
             $table->string('guid');
             $table->string('employee_number');
             $table->string('full_name');
+            $table->foreignId('organization_id')->constrained();
+            $table->string('branch_name')->nullable();
+            $table->string('government_email');
+
+
+            $table->string('milestones')->nullable();
+            $table->integer('qualifying_year')->nullable();
+
             $table->boolean('is_bcgeu_member')->default(false);
-            $table->string('milestones');
 
 
             //Milestone Information
-            $table->integer('qualifying_year');
+
             $table->boolean('retiring_this_year')->default(false);
             $table->date('retirement_date')->nullable();
-            $table->boolean('survey_participation')->default(true);
 
-            //Work Contact Information
-            $table->string('government_email');
             $table->string('government_phone_number')->nullable();
 
-            //work address
-            $table->unsignedBigInteger('office_address_id');
+            $table->unsignedBigInteger('office_address_id')->nullable();
             $table->foreign('office_address_id')->references('id')->on('addresses');
-
-            $table->foreignId('organization_id')->constrained();
-            $table->string('branch_name');
 
             //Personal Contact Information
             $table->string('personal_email')->nullable();
@@ -51,13 +51,17 @@ class CreateRecipientsTable extends Migration
             $table->foreign('personal_address_id')->references('id')->on('addresses');
 
             //Supervisor Information
-            $table->string('supervisor_full_name');
-            $table->string('supervisor_email');
+            $table->string('supervisor_full_name')->nullable();
+            $table->string('supervisor_email')->nullable();
 
 
             //Supervisor Address
-            $table->unsignedBigInteger('supervisor_address_id');
+            $table->unsignedBigInteger('supervisor_address_id')->nullable();
             $table->foreign('supervisor_address_id')->references('id')->on('addresses');
+
+
+            $table->boolean('survey_participation')->default(true);
+            $table->boolean('is_declared')->default(false);
 
 
             //Administrivia
