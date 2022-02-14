@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Recipient;
+use App\Models\HistoricalRecipient;
 use Illuminate\Http\Request;
 
 class RecipientController extends Controller
@@ -89,7 +90,7 @@ class RecipientController extends Controller
      */
     public function showArchivedRecipientByEmail (string $email)
     {
-
+        return HistoricalRecipient::where('email', $email)->firstOrFail();
     }
 
 }
