@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class RecipientController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * return a listing of Recipients.
      *
      * @return \Illuminate\Http\Response
      */
@@ -19,7 +19,7 @@ class RecipientController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new Recipient.
      *
      * @return \Illuminate\Http\Response
      */
@@ -29,7 +29,8 @@ class RecipientController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a new recipient (requires the full record).
+     * Fragmentary / Step-wise registration uses different methods (see below).
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -40,7 +41,7 @@ class RecipientController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Retrieve the full record for a recipient.
      *
      * @param  \App\Models\Recipient  $recipient
      * @return \Illuminate\Http\Response
@@ -51,7 +52,7 @@ class RecipientController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the recipient
      *
      * @param  \App\Models\Recipient  $recipient
      * @return \Illuminate\Http\Response
@@ -62,7 +63,7 @@ class RecipientController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the recipient - requires the full resource.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Recipient  $recipient
@@ -74,7 +75,7 @@ class RecipientController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the recipient from storage.
      *
      * @param  \App\Models\Recipient  $recipient
      * @return \Illuminate\Http\Response
@@ -87,10 +88,123 @@ class RecipientController extends Controller
     /**
      * Retrieve the recipient from the archived data
      *
+     * @param String $email
+     * @return \Illuminate\Http\Response
      */
     public function showArchivedRecipientByEmail (string $email)
     {
         return HistoricalRecipient::where('email', $email)->firstOrFail();
+    }
+
+    /**
+     * Store User employee identification
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param String $guid
+     * @return \Illuminate\Http\Response
+     */
+    public function storeIdentification(Request $request, $guid) {
+
+    }
+
+    /**
+     * Store Milestone-related information
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param String $guid
+     * @return \Illuminate\Http\Response
+     */
+    public function storeMilestone(Request $request, $guid) {
+
+    }
+
+    /**
+     * Store Retirement-related information
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param String $guid
+     * @return \Illuminate\Http\Response
+     *
+     */
+    public function storeRetirement(Request $request, $guid) {
+
+    }
+
+    /**
+     * Store Award selection
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param String $guid
+     * @return \Illuminate\Http\Response
+     */
+    public function storeAward(Request $request, $guid) {
+
+    }
+
+    /**
+     * Store Award Options
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param String $guid
+     * @return \Illuminate\Http\Response
+     */
+    public function storeAwardOptions(Request $request, $guid) {
+
+    }
+    /**
+     * Store Service Pin related info
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param String $guid
+     * @return \Illuminate\Http\Response
+     */
+    public function storeServicePins(Request $request, $guid) {
+
+    }
+
+    /**
+     * Store Declarations
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param String $guid
+     * @return \Illuminate\Http\Response
+     */
+    public function storeDeclarations(Request $request, $guid) {
+
+    }
+
+    /**
+     * Store Personal Contact
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param String $guid
+     * @return \Illuminate\Http\Response
+     */
+    public function storePersonalContact(Request $request, $guid) {
+
+    }
+
+    /**
+     * Update Confirmation
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param String $guid
+     * @return \Illuminate\Http\Response
+     */
+    public function updateConfirmation(Request $request, $guid) {
+
+    }
+
+    private function getByGUID(Request $request, $guid) {
+        //TODO : Model Organizational contact
+        $recipient = Recipient::where('guid', $guid)->firstOrFail();
+        if ($request->guid == $recipient) {
+            return $recipient;
+        }
+        else {
+            GUIDMismatchException $exception;
+            return back()->withErrors($exception->getMessage()->withInput());
+        }
     }
 
 }

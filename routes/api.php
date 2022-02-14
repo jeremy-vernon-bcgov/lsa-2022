@@ -33,7 +33,7 @@ Route::post('/recipients/{guid}/award', [RecipientController::class, 'storeAward
 Route::post('/recipients/{guid}/awardOptions', [RecipientController::class, 'storeAwardOptions']);
 Route::post('/recipients/{guid}/servicePins', [RecipientController::class, 'storeServicePins']);
 Route::post('/recipients/{guid}/declarations', [RecipientController::class, 'storeDeclarations']);
-Route::post('/recipients/{guid}/contact', [RecipientController::class, 'storeContactInfo']);
+Route::post('/recipients/{guid}/contact', [RecipientController::class, 'storePersonalContact']);
 Route::put('/recipients/{guid}/confirm', [RecipientController::class, 'updateConfirmation']);
 
 
