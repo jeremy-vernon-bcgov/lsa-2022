@@ -24,7 +24,13 @@ class StorePersonalContactRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'guid'                              => 'required',
+            'personal_email'                    => 'required',
+            'personal_phone_number'             => 'required',
+            'personal_address_prefix'           => '',
+            'personal_address_street_address'   => 'required',
+            'personal_address_postal_code'      => 'required',
+            'personal_address_community'        => 'required'
         ];
     }
 }

@@ -142,16 +142,7 @@ class RecipientController extends Controller
 
     }
 
-    /**
-     * Store Award Options
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param String $guid
-     * @return \Illuminate\Http\Response
-     */
-    public function storeAwardOptions(Request $request, $guid) {
 
-    }
     /**
      * Store Service Pin related info
      *

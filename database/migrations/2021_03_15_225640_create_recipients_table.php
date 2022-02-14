@@ -62,7 +62,7 @@ class CreateRecipientsTable extends Migration
 
             $table->boolean('survey_participation')->default(true);
             $table->boolean('is_declared')->default(false);
-
+            $table->boolean('ceremony_opt_out')->default(false);
 
             //Administrivia
             //None of these should be input directly by the user

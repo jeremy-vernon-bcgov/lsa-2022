@@ -24,7 +24,12 @@ class StoreServicePinsRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'supervisor_full_name'              => 'required',
+            'supervisor_email'                  => 'required',
+            'supervisor_address_prefix'         => '',
+            'supervisor_address_street_address' => '',
+            'supervisor_address_postal_code'    => '',
+            'supervisor_address_community'      => ''
         ];
     }
 }

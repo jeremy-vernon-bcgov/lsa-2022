@@ -24,7 +24,13 @@ class StoreIdentificationRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'guid'                          => 'required',
+            'idir'                          => 'required',
+            'government_email'              => 'required',
+            'employee_number'               => 'required',
+            'full_name'                     => 'required',
+            'organization_id'               => 'required',
+            'branch_name'                   => 'required'
         ];
     }
 }

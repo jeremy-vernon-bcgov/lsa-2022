@@ -24,7 +24,10 @@ class StoreDeclarationsRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'guid'                  => 'required',
+            'is_declared'           => 'required',
+            'survey_participation'  => 'required',
+            'ceremony_opt_out'      => 'required'
         ];
     }
 }
