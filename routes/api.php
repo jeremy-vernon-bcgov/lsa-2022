@@ -26,14 +26,14 @@ Route::post('/recipients', [RecipientController::class, 'store']);
 Route::put('/recipients/{guid}', [RecipientController::class, 'update']);
 
 /** Registration Phases */
-Route::post('/recipients/{guid}/identification', [RecipientController::class,'storeIdentification']);
-Route::post('/recipients/{guid}/milestone', [RecipientController::class, 'storeMilestone']);
-Route::post('/recipients/{guid}/retirement', [RecipientController::class, 'storeRetirement']);
-Route::post('/recipients/{guid}/award', [RecipientController::class, 'storeAward']);
-Route::post('/recipients/{guid}/servicePins', [RecipientController::class, 'storeServicePins']);
-Route::post('/recipients/{guid}/declarations', [RecipientController::class, 'storeDeclarations']);
-Route::post('/recipients/{guid}/contact', [RecipientController::class, 'storePersonalContact']);
-Route::put('/recipients/{guid}/confirm', [RecipientController::class, 'updateConfirmation']);
+Route::post('/recipients/identification', [RecipientController::class,'storeIdentification']);
+Route::post('/recipients/{rid}/milestone', [RecipientController::class, 'storeMilestone']);
+Route::post('/recipients/{rid}/retirement', [RecipientController::class, 'storeRetirement']);
+Route::post('/recipients/{rid}/award', [RecipientController::class, 'storeAward']);
+Route::post('/recipients/{rid}/servicePins', [RecipientController::class, 'storeServicePins']);
+Route::post('/recipients/{rid}/declarations', [RecipientController::class, 'storeDeclarations']);
+Route::post('/recipients/{rid}/contact', [RecipientController::class, 'storePersonalContact']);
+Route::put('/recipients/{rid}/confirm', [RecipientController::class, 'updateConfirmation']);
 
 
 /** AWARDS */

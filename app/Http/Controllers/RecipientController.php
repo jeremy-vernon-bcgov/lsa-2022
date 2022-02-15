@@ -100,10 +100,9 @@ class RecipientController extends Controller
      * Store User employee identification
      *
      * @param \Illuminate\Http\Request $request
-     * @param String $guid
      * @return \Illuminate\Http\Response
      */
-    public function storeIdentification(Request $request, $guid) {
+    public function storeIdentification(Request $request) {
         $recipient = $this->getByGUID($request, $guid);
 
     }
@@ -112,10 +111,10 @@ class RecipientController extends Controller
      * Store Milestone-related information
      *
      * @param \Illuminate\Http\Request $request
-     * @param String $guid
+     * @param \App\Models\Recipient $recipient
      * @return \Illuminate\Http\Response
      */
-    public function storeMilestone(Request $request, $guid) {
+    public function storeMilestone(Request $request, Recipient $recipient) {
 
     }
 
@@ -123,11 +122,11 @@ class RecipientController extends Controller
      * Store Retirement-related information
      *
      * @param \Illuminate\Http\Request $request
-     * @param String $guid
+     * @param \App\Model\Recipient $recipient
      * @return \Illuminate\Http\Response
      *
      */
-    public function storeRetirement(Request $request, $guid) {
+    public function storeRetirement(Request $request, Recipient $recipient) {
 
     }
 
@@ -135,10 +134,10 @@ class RecipientController extends Controller
      * Store Award selection
      *
      * @param \Illuminate\Http\Request $request
-     * @param String $guid
+     * @param \App\Model\Recipient $recipient
      * @return \Illuminate\Http\Response
      */
-    public function storeAward(Request $request, $guid) {
+    public function storeAward(Request $request, Recipient $recipient) {
 
     }
 
@@ -147,10 +146,10 @@ class RecipientController extends Controller
      * Store Service Pin related info
      *
      * @param \Illuminate\Http\Request $request
-     * @param String $guid
+     * @param \App\Model\Recipient $recipient
      * @return \Illuminate\Http\Response
      */
-    public function storeServicePins(Request $request, $guid) {
+    public function storeServicePins(Request $request, Recipient $recipient) {
 
     }
 
@@ -158,10 +157,10 @@ class RecipientController extends Controller
      * Store Declarations
      *
      * @param \Illuminate\Http\Request $request
-     * @param String $guid
+     * @param \App\Model\Recipient $recipient
      * @return \Illuminate\Http\Response
      */
-    public function storeDeclarations(Request $request, $guid) {
+    public function storeDeclarations(Request $request, Recipient $recipient) {
 
     }
 
@@ -169,10 +168,10 @@ class RecipientController extends Controller
      * Store Personal Contact
      *
      * @param \Illuminate\Http\Request $request
-     * @param String $guid
+     * @param \App\Model\Recipient $recipient
      * @return \Illuminate\Http\Response
      */
-    public function storePersonalContact(Request $request, $guid) {
+    public function storePersonalContact(Request $request,Recipient $recipient) {
 
     }
 
@@ -180,10 +179,10 @@ class RecipientController extends Controller
      * Update Confirmation
      *
      * @param \Illuminate\Http\Request $request
-     * @param String $guid
+     * @param \App\Model\Recipient $recipient
      * @return \Illuminate\Http\Response
      */
-    public function updateConfirmation(Request $request, $guid) {
+    public function updateConfirmation(Request $request, Recipient $recipient) {
 
     }
 

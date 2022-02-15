@@ -24,6 +24,7 @@ class StoreServicePinsRequest extends FormRequest
     public function rules()
     {
         return [
+            'recipient_id'                      => 'required',
             'supervisor_full_name'              => 'required',
             'supervisor_email'                  => 'required',
             'supervisor_address_prefix'         => '',

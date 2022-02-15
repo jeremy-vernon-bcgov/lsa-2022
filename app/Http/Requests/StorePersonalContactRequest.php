@@ -24,7 +24,7 @@ class StorePersonalContactRequest extends FormRequest
     public function rules()
     {
         return [
-            'guid'                              => 'required',
+            'recipient_id'                      => 'required',
             'personal_email'                    => 'required',
             'personal_phone_number'             => 'required',
             'personal_address_prefix'           => '',

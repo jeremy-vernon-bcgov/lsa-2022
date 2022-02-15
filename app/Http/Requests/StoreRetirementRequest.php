@@ -24,7 +24,7 @@ class StoreRetirementRequest extends FormRequest
     public function rules()
     {
         return [
-            'guid'                              => 'required',
+            'recipient_id'                              => 'required',
 
         ];
     }

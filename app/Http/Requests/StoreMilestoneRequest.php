@@ -24,7 +24,7 @@ class StoreMilestoneRequest extends FormRequest
     public function rules()
     {
         return [
-          'guid' => 'required',
+          'recipient_id' => 'required',
           'milestones' => 'required',
           'qualifying_year' => 'required',
         ];

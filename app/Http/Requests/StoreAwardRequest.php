@@ -24,7 +24,7 @@ class StoreAwardRequest extends FormRequest
     public function rules()
     {
         return [
-            'guid'      => 'required',
+            'recipient_id'      => 'required',
             'award_id'  => 'required',
             'options'   => ''
         ];
