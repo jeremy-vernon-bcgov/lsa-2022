@@ -36,6 +36,10 @@ Route::post('/recipients/{rid}/contact', [RecipientController::class, 'storePers
 Route::put('/recipients/{rid}/confirm', [RecipientController::class, 'updateConfirmation']);
 
 
+route::get('/organizations/', [OrganizationController::class, 'index']);
+
+route::get('/communities/', [CommunityController::class, 'index']);
+
 /** AWARDS */
 Route::get('/milestones/{milestone}/awards', [AwardController::class, 'getByMilestone']);
 Route::get('/awards/{id}/options', [AwardController::class, 'getAwardOptions']);
