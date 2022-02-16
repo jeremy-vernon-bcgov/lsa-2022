@@ -20,20 +20,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 /** RECIPIENTS */
 
-Route::get('/recipients/{guid}', [RecipientController::class, 'show']);
-Route::get('/recipients/archived/{email}', [RecipientController::class, 'showArchivedRecipientByEmail']);
-Route::post('/recipients', [RecipientController::class, 'store']);
-Route::put('/recipients/{guid}', [RecipientController::class, 'update']);
+Route::controller(RecipientController::class)->group(function() {
+   Route::get('/recipients/{guid}', 'show');
+   Route::get('/recipients/archieved/{email}', 'showArchivedRecipientByEmail');
+   Route::post('/recipients', 'store');
+   Route::put('/recipients/{guid}', 'update');
 
-/** Registration Phases */
-Route::post('/recipients/identification', [RecipientController::class,'storeIdentification']);
-Route::post('/recipients/{rid}/milestone', [RecipientController::class, 'storeMilestone']);
-Route::post('/recipients/{rid}/retirement', [RecipientController::class, 'storeRetirement']);
-Route::post('/recipients/{rid}/award', [RecipientController::class, 'storeAward']);
-Route::post('/recipients/{rid}/servicePins', [RecipientController::class, 'storeServicePins']);
-Route::post('/recipients/{rid}/declarations', [RecipientController::class, 'storeDeclarations']);
-Route::post('/recipients/{rid}/contact', [RecipientController::class, 'storePersonalContact']);
-Route::put('/recipients/{rid}/confirm', [RecipientController::class, 'updateConfirmation']);
+   /** Registration Phases **/
+    Route::post('/recipients/identification', 'storeIdentification');
+    Route::post('/recipients/{rid}/milestone', 'storeMilestone');
+    Route::post('/recipient/{rid}/retirement', 'storeRetirement');
+    Route::post('/recipient/{rid}/award', 'storeServicePins');
+    Route::post('/recipient/{rid}/declarations', 'storeDeclarations');
+    Route::post('/recipients/{rid}/contact', 'storePersonalContact');
+    Route::post('/recipients/{rid}/confirm', 'updateConfirmation');
+});
+
 
 
 route::get('/organizations/', [OrganizationController::class, 'index']);
