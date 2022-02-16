@@ -3,6 +3,15 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\RecipientController;
+use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\AwardController;
+use App\Http\Controllers\CommunityController;
+
+use App\Models\Recipient;
+use App\Models\Organization;
+use App\Models\Award;
+use App\Models\Community;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,12 +37,12 @@ Route::controller(RecipientController::class)->group(function() {
 
    /** Registration Phases **/
     Route::post('/recipients/identification', 'storeIdentification');
-    Route::post('/recipients/{rid}/milestone', 'storeMilestone');
-    Route::post('/recipient/{rid}/retirement', 'storeRetirement');
-    Route::post('/recipient/{rid}/award', 'storeServicePins');
-    Route::post('/recipient/{rid}/declarations', 'storeDeclarations');
-    Route::post('/recipients/{rid}/contact', 'storePersonalContact');
-    Route::post('/recipients/{rid}/confirm', 'updateConfirmation');
+    Route::post('/recipients/{recipient}/milestone', 'storeMilestone');
+    Route::post('/recipient/{recipient}/retirement', 'storeRetirement');
+    Route::post('/recipient/{recipient}/award', 'storeServicePins');
+    Route::post('/recipient/{recipient}/declarations', 'storeDeclarations');
+    Route::post('/recipients/{recipient}/contact', 'storePersonalContact');
+    Route::post('/recipients/{recipient}/confirm', 'updateConfirmation');
 });
 
 
