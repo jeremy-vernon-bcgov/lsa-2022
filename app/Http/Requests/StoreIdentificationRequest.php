@@ -24,13 +24,13 @@ class StoreIdentificationRequest extends FormRequest
     public function rules()
     {
         return [
-            'guid'                          => 'required',
-            'idir'                          => 'required',
-            'government_email'              => 'required',
-            'employee_number'               => 'required',
-            'full_name'                     => 'required',
-            'organization_id'               => 'required',
-            'branch_name'                   => 'required'
+            'guid'                          => 'required|string',
+            'idir'                          => 'required|string',
+            'government_email'              => 'required|email',
+            'employee_number'               => 'required|string|gte:4',
+            'full_name'                     => 'required|string|gte:5',
+            'organization_id'               => 'required|numeric',
+            'branch_name'                   => 'required|string|gte:3'
         ];
     }
 }

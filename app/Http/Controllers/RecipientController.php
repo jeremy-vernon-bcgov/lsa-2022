@@ -103,8 +103,22 @@ class RecipientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function storeIdentification(Request $request) {
-        $recipient = $this->getByGUID($request, $guid);
-
+        $recipient = Recipient::where('guid', $guid)->first();
+        if (!empty($recipient)) {
+            //GUID is not unique - do we report an error or update the data?
+        } else {
+            $recipient = Recipient::create([
+                'guid' => $request->input('guid'),
+                'idir' => $request->input('idir'),
+                'government_email' => $request->input('government_email'),
+                'employee_number' => $request->input('employee_number'),
+                'full_name' => $request->input('full_name'),
+                'organization_id' => $request->input('organization_id'),
+                'branch_name' => $request->input('branch_name')
+            ]);
+            $recipient->save();
+            return $recipient;
+        }
     }
 
     /**
@@ -192,15 +206,6 @@ class RecipientController extends Controller
      * @return \App\Models\Recipient
      */
 
-    private function getByGUID(Request $request, $guid) {
-        //TODO : Model Organizational contact
-        $recipient = Recipient::where('guid', $guid)->firstOrFail();
-        if ($request->guid == $recipient) {
-            return $recipient;
-        }
-        else {
-           //TODO : Handle GUID mismatch exception
-        }
-    }
+
 
 }
