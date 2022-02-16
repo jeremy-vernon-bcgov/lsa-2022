@@ -129,7 +129,10 @@ class RecipientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function storeMilestone(Request $request, Recipient $recipient) {
-
+        $recipient->milestones = $request->milestone;
+        $recipient->qualifying_year = $request->milestone;
+        $recipient->save();
+        return $recipient;
     }
 
     /**
@@ -141,7 +144,12 @@ class RecipientController extends Controller
      *
      */
     public function storeRetirement(Request $request, Recipient $recipient) {
-
+        $recipient->retiring_this_year = $request->retiring_this_year;
+        if ($recipient->retiring_this_year && !(empty($request->retirement_date))) {
+            $recipient->retirement_date = $request->retiring_this_year;
+        }
+        $recipient->save();
+        return $recipient;
     }
 
     /**

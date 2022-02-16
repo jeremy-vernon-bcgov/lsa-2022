@@ -24,8 +24,9 @@ class StoreRetirementRequest extends FormRequest
     public function rules()
     {
         return [
-            'recipient_id'                              => 'required',
-
+            'recipient_id'                  => 'required',
+            'retiring_this_year'            => 'required|boolean|required_with:retirement_date',
+            'retirement_date'               => 'date|after:today'
         ];
     }
 }
