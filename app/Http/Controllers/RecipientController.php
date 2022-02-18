@@ -162,6 +162,10 @@ class RecipientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function storeAward(Request $request, Recipient $recipient) {
+        $award = Award::find($request->award_id);
+        if (!empty($award)) {
+            $recipient->awards()->attach($award->id, ['options' => $request->options]);
+        }
 
     }
 
@@ -174,7 +178,18 @@ class RecipientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function storeServicePins(Request $request, Recipient $recipient) {
+        $supervisorAddress = new Address([
+            'prefix' => $request->supervisor_address_prefix,
+            'street_address' => $request->supervisor_address_street_address,
+            'postal_code'   => $request->supervisor_address_postal_code,
+            'community' => $request->supervisor_address_postal_code
+            ]);
+        $recipient->supervisor_full_name = $request->supervisor_full_name;
+        $recipient->supervisor_email = $request->supervisor_email;
+        $recipient->supervisorAddress()->save($supervisorAddress);
+        $recipient->save();
 
+        return $this->returnFullRecipient();
     }
 
     /**
@@ -210,12 +225,7 @@ class RecipientController extends Controller
 
     }
 
-    /**
-     * @param \Illuminate\HttpRequest $request
-     * @param String $guid
-     * @return \App\Models\Recipient
-     */
-
-
-
+    private function returnFullRecipient(Recipient $recipient) {
+        return Recipient::where('id', $recipient->id)->with(['personalAddress', 'supervisorAddress', 'officeAddress', 'award'])->firstOrFail();
+    }
 }
