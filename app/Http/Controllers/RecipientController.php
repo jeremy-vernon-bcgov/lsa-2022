@@ -167,6 +167,8 @@ class RecipientController extends Controller
             $recipient->awards()->attach($award->id, ['options' => $request->options]);
         }
 
+        return $this->getFullRecipient();
+
     }
 
 
@@ -189,7 +191,7 @@ class RecipientController extends Controller
         $recipient->supervisorAddress()->save($supervisorAddress);
         $recipient->save();
 
-        return $this->returnFullRecipient();
+        return $this->getFullRecipient();
     }
 
     /**
@@ -200,7 +202,12 @@ class RecipientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function storeDeclarations(Request $request, Recipient $recipient) {
+        $recipient->is_declared = $request->is_declared;
+        $recipient->survey_participation = $request->survey_participation;
+        $recipient->ceremony_opt_out = $request->ceremony_opt_out;
 
+        $recipient->save();
+        return $this->getFullRecipient();
     }
 
     /**
@@ -225,7 +232,7 @@ class RecipientController extends Controller
 
     }
 
-    private function returnFullRecipient(Recipient $recipient) {
+    private function getFullRecipient(Recipient $recipient) {
         return Recipient::where('id', $recipient->id)->with(['personalAddress', 'supervisorAddress', 'officeAddress', 'award'])->firstOrFail();
     }
 }
