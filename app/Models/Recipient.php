@@ -48,16 +48,11 @@ class Recipient extends Model
     }
 
     public function attendee() {
-        return $this->hasOne(Attendee::class);
+        return $this->morphOne(Attendee::class, 'attendable');
     }
-
-    public function accessibilityOptions()
+    public function accommodations()
     {
-        return $this->hasManyThrough(AccessbilityOption::class, Attendee::class);
-    }
-    public function dietaryRestrictions()
-    {
-        return $this->hasManyThrough(DietaryRestriction::class, Attendee::class);
+        return $this->hasManyThrough(Accommodation::class, Attendee::class);
     }
     public function organization()
     {

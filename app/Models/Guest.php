@@ -15,19 +15,17 @@ class Guest extends Model
     }
     public function attendee()
     {
-        return $this->hasOne(Attendee::class);
+        return $this->morphOne(Attendee::class, 'attendable');
     }
     public function ceremonies ()
     {
         return $this->hasManyThrough(Ceremony::class, Attendee::class);
     }
-    public function dietaryRestrictions ()
+
+    public function accommodations()
     {
-        return $this->hasManyThrough(DietaryRestriction::class, Attendee::class);
+        return $this->hasManyThrough(Accommodation::class, Attendee::class);
     }
-    public function accessibilityOptions ()
-    {
-        return $this->hasManyThrough(AccessibilityOption::class, Attendee::class);
-    }
+
 
 }

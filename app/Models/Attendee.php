@@ -19,23 +19,10 @@ class Attendee extends Model
                           ];
 
 
-    public function recipient() {
-        return $this->belongsTo(Recipient::class);
+    public function attendable()
+    {
+        return $this->morphTo();
     }
-    public function vip() {
-        return $this->belongsTo(Vip::class);
-    }
-    public function guest() {
-        return $this->belongsTo(Guest::class, );
-    }
-    public function ceremony() {
-        return $this->belongsTo(Ceremony::class);
-    }
-
-    public function accommodation() {
-        return $this->belongsToMany(Accommodation::class);
-    }
-
 
      /**** RSVP form functions *****/
 
