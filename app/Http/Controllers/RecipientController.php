@@ -15,7 +15,7 @@ class RecipientController extends Controller
      */
     public function index()
     {
-        return Recipient::with(['personalAddress', 'supervisorAddress', 'officeAddress'])->get();
+        return Recipient::with(['personalAddress', 'supervisorAddress', 'officeAddress', 'award'])->get();
     }
 
     /**
@@ -48,7 +48,7 @@ class RecipientController extends Controller
      */
     public function show(string $guid)
     {
-        return Recipient::where('guid', $guid)->with(['personalAddress', 'supervisorAddress', 'officeAddress'])->firstOrFail();
+        return Recipient::where('guid', $guid)->with(['personalAddress', 'supervisorAddress', 'officeAddress', 'award'])->firstOrFail();
     }
 
     /**
