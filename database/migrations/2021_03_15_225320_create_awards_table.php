@@ -19,7 +19,7 @@ class CreateAwardsTable extends Migration
             $table->string('name');
             $table->string('short_name');
             $table->string('description')->nullable();
-            $table->string('image_path');
+            $table->string('image_url');
             $table->integer('quantity');
             $table->json('options');
             $table->string('milestones');
