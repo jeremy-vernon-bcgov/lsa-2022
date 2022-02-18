@@ -15,7 +15,7 @@ class RecipientController extends Controller
      */
     public function index()
     {
-        return Recipient::all();
+        return Recipient::with(['personalAddress', 'supervisorAddress', 'officeAddress'])->get();
     }
 
     /**
@@ -103,7 +103,7 @@ class RecipientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function storeIdentification(Request $request) {
-        $recipient = Recipient::where('guid', $guid)->first();
+        $recipient = Recipient::where('guid', $request->guid)->first();
         if (!empty($recipient)) {
             //GUID is not unique - do we report an error or update the data?
         } else {
