@@ -39,7 +39,8 @@ Route::controller(RecipientController::class)->group(function() {
     Route::post('/recipients/identification', 'storeIdentification');
     Route::post('/recipients/{recipient}/milestone', 'storeMilestone');
     Route::post('/recipient/{recipient}/retirement', 'storeRetirement');
-    Route::post('/recipient/{recipient}/award', 'storeServicePins');
+    Route::post('/recipient/{recipient}/award', 'storeAward');
+    Route::post('/recipient/{recipient}/servicepins', 'storeServicePins');
     Route::post('/recipient/{recipient}/declarations', 'storeDeclarations');
     Route::post('/recipients/{recipient}/contact', 'storePersonalContact');
 
