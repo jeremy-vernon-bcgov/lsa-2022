@@ -16,20 +16,11 @@ class CreateAttendeesTable extends Migration
         Schema::create('attendees', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->enum('type', ['vip','recipient','guest']);
-            $table->foreignId('vip_id')->nullable();
-            $table->foreignId('recipient_id')->nullable();
-            $table->foreignId('guest_id')->nullable();
-            $table->foreignId('ceremony_id')->nullable();
             $table->enum('status',['','assigned','invited','attending','declined','waitlisted']);
-            $table->string('identifier')->nullable();
+            $table->foreignId('attendable_id');
+            $table->string('attendable_type');
 
 
-            $table->foreign('vip_id')->references('id')->on('vips');
-            $table->foreign('recipient_id')->references('id')->on('recipients');
-            $table->foreign('guest_id')->references('id')->on('guests');
-            $table->foreign('ceremony_id')->references('id')->on('ceremonies');
-            $table->text('annotations')->nullable();
         });
     }
 
