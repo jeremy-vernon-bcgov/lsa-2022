@@ -48,7 +48,7 @@ class RecipientController extends Controller
      */
     public function show(string $guid)
     {
-        return Recipient::where('guid', $guid)->firstOrFail();
+        return Recipient::where('guid', $guid)->with(['personalAddress', 'supervisorAddress', 'officeAddress'])->firstOrFail();
     }
 
     /**
