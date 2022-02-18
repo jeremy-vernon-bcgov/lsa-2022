@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Recipient;
+use App\Models\Address;
+use App\Models\Award;
 use App\Models\HistoricalRecipient;
 use Illuminate\Http\Request;
 
