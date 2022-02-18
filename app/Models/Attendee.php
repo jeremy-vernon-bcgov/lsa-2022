@@ -31,13 +31,10 @@ class Attendee extends Model
     public function ceremony() {
         return $this->belongsTo(Ceremony::class);
     }
-    public function dietaryRestrictions() {
-        return $this->belongsToMany(DietaryRestriction::class);
-    }
-    public function accessibilityOptions() {
-        return $this->belongsToMany(AccessibilityOption::class);
-    }
 
+    public function accommodation() {
+        return $this->belongsToMany(Accommodation::class);
+    }
 
 
      /**** RSVP form functions *****/

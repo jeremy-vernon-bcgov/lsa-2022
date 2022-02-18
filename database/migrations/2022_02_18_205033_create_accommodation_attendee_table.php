@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAccessibilityOptionsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateAccessibilityOptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('accessibility_options', function (Blueprint $table) {
+        Schema::create('accommodation_attendee', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('description');
-            $table->string('short_name');
-            $table->integer('sort_order');
+            $table->foreignId('attendee_id')->constrained();
+            $table->foreignId('accommodation_id')->constrained();
+            $table->string('details')->nullable();
         });
     }
 
@@ -29,6 +29,6 @@ class CreateAccessibilityOptionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('accessibility_options');
+        Schema::dropIfExists('accommodation_attendee');
     }
-}
+};

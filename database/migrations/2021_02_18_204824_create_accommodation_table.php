@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDietaryRestrictionsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class CreateDietaryRestrictionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('dietary_restrictions', function (Blueprint $table) {
+        Schema::create('accommodation', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('short_name');
+            $table->string('full_name')->nullable();
+            $table->string('description')->nullable();
+            $table->string('type')->nullable();
+            $table->integer('sort_order')->nullable();
         });
     }
 
@@ -27,6 +31,6 @@ class CreateDietaryRestrictionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dietary_restrictions');
+        Schema::dropIfExists('accommodation');
     }
-}
+};
