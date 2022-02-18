@@ -76,4 +76,8 @@ class Recipient extends Model
         return $this->belongsTo(Ceremony::class, 'ceremony_id');
     }
 
+    public function notes() {
+        return $this->morphMany(Note::class, 'notable');
+    }
+
 }
