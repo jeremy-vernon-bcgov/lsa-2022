@@ -18,9 +18,7 @@ class CreateGuestsTable extends Migration
             $table->timestamps();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->foreignId('recipient_id');
-
-            $table->foreign('recipient_id')->references('id')->on('recipients');
+            $table->foreignId('recipient_id')->constrained();
         });
     }
 
