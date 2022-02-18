@@ -42,7 +42,7 @@ Route::controller(RecipientController::class)->group(function() {
     Route::post('/recipient/{recipient}/award', 'storeServicePins');
     Route::post('/recipient/{recipient}/declarations', 'storeDeclarations');
     Route::post('/recipients/{recipient}/contact', 'storePersonalContact');
-    Route::post('/recipients/{recipient}/confirm', 'updateConfirmation');
+
 });
 
 

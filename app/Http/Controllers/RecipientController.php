@@ -134,7 +134,7 @@ class RecipientController extends Controller
         $recipient->milestones = $request->milestone;
         $recipient->qualifying_year = $request->milestone;
         $recipient->save();
-        return $recipient;
+        return $this->getFullRecipient($recipient);
     }
 
     /**
@@ -151,7 +151,7 @@ class RecipientController extends Controller
             $recipient->retirement_date = $request->retiring_this_year;
         }
         $recipient->save();
-        return $recipient;
+        return $this->getFullRecipient($recipient);
     }
 
     /**
@@ -167,7 +167,7 @@ class RecipientController extends Controller
             $recipient->awards()->attach($award->id, ['options' => $request->options]);
         }
 
-        return $this->getFullRecipient();
+        return $this->getFullRecipient($recipient);
 
     }
 
@@ -191,7 +191,7 @@ class RecipientController extends Controller
         $recipient->supervisorAddress()->save($supervisorAddress);
         $recipient->save();
 
-        return $this->getFullRecipient();
+        return $this->getFullRecipient($recipient);
     }
 
     /**
@@ -207,7 +207,7 @@ class RecipientController extends Controller
         $recipient->ceremony_opt_out = $request->ceremony_opt_out;
 
         $recipient->save();
-        return $this->getFullRecipient();
+        return $this->getFullRecipient($recipient);
     }
 
     /**
@@ -218,17 +218,18 @@ class RecipientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function storePersonalContact(Request $request,Recipient $recipient) {
+        $personalAddress = new Address([
+           'prefix' => $request->personal_address_prefix,
+           'street_address' => $request->personal_address_street_address,
+           'postal_code' => $request->personal_address_postal_code,
+           'community' => $request->personal_address_community
+        ]);
+        $recipient->personal_email = $request->personal_email;
+        $recipient->personal_phone_number = $request->personal_phone_number;
+        $recipient->personalAddress()->save($personalAddress);
+        $recipient->save();
 
-    }
-
-    /**
-     * Update Confirmation
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Model\Recipient $recipient
-     * @return \Illuminate\Http\Response
-     */
-    public function updateConfirmation(Request $request, Recipient $recipient) {
+        return $this->getFullRecipient($recipient);
 
     }
 
