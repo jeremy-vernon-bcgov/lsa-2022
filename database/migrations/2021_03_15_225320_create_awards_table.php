@@ -21,8 +21,7 @@ class CreateAwardsTable extends Migration
             $table->string('description')->nullable();
             $table->string('image_url');
             $table->integer('quantity');
-            $table->json('options');
-            $table->string('milestones');
+            $table->integer('milestone');
             $table->integer('sort_order')->nullable();
         });
     }
