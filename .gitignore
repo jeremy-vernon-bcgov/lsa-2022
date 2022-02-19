@@ -15,3 +15,4 @@ yarn-error.log
 /.vscode
 /database/seeders/RecipientSeeder.php
 /database/seeders/HistoricalRecipientsSeeder.php
+/database/seeders/UsersSeeder.php
