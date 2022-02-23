@@ -17,7 +17,6 @@ class Organization extends Model
         return $this->hasManyThrough();
     }
 
-
     public function vips () {
         return $this->hasMany(Vip::class);
     }
@@ -25,6 +24,7 @@ class Organization extends Model
     public function recipients () {
         return $this->hasMany(Recipient::class);
     }
+
     public function recipientCeremonies ()
     {
         return $this->hasMany(RecipientCeremony::class);

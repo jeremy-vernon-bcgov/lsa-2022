@@ -35,11 +35,12 @@ class Recipient extends Model
         //TODO specify all mass-assignable fields.
         ];
     */
-    public function officeAddress() {
+
+    public function personalAddress() {
         return $this->belongsTo(Address::class);
     }
 
-    public function personalAddress() {
+    public function officeAddress() {
         return $this->belongsTo(Address::class);
     }
 
