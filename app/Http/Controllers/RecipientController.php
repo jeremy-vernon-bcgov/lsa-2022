@@ -25,9 +25,8 @@ class RecipientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
     }
 
     /**
@@ -39,7 +38,13 @@ class RecipientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $data = array(
+        $request->input('guid'),
+        $request->input('idir'),
+        $request->input('employee_number'),
+        $request->input('organization_id')
+      );
+      return Recipient::insert('insert into recipients (guid, idir, employee_number, organization_id) values (?, ?)', $data);
     }
 
     /**
@@ -105,9 +110,16 @@ class RecipientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function storeIdentification(Request $request) {
-        $recipient = Recipient::where('guid', $request->guid)->first();
+        $recipient = Recipient::where('guid', $request->input('guid'))->first();
         if (!empty($recipient)) {
-            //GUID is not unique - do we report an error or update the data?
+            // Recipient GUID exists: update recipient identification
+            $recipient->government_email = $request->input('government_email');
+            $recipient->employee_number = $request->input('employee_number');
+            $recipient->full_name = $request->input('full_name');
+            $recipient->organization_id = $request->input('organization_id');
+            $recipient->branch_name = $request->input('branch_name');
+            $recipient->save();
+            return $recipient;
         } else {
             $recipient = Recipient::create([
                 'guid' => $request->input('guid'),
@@ -131,8 +143,10 @@ class RecipientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function storeMilestone(Request $request, Recipient $recipient) {
-        $recipient->milestones = $request->milestone;
-        $recipient->qualifying_year = $request->milestone;
+        $recipient->milestones = $request->input('milestone');
+        $recipient->qualifying_year = $request->input('qualifying_year');
+        $recipient->is_bcgeu_member = $request->input('is_bcgeu_member');
+        $recipient->retiring_this_year = $request->input('retiring_this_year');
         $recipient->save();
         return $this->getFullRecipient($recipient);
     }
@@ -146,7 +160,7 @@ class RecipientController extends Controller
      *
      */
     public function storeRetirement(Request $request, Recipient $recipient) {
-        $recipient->retiring_this_year = $request->retiring_this_year;
+
         if ($recipient->retiring_this_year && !(empty($request->retirement_date))) {
             $recipient->retirement_date = $request->retiring_this_year;
         }
@@ -217,15 +231,15 @@ class RecipientController extends Controller
      * @param \App\Model\Recipient $recipient
      * @return \Illuminate\Http\Response
      */
-    public function storePersonalContact(Request $request,Recipient $recipient) {
+    public function storePersonalContact(Request $request, Recipient $recipient) {
         $personalAddress = new Address([
-           'prefix' => $request->personal_address_prefix,
-           'street_address' => $request->personal_address_street_address,
-           'postal_code' => $request->personal_address_postal_code,
-           'community' => $request->personal_address_community
+           'prefix' => $request->input('personal_address_prefix'),
+           'street_address' => $request->input('personal_address_street_address'),
+           'postal_code' => $request->input('personal_address_postal_code'),
+           'community' => $request->input('personal_address_community')
         ]);
-        $recipient->personal_email = $request->personal_email;
-        $recipient->personal_phone_number = $request->personal_phone_number;
+        $recipient->personal_email = $request->input('personal_email');
+        $recipient->personal_phone_number = $request->input('personal_phone_number');
         $recipient->personalAddress()->save($personalAddress);
         $recipient->save();
 

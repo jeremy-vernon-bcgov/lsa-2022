@@ -36,15 +36,15 @@ class Recipient extends Model
         ];
     */
     public function officeAddress() {
-        return $this->hasOne(Address::class, 'office_address_id');
+        return $this->belongsTo(Address::class);
     }
 
     public function personalAddress() {
-        return $this->hasOne(Address::class, 'personal_address_id');
+        return $this->belongsTo(Address::class);
     }
 
     public function supervisorAddress() {
-        return $this->hasOne(Address::class, 'supervisor_address_id');
+        return $this->belongsTo(Address::class);
     }
 
     public function attendee() {

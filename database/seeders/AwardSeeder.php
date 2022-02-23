@@ -45,7 +45,7 @@ class AwardSeeder extends Seeder
                                                 'milestone' => 25,
                                                 'sort_order' => 5,
                                                 'quantity' => -1]);
-        DB::table('awards')->insert(['id'=> 4,'name' => 'Slate serving board',
+        DB::table('awards')->insert(['id'=> 5,'name' => 'Slate serving board',
                                                 'short_name' => '25-serving-board' ,
                                                 'image_url' => '25/25-serving-board.png',
                                                 'description' => 'This serving board comes with a stainless steel cheese knife and and three cheese markers. Engraved with the BC Coat of Arms and "25 Years".',
