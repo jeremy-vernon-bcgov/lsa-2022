@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-/** RECIPIENTS */
+/** Recipients routes */
 
 Route::controller(RecipientController::class)->group(function() {
    Route::get('/recipients/{guid}', 'show');
@@ -46,12 +46,12 @@ Route::controller(RecipientController::class)->group(function() {
 
 });
 
-
-
+/** Organization routes */
 route::get('/organizations/', [OrganizationController::class, 'index']);
 
+/** Community routes [TODO discard community routes?] */
 route::get('/communities/', [CommunityController::class, 'index']);
 
-/** AWARDS */
+/** Awards routes */
 Route::get('/milestones/{milestone}/awards', [AwardController::class, 'getByMilestone']);
 Route::get('/awards/{id}/options', [AwardController::class, 'getAwardOptions']);

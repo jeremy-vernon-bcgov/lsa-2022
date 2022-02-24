@@ -170,16 +170,16 @@ class RecipientController extends Controller
   }
 
   /**
-  * Store Award selection
+  * Store Award selection [TODO: award selection is incomplete]
   *
   * @param \Illuminate\Http\Request $request
   * @param \App\Model\Recipient $recipient
   * @return \Illuminate\Http\Response
   */
   public function storeAward(Request $request, Recipient $recipient) {
-    $award = Award::find($request->award_id);
+    $award = Award::find($request->input('award_id'));
     if (!empty($award)) {
-      $recipient->awards()->attach($award->id, ['options' => $request->options]);
+      $recipient->award()->attach($award->id, ['options' => $request->input('options')]);
     }
 
     return $this->getFullRecipient($recipient);
