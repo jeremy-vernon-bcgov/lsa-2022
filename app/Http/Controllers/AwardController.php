@@ -96,5 +96,17 @@ class AwardController extends Controller
         return Award::where('milestone', $milestone)->get();
     }
 
+    /**
+     * Return options for an award
+     *
+     * @param Integer $milestone
+     * @return \Illuminate\Http\Response
+     */
+
+    public function getAwardOptions(Award $award)
+    {
+        return $award->get();
+    }
+
 
 }

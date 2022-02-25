@@ -7,6 +7,7 @@ use App\Http\Controllers\RecipientController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\AwardController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\PecsfController;
 
 use App\Models\Recipient;
 use App\Models\Organization;
@@ -54,4 +55,8 @@ route::get('/communities/', [CommunityController::class, 'index']);
 
 /** Awards routes */
 Route::get('/milestones/{milestone}/awards', [AwardController::class, 'getByMilestone']);
-Route::get('/awards/{id}/options', [AwardController::class, 'getAwardOptions']);
+// Route::get('/awards/{id}/options', [AwardController::class, 'getAwardOptions']);
+
+/** PECSF routes */
+Route::get('/pecsf/charities', [PecsfController::class, 'getCharities']);
+Route::get('/pecsf/regions', [PecsfController::class, 'getRegions']);

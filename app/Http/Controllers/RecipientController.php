@@ -55,7 +55,12 @@ class RecipientController extends Controller
   */
   public function show(string $guid)
   {
-    return Recipient::where('guid', $guid)->with(['personalAddress', 'supervisorAddress', 'officeAddress', 'award'])->firstOrFail();
+    return Recipient::where('guid', $guid)->with([
+      'personalAddress',
+      'supervisorAddress',
+      'officeAddress',
+      'award'
+      ])->firstOrFail();
   }
 
   /**
@@ -179,7 +184,10 @@ class RecipientController extends Controller
   public function storeAward(Request $request, Recipient $recipient) {
     $award = Award::find($request->input('award_id'));
     if (!empty($award)) {
-      $recipient->award()->attach($award->id, ['options' => $request->input('options')]);
+      $recipient->award()->syncWithoutDetaching($award->id, [
+        'options' => $request->input('options'),
+        'status' => $request->input('status')
+      ]);
     }
 
     return $this->getFullRecipient($recipient);
