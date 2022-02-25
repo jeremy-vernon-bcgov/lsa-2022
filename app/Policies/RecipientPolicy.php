@@ -33,6 +33,9 @@ class RecipientPolicy
         if ($user->hasRole('orgContact')) {
             return $recipient->organization_id == $user->organization_id;
         }
+        else {
+            return $user->can('view recipients');
+        }
     }
 
     /**

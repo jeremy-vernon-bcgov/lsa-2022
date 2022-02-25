@@ -252,90 +252,116 @@ class OrganizationSeeder extends Seeder
         ['id'   => 55 ,
             'name' => 'Office of the Auditor General',
             'short_name' => 'AG']
-    ]);        DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   => 56 ,
             'name' => 'Office of the Conflict of Interest Commissioner',
             'short_name' => 'Conflict of Interest']
-    ]);        DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   => 57 ,
             'name' => 'Office of the Fire Commissioner',
             'short_name' => 'Fire Commissioner']
-    ]);        DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   => 58 ,
             'name' => 'Office of the Information and Privacy Commissioner',
             'short_name' => 'Information & Privacy Commissioner']
-    ]);        DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   => 59 ,
             'name' => 'Office of the Merit Commissioner',
             'short_name' => 'Merit Commissioner']
-    ]);        DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   => 60 ,
             'name' => 'Office of the Ombudsperson',
             'short_name' => 'Ombudsperson']
-    ]);        DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   =>  61 ,
             'name' => 'Office of the Police Complaint Commissioner',
             'short_name' => 'Police Complaints']
-    ]);        DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   =>  62,
             'name' => 'Office of the Premier',
             'short_name' => 'Premier']
-    ]);        DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   => 63 ,
             'name' => 'Office of the Representative for Children and Youth',
             'short_name' => 'Rep for Children and Youth']
-    ]);        DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   =>  64,
             'name' => 'Oil and Gas Appeal Tribunal',
             'short_name' => 'Oil and Gas Appeals']
-    ]);        DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   =>  65,
             'name' => 'Passenger Transportation Board',
             'short_name' => 'Passenger Transportation']
-    ]);        DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   =>  66,
             'name' => 'Property Assessment Appeal Board',
             'short_name' => 'Property Assessment Appeals']
-    ]);        DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   =>  67,
             'name' => 'Public Guardian and Trustee',
             'short_name' => 'PGT']
-    ]);        DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   => 68 ,
             'name' => 'Public Sector Employers’ Council Secretariat',
             'short_name' => 'Public Sector Employers']
-    ]);        DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   => 69 ,
             'name' => 'Royal BC Museum',
             'short_name' => 'RBCM']
-    ]);DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   =>  70,
             'name' => 'Safety Standards Appeal Board',
             'short_name' => 'Safety Standards']
-    ]);DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   =>  71 ,
             'name' => 'Surface Rights Board',
             'short_name' => 'Surface Rights']
-    ]);DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   =>  72,
             'name' => 'BC Financial Services Authority',
             'short_name' => 'Financial Services Auth']
-    ]);DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id'   => 73,
             'name' => 'Children and Family Development (Ministry of)',
             'short_name' => 'MCFD']
-    ]);DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id' => 74,
             'name' => 'Workers’ Compensation Appeal Tribunal',
             'short_name' => 'WCAT']
-    ]);DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id' => 75,
             'name' => 'Agritech Land Use Secretariat',
             'short_name' => 'ALUS']
-    ]);DB::table('organizations')->insert([
+    ]);
+    DB::table('organizations')->insert([
         ['id' => 76,
             'name' => 'Office of the Human Rights Commissioner for BC',
             'short_name' => 'Human Rights Commissioner']
+    ]);
+    DB::table('organizations')->insert([
+        ['id' => 77,
+        'name' => 'Land, Water and Resource Stewardship',
+        'short_name' => 'LWRS']
     ]);
     }
 }
