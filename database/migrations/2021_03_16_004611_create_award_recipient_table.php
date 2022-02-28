@@ -18,8 +18,8 @@ class CreateAwardRecipientTable extends Migration
             $table->timestamps();
             $table->foreignId('award_id')->constrained();
             $table->foreignId('recipient_id')->constrained();
-            $table->json('options');
-            $table->string('status');
+            $table->json('options')->nullable();
+            $table->string('status')->nullable();
 
         });
 
