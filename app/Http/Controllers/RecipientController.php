@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\RecipientNoCeremonyRegistrationConfirm;
+use App\Mail\RecipientRegistrationConfirm;
+use App\Mail\SupervisorRegistrationConfirm;
 use App\Models\Recipient;
 use App\Models\Address;
 use App\Models\Award;
 use App\Models\HistoricalRecipient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class RecipientController extends Controller
 {
@@ -290,6 +294,16 @@ class RecipientController extends Controller
     return $this->getFullRecipient($recipient);
 
   }
+
+  private function sendConfirmationEmails(Recipient $recipient) {
+      if ($recipient->ceremony_opt_out == true) {
+        Mail::to($recipient->government_email)->send(new RecipientNoCeremonyRegistrationConfirm($recipient));
+      } else {
+        Mail::to($recipient->government_email)->send(new RecipientRegistrationConfirm($recipient));
+      }
+        Mail::to($recipient->supervisor_email)->send(new SupervisorRegistrationConfirm($recipient));
+  }
+
 
   private function getFullRecipient(Recipient $recipient) {
     return Recipient::where('id', $recipient->id)->with([
