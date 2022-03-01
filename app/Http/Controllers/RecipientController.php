@@ -188,10 +188,10 @@ class RecipientController extends Controller
   public function storeAward(Request $request, Recipient $recipient) {
     $award = Award::find($request->input('award_id'));
     if (!empty($award)) {
-      $recipient->award()->syncWithoutDetaching($award->id, [
+      $recipient->award()->syncWithoutDetaching([$award->id => [
         'options' => $request->input('options'),
         'status' => $request->input('status')
-      ]);
+      ]]);
     }
 
     return $this->getFullRecipient($recipient);
