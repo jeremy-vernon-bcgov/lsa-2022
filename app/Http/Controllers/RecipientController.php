@@ -203,15 +203,32 @@ class RecipientController extends Controller
   * @return \Illuminate\Http\Response
   */
   public function storeServicePins(Request $request, Recipient $recipient) {
-    $supervisorAddress = new Address([
-      'prefix' => $request->supervisor_address_prefix,
-      'street_address' => $request->supervisor_address_street_address,
-      'postal_code'   => $request->supervisor_address_postal_code,
-      'community' => $request->supervisor_address_postal_code
-    ]);
-    $recipient->supervisor_full_name = $request->supervisor_full_name;
-    $recipient->supervisor_email = $request->supervisor_email;
-    $recipient->supervisorAddress()->save($supervisorAddress);
+    // save non-address data
+    $recipient->supervisor_email = $request->input('supervisor_email');
+
+    // check for existing address record
+    $addressId = $request->input('supervisor_address_id');
+    $supervisorAddress = Address::find($addressId);
+
+    if ($supervisorAddress === null) {
+      $supervisorAddress = new Address([
+        'prefix' => $request->input('supervisor_address_prefix'),
+        'street_address' => $request->input('supervisor_address_street_address'),
+        'postal_code' => $request->input('supervisor_address_postal_code'),
+        'community' => $request->input('supervisor_address_community')
+      ]);
+      $supervisorAddress->save();
+      $recipient->supervisorAddress()->associate($supervisorAddress);
+
+    } else {
+      // update existing address record
+      $supervisorAddress->prefix = $request->input('supervisor_address_prefix');
+      $supervisorAddress->street_address = $request->input('supervisor_address_street_address');
+      $supervisorAddress->postal_code = $request->input('supervisor_address_postal_code');
+      $supervisorAddress->community = $request->input('supervisor_address_community');
+      $supervisorAddress->save();
+    }
+
     $recipient->save();
 
     return $this->getFullRecipient($recipient);
