@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 
-class accommodationeeder extends Seeder
+class AccommodationSeeder extends Seeder
 {
     /**
      * Run the database seeds.
