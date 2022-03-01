@@ -18,17 +18,14 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             OrganizationSeeder::class,
-            AccessibilityOptionSeeder::class,
+
             AwardSeeder::class,
             CommunitySeeder::class,
-            DietaryRestrictionSeeder::class,
             PecsfRegionSeeder::class,
             PecsfCharitySeeder::class,
-            VipCategorySeeder::class,
             CeremonySeeder::class,
 
             //RecipientSeeder::class,
-            AwardOptionSeeder::class,
             //AwardSelectionSeeder::class,
             //AttendeesSeeder::class,
 

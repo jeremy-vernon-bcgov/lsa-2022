@@ -363,5 +363,10 @@ class OrganizationSeeder extends Seeder
         'name' => 'Land, Water and Resource Stewardship',
         'short_name' => 'LWRS']
     ]);
+    DB::table('organizations')->insert([
+        ['id' => 78,
+        'name' => 'BC Container Trucking Commissioner',
+        'short_name' => 'BCCTC']
+    ]);
     }
 }
