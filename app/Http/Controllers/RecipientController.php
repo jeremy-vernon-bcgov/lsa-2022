@@ -209,6 +209,7 @@ class RecipientController extends Controller
   public function storeServicePins(Request $request, Recipient $recipient) {
     // save non-address data
     $recipient->supervisor_email = $request->input('supervisor_email');
+    $recipient->supervisor_full_name = $request->input('supervisor_full_name');
 
     // check for existing address record
     $addressId = $request->input('supervisor_address_id');
