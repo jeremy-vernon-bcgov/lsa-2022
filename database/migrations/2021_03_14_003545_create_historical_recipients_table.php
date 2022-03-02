@@ -15,12 +15,7 @@ class CreateHistoricalRecipientsTable extends Migration
     {
         Schema::create('historical_recipients', function (Blueprint $table) {
             $table->id();
-            $table->string('employee_number');
-            $table->string('first_name');
-            $table->string('last_name');
             $table->string('government_email');
-            $table->integer('milestone');
-            $table->integer('milestone_year');
         });
 
     }
