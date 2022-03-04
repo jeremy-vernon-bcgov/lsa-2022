@@ -20,20 +20,18 @@ class CreateRecipientsTable extends Migration
             $table->string('idir');
             $table->string('guid');
             $table->string('employee_number');
-            $table->string('full_name');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->foreignId('organization_id')->constrained();
             $table->string('branch_name')->nullable();
             $table->string('government_email');
 
-
             $table->string('milestones')->nullable();
             $table->integer('qualifying_year')->nullable();
-
             $table->boolean('is_bcgeu_member')->default(false);
 
 
             //Milestone Information
-
             $table->boolean('retiring_this_year')->default(false);
             $table->date('retirement_date')->nullable();
 
@@ -51,7 +49,8 @@ class CreateRecipientsTable extends Migration
             $table->foreign('personal_address_id')->references('id')->on('addresses');
 
             //Supervisor Information
-            $table->string('supervisor_full_name')->nullable();
+            $table->string('supervisor_first_name')->nullable();
+            $table->string('supervisor_last_name')->nullable();
             $table->string('supervisor_email')->nullable();
 
 
@@ -66,7 +65,7 @@ class CreateRecipientsTable extends Migration
 
             //Administrivia
             //None of these should be input directly by the user
-            //All should have defeaults or permit null values.
+            //All should have defealts or permit null values.
 
             $table->text('admin_notes')->nullable();
 

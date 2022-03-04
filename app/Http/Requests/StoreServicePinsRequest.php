@@ -25,8 +25,10 @@ class StoreServicePinsRequest extends FormRequest
     {
         return [
             'recipient_id'                      => 'required',
-            'supervisor_full_name'              => 'required',
+            'supervisor_first_name'             => 'required',
+            'supervisor_last_name'              => 'required',
             'supervisor_email'                  => 'required',
+            'supervisor_address_pobox'          => '',
             'supervisor_address_prefix'         => '',
             'supervisor_address_street_address' => '',
             'supervisor_address_postal_code'    => '',

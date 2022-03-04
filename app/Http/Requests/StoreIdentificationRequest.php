@@ -28,7 +28,8 @@ class StoreIdentificationRequest extends FormRequest
             'idir'                          => 'required|string',
             'government_email'              => 'required|email',
             'employee_number'               => 'required|string|gte:4',
-            'full_name'                     => 'required|string|gte:5',
+            'first_name'                    => 'required|string|gte:5',
+            'last_name'                     => 'required|string|gte:5',
             'organization_id'               => 'required|numeric',
             'branch_name'                   => 'required|string|gte:3'
         ];
