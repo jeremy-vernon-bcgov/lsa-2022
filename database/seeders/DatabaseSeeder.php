@@ -25,6 +25,8 @@ class DatabaseSeeder extends Seeder
             PecsfCharitySeeder::class,
             CeremonySeeder::class,
 
+
+            UsersSeeder::class
             //RecipientSeeder::class,
             //AwardSelectionSeeder::class,
             //AttendeesSeeder::class,
