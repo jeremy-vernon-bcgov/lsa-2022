@@ -17,6 +17,7 @@ class CreateAddressesTable extends Migration
            $table->id();
            $table->timestamps();
            $table->string('prefix')->nullable();
+           $table->string('pobox')->nullable();
            $table->string('street_address');
            $table->string('postal_code');
            $table->string('community');
