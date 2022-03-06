@@ -119,9 +119,12 @@ class RecipientController extends Controller
   * @return \Illuminate\Http\Response
   */
   public function storeIdentification(Request $request) {
+
+    //  look up recipient
     $recipient = Recipient::where('guid', $request->input('guid'))->first();
+
     if (!empty($recipient)) {
-      // Recipient GUID exists: update recipient identification
+      // Recipient GUID exists: update recipient identification details
       $recipient->employee_number = $request->input('employee_number');
       $recipient->first_name = $request->input('first_name');
       $recipient->last_name = $request->input('last_name');
@@ -129,32 +132,6 @@ class RecipientController extends Controller
       $recipient->personal_phone_number = $request->input('personal_phone_number');
       $recipient->organization_id = $request->input('organization_id');
       $recipient->branch_name = $request->input('branch_name');
-
-      // check for existing office address record
-      $addressId = $request->input('office_address_id');
-      $officeAddress = Address::find($addressId);
-
-      if ($officeAddress === null) {
-        $officeAddress = new Address([
-          'prefix' => $request->input('office_address_prefix'),
-          'street_address' => $request->input('office_address_street_address'),
-          'postal_code' => $request->input('office_address_postal_code'),
-          'community' => $request->input('office_address_community')
-        ]);
-        $officeAddress->save();
-        $recipient->officeAddress()->associate($officeAddress);
-
-      } else {
-        // update existing address record
-        $officeAddress->prefix = $request->input('office_address_prefix');
-        $officeAddress->street_address = $request->input('office_address_street_address');
-        $officeAddress->postal_code = $request->input('office_address_postal_code');
-        $officeAddress->community = $request->input('office_address_community');
-        $officeAddress->save();
-      }
-
-      $recipient->save();
-      return $recipient;
     } else {
       $recipient = Recipient::create([
         'guid' => $request->input('guid'),
@@ -167,9 +144,34 @@ class RecipientController extends Controller
         'organization_id' => $request->input('organization_id'),
         'branch_name' => $request->input('branch_name')
       ]);
-      $recipient->save();
-      return $recipient;
+
     }
+
+    // check for attached office address record
+    $addressId = $request->input('office_address_id');
+    $officeAddress = Address::find($addressId);
+
+    if ($officeAddress === null) {
+      $officeAddress = new Address([
+        'prefix' => $request->input('office_address_prefix'),
+        'street_address' => $request->input('office_address_street_address'),
+        'postal_code' => $request->input('office_address_postal_code'),
+        'community' => $request->input('office_address_community')
+      ]);
+      $officeAddress->save();
+      $recipient->officeAddress()->associate($officeAddress);
+
+    } else {
+      // update existing address record
+      $officeAddress->prefix = $request->input('office_address_prefix');
+      $officeAddress->street_address = $request->input('office_address_street_address');
+      $officeAddress->postal_code = $request->input('office_address_postal_code');
+      $officeAddress->community = $request->input('office_address_community');
+      $officeAddress->save();
+    }
+
+    $recipient->save();
+    return $this->getFullRecipient($recipient);
   }
 
   /**
