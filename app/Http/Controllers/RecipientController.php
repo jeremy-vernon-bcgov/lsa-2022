@@ -71,13 +71,20 @@ class RecipientController extends Controller
   }
 
   /**
-  * Remove the recipient from storage.
+  * Clear recipient data
   *
   * @param  \App\Models\Recipient  $recipient
   * @return \Illuminate\Http\Response
   */
-  public function destroy(Recipient $recipient)
+  public function reset(Recipient $recipient)
   {
+    // $recipient->deleted_at = now();
+    // $recipient->is_declared = 0;
+    // $recipient->milestones = '';
+    // $recipient->qualifying_year = NULL;
+
+    // detach awards
+    $recipient->award()->detach();
     $recipient->delete();
     return $recipient;
   }

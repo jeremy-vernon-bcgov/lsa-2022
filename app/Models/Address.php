@@ -11,7 +11,7 @@ class Address extends Model
 
     protected $guarded = ['id'];
 
-    protected $fillable = ['prefix', 'street_address', 'postal_code', 'community'];
+    protected $fillable = ['prefix', 'pobox', 'street_address', 'postal_code', 'community'];
 
     public function recipients () {
         return $this->hasMany(Recipient::class);

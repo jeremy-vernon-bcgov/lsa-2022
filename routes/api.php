@@ -3,6 +3,16 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\RecipientController;
+use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\AwardController;
+use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\PecsfController;
+
+use App\Models\Recipient;
+use App\Models\Organization;
+use App\Models\Award;
+use App\Models\Community;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,7 +24,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+if (App::environment('production')) {
+    URL::forceScheme('https');
+}
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
@@ -25,7 +39,8 @@ Route::controller(RecipientController::class)->group(function() {
    Route::post('/recipients/create', 'store');
    Route::get('/recipients/show/{recipient}', 'show');
    Route::put('/recipients/update/{recipient}', 'update');
-   Route::get('/recipients/delete/{recipient}', 'destroy');
+   Route::get('/recipients/reset/{recipient}', 'reset');
+   Route::get('/recipients/delete/{recipient}', 'disable');
    Route::get('/recipients/archived/{employee_number}', 'showArchivedRecipientByEmployeeId');
 
    /** Registration Phases **/
@@ -42,7 +57,7 @@ Route::controller(RecipientController::class)->group(function() {
 /** Organization routes */
 route::get('/organizations/', [OrganizationController::class, 'index']);
 
-/** Community routes [TODO discard community routes?] */
+/** Community routes */
 route::get('/communities/', [CommunityController::class, 'index']);
 
 /** Awards routes */

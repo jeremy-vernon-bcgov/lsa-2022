@@ -27,6 +27,8 @@ class StoreMilestoneRequest extends FormRequest
           'recipient_id' => 'required',
           'milestones' => 'required',
           'qualifying_year' => 'required',
+          'retiring_this_year' => 'required|boolean|required_with:retirement_date',
+          'retirement_date' => 'date|after:today'
         ];
     }
 }
