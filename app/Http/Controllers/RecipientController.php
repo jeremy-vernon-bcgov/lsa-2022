@@ -25,12 +25,19 @@ class RecipientController extends Controller
   }
 
   /**
-  * Show the form for creating a new Recipient.
+  * Retrieve the full record for a recipient.
   *
+  * @param  \App\Models\Recipient  $recipient
   * @return \Illuminate\Http\Response
   */
-  public function create(Request $request)
+  public function show(string $guid)
   {
+    return Recipient::where('guid', $guid)->with([
+      'personalAddress',
+      'supervisorAddress',
+      'officeAddress',
+      'award'
+      ])->firstOrFail();
   }
 
   /**
@@ -49,33 +56,6 @@ class RecipientController extends Controller
       $request->input('organization_id')
     );
     return Recipient::insert('insert into recipients (guid, idir, employee_number, organization_id) values (?, ?)', $data);
-  }
-
-  /**
-  * Retrieve the full record for a recipient.
-  *
-  * @param  \App\Models\Recipient  $recipient
-  * @return \Illuminate\Http\Response
-  */
-  public function show(string $guid)
-  {
-    return Recipient::where('guid', $guid)->with([
-      'personalAddress',
-      'supervisorAddress',
-      'officeAddress',
-      'award'
-      ])->firstOrFail();
-  }
-
-  /**
-  * Show the form for editing the recipient
-  *
-  * @param  \App\Models\Recipient  $recipient
-  * @return \Illuminate\Http\Response
-  */
-  public function edit(Recipient $recipient)
-  {
-    //
   }
 
   /**
@@ -98,7 +78,8 @@ class RecipientController extends Controller
   */
   public function destroy(Recipient $recipient)
   {
-    //
+    $recipient->delete();
+    return $recipient;
   }
 
   /**
@@ -107,9 +88,9 @@ class RecipientController extends Controller
   * @param String $email
   * @return \Illuminate\Http\Response
   */
-  public function showArchivedRecipientByEmail (string $email)
+  public function showArchivedRecipientByEmployeeId (string $employee_number)
   {
-    return HistoricalRecipient::where('email', $email)->firstOrFail();
+    return HistoricalRecipient::where('employee_number', $employee_number)->firstOrFail();
   }
 
   /**
@@ -319,6 +300,13 @@ class RecipientController extends Controller
 
   }
 
+  /**
+  * Send confirmation emails for ceremony sign-up
+  *
+  * @param \Illuminate\Http\Request $request
+  * @param \App\Model\Recipient $recipient
+  * @return \Illuminate\Http\Response
+  */
   private function sendConfirmationEmails(Recipient $recipient) {
       if ($recipient->ceremony_opt_out == true) {
         Mail::to($recipient->government_email)->send(new RecipientNoCeremonyRegistrationConfirm($recipient));
@@ -329,6 +317,13 @@ class RecipientController extends Controller
   }
 
 
+  /**
+  * Get recipient full data by ID
+  *
+  * @param \Illuminate\Http\Request $request
+  * @param \App\Model\Recipient $recipient
+  * @return \Illuminate\Http\Response
+  */
   private function getFullRecipient(Recipient $recipient) {
     return Recipient::where('id', $recipient->id)->with([
       'personalAddress',

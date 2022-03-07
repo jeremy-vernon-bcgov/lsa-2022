@@ -36,9 +36,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::controller(RecipientController::class)->group(function() {
    Route::get('/recipients/{guid}', 'show');
-   Route::get('/recipients/archieved/{email}', 'showArchivedRecipientByEmail');
-   Route::post('/recipients', 'store');
-   Route::put('/recipients/{guid}', 'update');
+   Route::post('/recipients/create', 'store');
+   Route::get('/recipients/show/{recipient}', 'show');
+   Route::put('/recipients/update/{recipient}', 'update');
+   Route::get('/recipients/delete/{recipient}', 'destroy');
+   Route::get('/recipients/archived/{employee_number}', 'showArchivedRecipientByEmployeeId');
 
    /** Registration Phases **/
     Route::post('/recipients/identification', 'storeIdentification');
