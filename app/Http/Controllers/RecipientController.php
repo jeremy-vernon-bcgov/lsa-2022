@@ -209,7 +209,7 @@ class RecipientController extends Controller
     $award = Award::find($request->input('award_id'));
     if (!empty($award)) {
       $recipient->award()->syncWithoutDetaching([$award->id => [
-        'milestone' => $request->input('milestone'),
+        'qualifying_year' => $request->input('qualifying_year'),
         'options' => $request->input('options'),
         'status' => $request->input('status')
       ]]);
