@@ -126,7 +126,7 @@ class AwardSeeder extends Seeder
             'image_url' => '35/35-watches.png',
             'milestone' => 35,
             'sort_order' => 5,
-            'options' => '{"straps": [{"value" : "black-leather", "text" : "Black Leather"},{"value" : "brown-leather", "text" : "Brown Leather"},{"value" : "plated", "text" : "Plated"}], "faces": [{"value" : "gold", "text" : "Gold"},{"value" : "silver" , "text" : "Silver"},{"value" : "two-toned" , "text" : "Two-Toned"}],"sizes" : [{"value" : "29mm" , "text" : "29 mm diameter face"},{"value" : "38mm" , "text" : "38 mm diameter face"}]}',
+            'options' => '{"straps": [{"value" : "black-leather", "text" : "Black Leather"},{"value" : "brown-leather", "text" : "Brown Leather"},{"value" : "plated", "text" : "Plated"}], "faces": [{"value" : "gold", "text" : "Gold"},{"value" : "silver" , "text" : "Silver"},{"value" : "two-toned" , "text" : "Two-Toned"}],"sizes" : [{"value" : "29mm" , "text" : "29 mm diameter face"},{"value" : "38mm" , "text" : "38 mm diameter face"}],"engraving": true}',
             'quantity' => -1]);
         DB::table('awards')->insert(['name' => 'Bushnell® Prime binoculars',
             'short_name' => '35-binoculars' ,
