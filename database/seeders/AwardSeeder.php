@@ -207,6 +207,7 @@ class AwardSeeder extends Seeder
         DB::table('awards')->insert(['name' => 'Akron Howard Miller mantel clock',
             'short_name' => '45-akron-clock' ,
             'image_url' => 'wp-content/uploads/2022/03/Akron-mantel-clock-compass.jpg',
+
             'milestone' => 45,
             'sort_order' => 5,
             'quantity' => -1]);
