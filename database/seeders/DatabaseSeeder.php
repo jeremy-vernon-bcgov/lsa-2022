@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
             CeremonySeeder::class,
 
 
-            UsersSeeder::class
+            //UsersSeeder::class
             //RecipientSeeder::class,
             //AwardSelectionSeeder::class,
             //AttendeesSeeder::class,
