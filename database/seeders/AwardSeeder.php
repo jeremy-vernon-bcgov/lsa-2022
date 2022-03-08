@@ -207,7 +207,6 @@ class AwardSeeder extends Seeder
         DB::table('awards')->insert(['name' => 'Akron Howard Miller mantel clock',
             'short_name' => '45-akron-clock' ,
             'image_url' => 'wp-content/uploads/2022/03/Akron-mantel-clock-compass.jpg',
-
             'milestone' => 45,
             'sort_order' => 5,
             'quantity' => -1]);
@@ -334,7 +333,7 @@ class AwardSeeder extends Seeder
                                                 'image_url' => 'wp-content/uploads/2022/03/pecsf-logo-compass.jpg',
                                                 'options' =>  '{"pecsf": [{"key": "pecsf", "text": "pecsf"}]}',
                                                 'milestone' => 25,
-                                                'descriptions' => 'Donate to the Provincial Employees Community Services Fund, an annual fundraising campaign that helps BC Public Service employees support local charities.',
+                                                'description' => 'Donate to the Provincial Employees Community Services Fund, an annual fundraising campaign that helps BC Public Service employees support local charities.',
                                                 'sort_order' => 1,
                                                 'quantity' => -1]);
         DB::table('awards')->insert(['id'=> 71,'name' => 'PECSF Donation',
@@ -342,7 +341,7 @@ class AwardSeeder extends Seeder
                                                 'image_url' => 'wp-content/uploads/2022/03/pecsf-logo-compass.jpg',
                                                 'options' =>  '{"pecsf": [{"key": "pecsf", "text": "pecsf"}]}',
                                                 'milestone' => 30,
-                                                'descriptions' => 'Donate to the Provincial Employees Community Services Fund, an annual fundraising campaign that helps BC Public Service employees support local charities.',
+                                                'description' => 'Donate to the Provincial Employees Community Services Fund, an annual fundraising campaign that helps BC Public Service employees support local charities.',
                                                 'sort_order' => 1,
                                                 'quantity' => -1]);
         DB::table('awards')->insert(['id'=> 72,'name' => 'PECSF Donation',
@@ -350,7 +349,7 @@ class AwardSeeder extends Seeder
                                                 'image_url' => 'wp-content/uploads/2022/03/pecsf-logo-compass.jpg',
                                                 'options' =>  '{"pecsf": [{"key": "pecsf", "text": "pecsf"}]}',
                                                 'milestone' => 35,
-                                                'descriptions' => 'Donate to the Provincial Employees Community Services Fund, an annual fundraising campaign that helps BC Public Service employees support local charities.',
+                                                'description' => 'Donate to the Provincial Employees Community Services Fund, an annual fundraising campaign that helps BC Public Service employees support local charities.',
                                                 'sort_order' => 1,
                                                 'quantity' => -1]);
         DB::table('awards')->insert(['id'=> 73,'name' => 'PECSF Donation',
@@ -358,7 +357,7 @@ class AwardSeeder extends Seeder
                                                 'image_url' => 'wp-content/uploads/2022/03/pecsf-logo-compass.jpg',
                                                 'options' =>  '{"pecsf": [{"key": "pecsf", "text": "pecsf"}]}',
                                                 'milestone' => 40,
-                                                'descriptions' => 'Donate to the Provincial Employees Community Services Fund, an annual fundraising campaign that helps BC Public Service employees support local charities.',
+                                                'description' => 'Donate to the Provincial Employees Community Services Fund, an annual fundraising campaign that helps BC Public Service employees support local charities.',
                                                 'sort_order' => 1,
                                                 'quantity' => -1]);
         DB::table('awards')->insert(['id'=> 74,'name' => 'PECSF Donation',
@@ -366,7 +365,7 @@ class AwardSeeder extends Seeder
                                                  'image_url' => 'wp-content/uploads/2022/03/pecsf-logo-compass.jpg',
                                                  'options' =>  '{"pecsf": [{"key": "pecsf", "text": "pecsf"}]}',
                                                  'milestone' => 45,
-                                                 'descriptions' => 'Donate to the Provincial Employees Community Services Fund, an annual fundraising campaign that helps BC Public Service employees support local charities.',
+                                                 'description' => 'Donate to the Provincial Employees Community Services Fund, an annual fundraising campaign that helps BC Public Service employees support local charities.',
                                                  'sort_order' => 1,
                                                  'quantity' => -1]);
         DB::table('awards')->insert(['id'=> 75,'name' => 'PECSF Donation',
@@ -374,7 +373,7 @@ class AwardSeeder extends Seeder
                                                 'image_url' => 'wp-content/uploads/2022/03/pecsf-logo-compass.jpg',
                                                 'options' =>  '{"pecsf": [{"key": "pecsf", "text": "pecsf"}]}',
                                                 'milestone' => 50,
-                                                'descriptions' => 'Donate to the Provincial Employees Community Services Fund, an annual fundraising campaign that helps BC Public Service employees support local charities.',
+                                                'description' => 'Donate to the Provincial Employees Community Services Fund, an annual fundraising campaign that helps BC Public Service employees support local charities.',
                                                 'sort_order' => 1,
                                                 'quantity' => -1]);
 
