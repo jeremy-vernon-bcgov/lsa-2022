@@ -194,6 +194,14 @@ class RecipientController extends Controller
   * @return \Illuminate\Http\Response
   */
   public function storeAward(Request $request, Recipient $recipient) {
+    // check if existing award record exists for:
+    // - status: 'self-registration'
+    // - qualifying_year: matches
+    $recipient->award()
+      ->wherePivot('status', '=', $request->input('status'))
+      ->wherePivot('qualifying_year', '=', $request->input('qualifying_year'))
+      ->detach();
+
     $award = Award::find($request->input('award_id'));
     if (!empty($award)) {
       $recipient->award()->syncWithoutDetaching([$award->id => [
