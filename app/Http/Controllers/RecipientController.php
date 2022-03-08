@@ -175,11 +175,11 @@ class RecipientController extends Controller
     $recipient->is_bcgeu_member = $request->input('is_bcgeu_member');
 
     // update retirement information
-    $is_retiring = $request->input('retiring_this_year');
-    if ($is_retiring && !(empty($request->input('retirement_date')))) {
-      $recipient->retiring_this_year = $request->input('retiring_this_year');
+    $recipient->retiring_this_year = $request->input('retiring_this_year');
+    if ($recipient->retiring_this_year && !(empty($request->input('retirement_date')))) {
       $recipient->retirement_date = $request->input('retirement_date');
-      $recipient->save();
+    } else {
+      $recipient->retirement_date = NULL;
     }
 
     $recipient->save();
