@@ -17,6 +17,8 @@ class CreateHistoricalRecipientsTable extends Migration
             $table->id();
             $table->string('employee_number');
             $table->string('government_email');
+            $table->integer('milestone')->nullable();
+            $table->integer('milestone_year')->nullable();
         });
 
     }

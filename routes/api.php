@@ -35,15 +35,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 /** Recipients routes */
 
 Route::controller(RecipientController::class)->group(function() {
-   Route::get('/recipients/{guid}', 'show');
-   Route::post('/recipients/create', 'store');
-   Route::get('/recipients/show/{recipient}', 'show');
-   Route::put('/recipients/update/{recipient}', 'update');
-   Route::get('/recipients/reset/{recipient}', 'reset');
-   Route::get('/recipients/delete/{recipient}', 'disable');
-   Route::get('/recipients/archived/{employee_number}', 'showArchivedRecipientByEmployeeId');
+    Route::get('/recipients/{guid}', 'show');
+    Route::post('/recipients/create', 'store');
+    Route::get('/recipients/show/{recipient}', 'show');
+    Route::put('/recipients/update/{recipient}', 'update');
+    Route::get('/recipients/reset/{recipient}', 'reset');
+    Route::get('/recipients/delete/{recipient}', 'disable');
+    Route::get('/recipients/archived/{employee_number}', 'showArchivedRecipientByEmployeeId');
 
-   /** Registration Phases **/
+    /** Registration Phases **/
     Route::post('/recipients/identification', 'storeIdentification');
     Route::post('/recipients/{recipient}/milestone', 'storeMilestone');
     Route::post('/recipients/{recipient}/retirement', 'storeRetirement');
