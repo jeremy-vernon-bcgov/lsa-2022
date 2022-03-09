@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RecipientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,5 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
+
+Route::get('/reportTest', [RecipientController::class, 'generateAllRecipientReport']);
+
 
 require __DIR__.'/auth.php';

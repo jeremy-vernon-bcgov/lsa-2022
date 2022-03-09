@@ -11,6 +11,7 @@ use App\Models\Award;
 use App\Models\HistoricalRecipient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class RecipientController extends Controller
 {
@@ -346,5 +347,15 @@ class RecipientController extends Controller
       'officeAddress',
       'award'
       ])->firstOrFail();
-    }
   }
+
+  public function generateAllRecipientReport() {
+        //return view ('documents.recipientsByMinistry');
+
+     $pdf = PDF::loadView('documents.recipientsByMinistry');
+     return $pdf->download('recipients-by-ministry.pdf');
+
+  }
+
+  }
+
