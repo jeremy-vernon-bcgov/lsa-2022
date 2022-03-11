@@ -15,16 +15,9 @@ class Ceremony extends Model
     }
     public function recipients()
     {
-        return $this->hasMany(Recipient::class, 'ceremony_id', 'id');
+        return $this->hasManyThrough(Recipient::class, Attendee::class);
     }
 
-    public function recipient_ceremonies() {
-        return $this->hasMany(RecipientCeremony::class, 'ceremony_id', 'id');
-    }
-    public function vips()
-    {
-        return $this->hasManyThrough(Vip::class, Attendee::class);
-    }
     public function guests()
     {
         return $this->hasManyThrough(Guest::class, Attendee::class);
