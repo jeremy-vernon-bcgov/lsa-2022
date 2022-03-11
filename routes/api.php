@@ -35,6 +35,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 /** Recipients routes */
 
 Route::controller(RecipientController::class)->group(function() {
+    Route::get('/recipients/list', 'index');
     Route::get('/recipients/{guid}', 'show');
     Route::post('/recipients/create', 'store');
     Route::get('/recipients/show/{recipient}', 'show');

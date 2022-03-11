@@ -12,18 +12,25 @@ use App\Models\HistoricalRecipient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 
 class RecipientController extends Controller
 {
   /**
-  * return a listing of Recipients.
+  * Return a listing of Recipients.
   *
   * @return \Illuminate\Http\Response
   */
   public function index()
   {
+    $user = auth()->user();
+    Log::info('User Permissions', array('permissions' => $user->getAllPermissions()));
+
+    $this->authorize('viewAny', Recipient::class);
+
     return Recipient::with(['personalAddress', 'supervisorAddress', 'officeAddress', 'award'])->get();
   }
+
 
   /**
   * Retrieve the full record for a recipient.

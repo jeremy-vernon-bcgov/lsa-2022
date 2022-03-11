@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Recipient;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Log;
 
 class RecipientPolicy
 {
@@ -18,7 +19,7 @@ class RecipientPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('view recipients');
+        return $user->can('view recipients', Recipient::class);
     }
 
     /**
