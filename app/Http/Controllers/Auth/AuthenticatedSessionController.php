@@ -50,7 +50,15 @@ class AuthenticatedSessionController extends Controller
   */
   public function profile(Request $request)
   {
-    return $request->user();
+    // get user profile data
+    $user = $request->user();
+
+    // get the names of the user's roles
+    if (!empty($user)){
+      $roles = $user->getRoleNames();
+    }
+
+    return $user;
   }
 
   /**
