@@ -91,7 +91,8 @@ class RecipientController extends Controller
   }
 
   /**
-  * Retrieve the recipient from the archived data
+  * Retrieve historical recipient from the archived data
+  * - search using Employee Number
   *
   * @param String $email
   * @return \Illuminate\Http\Response
@@ -358,4 +359,3 @@ class RecipientController extends Controller
   }
 
   }
-
