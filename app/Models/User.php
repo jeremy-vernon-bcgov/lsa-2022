@@ -50,7 +50,7 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
-    public function organization() {
+    public function organizations() {
         return $this->belongsToMany(Organization::class)->withTimestamps();
     }
 

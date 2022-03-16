@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Organization;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,11 +53,39 @@ class RegisteredUserController extends Controller
         // assign user role
         $user->assignRole($request->input('role'));
 
+        // If orgContact, assign organizations
+        if ($request->input('role') == 'orgContact' && $request->input('organizations')) {
+            foreach ($request->organizations as $org_id) :
+                $organization = Organization::find($org_id);
+                $this->addOrganization($user, $organization);
+            endforeach;
+        }
+
+
         event(new Registered($user));
 
         // Auth::login($user);
 
+
+
         return response()->noContent();
+    }
+
+    /**
+     * Creates the association between a user and an organization
+     *
+     * @param User $user
+     * @param Organization $organization
+     */
+
+    private function addOrganization(User $user, Organization $organization) {
+        $user->organizations()->attach($organization);
+        $user->save();
+    }
+
+    private function removeOrganization(User $user, Organization $organization) {
+        $user->organizations()->detach($organization);
+        $user->save();
     }
 
     /**

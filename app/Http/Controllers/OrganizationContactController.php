@@ -3,12 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Organization;
+use App\Models\User;
 
 class OrganizationContactController extends Controller
 {
-    public function register() {
+    /**
+     *
+     * @param User $user
+     * @param Request $request
+     */
+
+    public function register(User $user, Request $request) {
 
     }
-    public function
+
+
+
+
 
 }
