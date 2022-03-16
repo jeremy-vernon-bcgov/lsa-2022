@@ -23,8 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'idir',
-        'guid',
-        'organization_id'
+        'guid'
     ];
 
     /**
@@ -45,6 +44,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Define model relationships
+     *
+     * @var array<string, string>
+     */
+    public function organization() {
+        return $this->belongsToMany(Organization::class)->withTimestamps();
+    }
 
 
 }

@@ -17,8 +17,8 @@ class CreateRecipientsTable extends Migration
             $table->id();
             $table->timestamps();
             //Identifying Information
-            $table->string('idir');
-            $table->string('guid');
+            $table->string('idir')->nullable();
+            $table->string('guid')->nullable();
             $table->string('employee_number');
             $table->string('first_name');
             $table->string('last_name');

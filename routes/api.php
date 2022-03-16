@@ -35,16 +35,21 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 /** Recipients routes */
 
 Route::controller(RecipientController::class)->group(function() {
+
+    /** Recipient administrator routes */
     Route::get('/recipients/list', 'index');
-    Route::get('/recipients/{guid}', 'show');
-    Route::post('/recipients/create', 'store');
+    Route::get('/recipients/view/{recipient}', 'show');
     Route::get('/recipients/show/{recipient}', 'show');
+    Route::post('/recipients/create', 'store');
     Route::put('/recipients/update/{recipient}', 'update');
-    Route::get('/recipients/reset/{recipient}', 'reset');
     Route::get('/recipients/delete/{recipient}', 'disable');
+
+    /** Recipient self-registration workflow routes */
+    Route::get('/recipients/{guid}', 'showByGUID');
+    Route::get('/recipients/reset/{recipient}', 'reset');
     Route::get('/recipients/archived/{employee_number}', 'showArchivedRecipientByEmployeeId');
 
-    /** Registration Phases **/
+    /** Self-Registration Phases routes **/
     Route::post('/recipients/identification', 'storeIdentification');
     Route::post('/recipients/{recipient}/milestone', 'storeMilestone');
     Route::post('/recipients/{recipient}/retirement', 'storeRetirement');

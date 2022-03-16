@@ -27,7 +27,7 @@ class RecipientFactory extends Factory
             'government_email'          => $this->faker->companyEmail(),
             'milestones'                => $this->faker->randomElement([25, 30, 35, 40 ,45 ,50 ,55]),
             'qualifying_year'           => $this->faker->randomElement([2019, 2020, 2021, 2022]),
-            'is_bcgeu_memmber'          => $this->faker->randomElement([true, false]),
+            'is_bcgeu_member'          => $this->faker->randomElement([true, false]),
             'retiring_this_year'        => $this->faker->randomElement([true, false]),
             'retirement_date'           => $this->faker->date(),
             'government_phone_number'   => $this->faker->phoneNumber(),
