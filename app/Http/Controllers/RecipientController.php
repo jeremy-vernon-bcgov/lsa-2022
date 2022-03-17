@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class RecipientController extends Controller
 {
@@ -27,7 +28,7 @@ class RecipientController extends Controller
     // $this->authorize('viewAny', Recipient::class);
 
     // filter user-associated organizations
-    $user = auth('web')->user();
+    $user = Auth::User();
     $orgs = [];
     foreach ($user->organizations as $org){
       $orgs[] = $org->id;
