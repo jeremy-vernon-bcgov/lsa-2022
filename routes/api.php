@@ -13,6 +13,8 @@ use App\Models\Recipient;
 use App\Models\Organization;
 use App\Models\Award;
 use App\Models\Community;
+use App\Models\User;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
