@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class RecipientController extends Controller
 {
@@ -26,7 +27,7 @@ class RecipientController extends Controller
   {
 
     // $this->authorize('viewAny', Recipient::class);
-    $user = $request->user('api');
+    $user = $request->user();
 
     Log::info('Manage Recipients', array(
       'user' => $user,
