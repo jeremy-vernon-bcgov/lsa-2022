@@ -22,13 +22,13 @@ class RecipientController extends Controller
   *
   * @return \Illuminate\Http\Response
   */
-  public function index()
+  public function index(Request $request)
   {
 
     // $this->authorize('viewAny', Recipient::class);
+    $user = $request->user();
 
     // filter user-associated organizations
-    $user = Auth::User();
     $orgs = [];
     foreach ($user->organizations as $org){
       $orgs[] = $org->id;
