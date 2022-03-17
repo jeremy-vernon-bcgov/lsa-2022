@@ -28,6 +28,10 @@ class RecipientController extends Controller
     // $this->authorize('viewAny', Recipient::class);
     $user = $request->user();
 
+    Log::info('Manage Recipients', array(
+      'user' => $user
+    ));
+
     // filter user-associated organizations
     $orgs = [];
     foreach ($user->organizations as $org){
