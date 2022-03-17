@@ -19,7 +19,7 @@ class RecipientPolicy
   */
   public function viewAny(User $user)
   {
-    return $user->can('view recipients', Recipient::class);
+    return $user->can('view recipients');
   }
 
   /**
@@ -40,7 +40,7 @@ class RecipientPolicy
       return in_array($recipient->organization_id, $orgs);
     }
     else {
-      return $user->can('view recipients', Recipient::class);
+      return $user->can('view recipients');
     }
   }
 
@@ -73,7 +73,7 @@ class RecipientPolicy
       return in_array($recipient->organization_id, $orgs);
     }
     else {
-      return $user->can('edit recipients', Recipient::class);
+      return $user->can('edit recipients');
     }
   }
 
@@ -95,7 +95,7 @@ class RecipientPolicy
       return in_array($recipient->organization_id, $orgs);
     }
     else {
-      return $user->can('delete recipients', Recipient::class);
+      return $user->can('delete recipients');
     }
   }
 

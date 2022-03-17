@@ -26,8 +26,8 @@ class RegisteredUserController extends Controller
   public function index()
   {
 
-    $this->authorize('viewAny', User::class);
-    
+    $this->authorize('viewAny');
+
     return User::with(['organizations', 'roles'])->get();
 
   }
@@ -41,7 +41,7 @@ class RegisteredUserController extends Controller
   public function show(User $user)
   {
 
-    $this->authorize('viewAny', User::class);
+    $this->authorize('viewAny');
 
     return User::where('users.id', $user->id)
     ->with(['organizations'])
@@ -59,7 +59,7 @@ class RegisteredUserController extends Controller
   public function store(Request $request)
   {
 
-    $this->authorize('create', User::class);
+    $this->authorize('create');
 
     Log::info('User Registration Requested', array(
       'name' => $request->name,
@@ -131,7 +131,7 @@ class RegisteredUserController extends Controller
   public function update(Request $request)
   {
 
-    $this->authorize('update', User::class);
+    $this->authorize('update');
 
     // find user and update profile data
     $user = User::where('email', $request->input('email'))->firstOrFail();
