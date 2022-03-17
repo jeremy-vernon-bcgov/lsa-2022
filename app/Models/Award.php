@@ -14,5 +14,4 @@ class Award extends Model
         return $this->belongsToMany(Recipient::class)->withPivot('options','status');
     }
 
-
 }

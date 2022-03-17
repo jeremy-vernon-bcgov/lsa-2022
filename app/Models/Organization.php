@@ -30,5 +30,9 @@ class Organization extends Model
         return $this->hasMany(RecipientCeremony::class);
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 
 }

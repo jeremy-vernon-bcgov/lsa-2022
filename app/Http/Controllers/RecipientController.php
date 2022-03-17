@@ -23,18 +23,42 @@ class RecipientController extends Controller
   */
   public function index()
   {
-    // authorize view
+
     $this->authorize('viewAny', Recipient::class);
+
+    // filter user-associated organizations
+    $user = auth()->user();
+    $orgs = [];
+    foreach ($user->organizations as $org){
+      $orgs[] = $org->id;
+    }
+
+    Log::info('Org filtered by User Role', array(
+      'orgID' => $orgs
+    ));
 
     // get recipients list data
     // - filter deleted recipients
     // - include historical recipient flag
-    return Recipient::with([
+    return count($orgs) === 0
+    ? Recipient::with([
       'personalAddress',
       'supervisorAddress',
       'officeAddress',
       'awards'])
       ->whereNull('deleted_at')
+      ->leftJoin('historical_recipients', function($join) {
+        $join->on('recipients.employee_number','=','historical_recipients.employee_number');
+      })
+      ->select('recipients.*', 'historical_recipients.id AS historical')
+      ->get()
+    : Recipient::with([
+      'personalAddress',
+      'supervisorAddress',
+      'officeAddress',
+      'awards'])
+      ->whereNull('deleted_at')
+      ->whereIn('organization_id', $orgs)
       ->leftJoin('historical_recipients', function($join) {
         $join->on('recipients.employee_number','=','historical_recipients.employee_number');
       })
@@ -51,7 +75,7 @@ class RecipientController extends Controller
     public function show(Recipient $recipient)
     {
       // authorize view
-      $this->authorize('viewAny', Recipient::class);
+      $this->authorize('view', $recipient);
 
       return $this->getFullRecipient($recipient);
     }

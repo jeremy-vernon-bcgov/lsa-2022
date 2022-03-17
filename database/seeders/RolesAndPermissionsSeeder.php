@@ -27,6 +27,13 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'assign recipients']);
         Permission::create(['name' => 'invite recipients']);
 
+        Permission::create(['name' => 'view users']);
+        Permission::create(['name' => 'edit users']);
+        Permission::create(['name' => 'add users']);
+        Permission::create(['name' => 'destroy users']);
+        Permission::create(['name' => 'assign users']);
+        Permission::create(['name' => 'invite users']);
+
 
         //Create roles and assign created permissions
 
@@ -43,6 +50,13 @@ class RolesAndPermissionsSeeder extends Seeder
         $admin->givePermissionTo('destroy recipients');
         $admin->givePermissionTo('assign recipients');
         $admin->givePermissionTo('invite recipients');
+
+        $admin->givePermissionTo('view users');
+        $admin->givePermissionTo('edit users');
+        $admin->givePermissionTo('add users');
+        $admin->givePermissionTo('destroy users');
+        $admin->givePermissionTo('assign users');
+        $admin->givePermissionTo('invite users');
 
         $superadmin = Role::create(['name' => 'super-admin']);
         $superadmin->givePermissionTo(Permission::all());

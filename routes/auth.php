@@ -21,6 +21,9 @@ Route::get('/isauth', [AuthenticatedSessionController::class, 'check'])
 Route::get('/profile', [AuthenticatedSessionController::class, 'profile'])
                 ->name('check');
 
+Route::get('/users', [RegisteredUserController::class, 'index'])
+                ->name('userlist');
+
 Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
                 ->middleware('guest')
                 ->name('password.email');
