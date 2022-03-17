@@ -19,7 +19,7 @@ class RecipientPolicy
   */
   public function viewAny(User $user)
   {
-    Log::info('User view request', array(
+    Log::info('Recipient view request', array(
       'user' => $user,
       'permission' => $user->can('view recipients')
     ));

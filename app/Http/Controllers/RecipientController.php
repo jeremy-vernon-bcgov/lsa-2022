@@ -24,7 +24,7 @@ class RecipientController extends Controller
   public function index()
   {
 
-    $this->authorize('viewAny', Recipient::class);
+    // $this->authorize('viewAny', Recipient::class);
 
     // filter user-associated organizations
     $user = auth()->user();
