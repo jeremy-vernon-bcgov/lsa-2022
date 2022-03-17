@@ -27,7 +27,7 @@ class RecipientController extends Controller
     // $this->authorize('viewAny', Recipient::class);
 
     // filter user-associated organizations
-    $user = auth('api')->user();
+    $user = auth('web')->user();
     $orgs = [];
     foreach ($user->organizations as $org){
       $orgs[] = $org->id;
