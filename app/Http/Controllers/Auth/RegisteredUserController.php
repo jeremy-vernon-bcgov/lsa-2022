@@ -55,7 +55,7 @@ class RegisteredUserController extends Controller
 
         // If orgContact, assign organizations
         if ($request->input('role') == 'orgContact' && $request->input('organizations')) {
-            foreach ($request->input(organizations) as $org_id) :
+            foreach ($request->input('organizations') as $org_id) :
                 $organization = Organization::find($org_id);
                 $this->addOrganization($user, $organization);
             endforeach;

@@ -65,7 +65,8 @@ class Recipient extends Model
         return $this->hasOne(Guest::class);
     }
     public function awards() {
-        return $this->belongsToMany(Award::class)->withPivot('qualifying_year', 'options', 'status')->withTimestamps();
+        return $this->belongsToMany(Award::class)
+        ->withPivot('qualifying_year', 'options', 'status')->withTimestamps();
     }
 
     public function ceremony() {

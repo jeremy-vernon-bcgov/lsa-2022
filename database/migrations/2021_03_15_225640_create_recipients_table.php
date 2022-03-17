@@ -21,7 +21,7 @@ class CreateRecipientsTable extends Migration
             $table->string('idir')->nullable();
             $table->string('guid')->nullable();
 
-            $table->string('employee_number');
+            $table->string('employee_number')->unique();
             $table->string('first_name');
             $table->string('last_name');
             $table->foreignId('organization_id')->constrained();

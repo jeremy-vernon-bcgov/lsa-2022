@@ -26,11 +26,20 @@ class RecipientController extends Controller
     // authorize view
     $this->authorize('viewAny', Recipient::class);
 
+    // get recipients list data
+    // - filter deleted recipients
+    // - include historical recipient flag
     return Recipient::with([
       'personalAddress',
       'supervisorAddress',
       'officeAddress',
-      'award'])->get();
+      'awards'])
+      ->whereNull('deleted_at')
+      ->leftJoin('historical_recipients', function($join) {
+        $join->on('recipients.employee_number','=','historical_recipients.employee_number');
+      })
+      ->select('recipients.*', 'historical_recipients.id AS historical')
+      ->get();
     }
 
     /**
@@ -43,6 +52,46 @@ class RecipientController extends Controller
     {
       // authorize view
       $this->authorize('viewAny', Recipient::class);
+
+      return $this->getFullRecipient($recipient);
+    }
+
+    /**
+    * Return a listing of Recipients.
+    *
+    * @return \Illuminate\Http\Response
+    */
+    public function showDeleted()
+    {
+      // authorize view
+      $this->authorize('viewAny', Recipient::class);
+
+      return Recipient::with([
+        'personalAddress',
+        'supervisorAddress',
+        'officeAddress',
+        'awards'])
+        ->whereNotNull('deleted_at')
+        ->leftJoin('historical_recipients', function($join) {
+          $join->on('recipients.employee_number','=','historical_recipients.employee_number');
+        })
+        ->select('recipients.*', 'historical_recipients.id AS historical')
+        ->get();
+
+    }
+
+    /**
+    * Delete (Disable) recipient.
+    *
+    * @param  \App\Models\Recipient  $recipient
+    * @return \Illuminate\Http\Response
+    */
+    public function disable(Recipient $recipient)
+    {
+      // authorize view
+      $this->authorize('viewAny', Recipient::class);
+      $recipient->deleted_at = date("Y-m-d H:i:s");
+      $recipient->save();
 
       return $this->getFullRecipient($recipient);
     }
@@ -60,8 +109,13 @@ class RecipientController extends Controller
         'personalAddress',
         'supervisorAddress',
         'officeAddress',
-        'award'
-        ])->firstOrFail();
+        'awards'
+        ])
+        ->leftJoin('historical_recipients', function($join) {
+          $join->on('recipients.employee_number','=','historical_recipients.employee_number');
+        })
+        ->select('recipients.*', 'historical_recipients.id AS historical')
+        ->firstOrFail();
       }
 
       /**
@@ -73,6 +127,7 @@ class RecipientController extends Controller
       */
       public function store(Request $request)
       {
+
         // create new recipient record
         $recipient = self::createRecipient($request);
 
@@ -124,7 +179,7 @@ class RecipientController extends Controller
         // $recipient->qualifying_year = NULL;
 
         // detach awards
-        $recipient->award()->detach();
+        $recipient->awards()->detach();
         $recipient->delete();
         return $recipient;
       }
@@ -199,17 +254,17 @@ class RecipientController extends Controller
         // check if existing award record exists for:
         // - status: 'self-registration'
         // - qualifying_year: matches
-        $recipient->award()
-        ->wherePivot('status', '=', $request->input('status'))
+        $recipient->awards()
+        ->wherePivot('status', '=', $request->input('award.status'))
         ->wherePivot('qualifying_year', '=', $request->input('qualifying_year'))
         ->detach();
 
-        $award = Award::find($request->input('award_id'));
+        $award = Award::find($request->input('award.id'));
         if (!empty($award)) {
-          $recipient->award()->syncWithoutDetaching([$award->id => [
+          $recipient->awards()->syncWithoutDetaching([$award->id => [
             'qualifying_year' => $request->input('qualifying_year'),
-            'options' => $request->input('options'),
-            'status' => $request->input('status')
+            'options' => $request->input('award.options'),
+            'status' => $request->input('award.status')
             ]]);
           }
 
@@ -295,7 +350,6 @@ class RecipientController extends Controller
         }
 
 
-
         /**
         * Create recipient record
         *
@@ -304,6 +358,7 @@ class RecipientController extends Controller
         */
         public function createRecipient(Request $request)
         {
+          // create new recipient
           $recipient = Recipient::create([
             'guid' => $request->input('guid'),
             'idir' => $request->input('idir'),
@@ -386,11 +441,11 @@ class RecipientController extends Controller
 
           // update existing address record
           if (!empty($address)){
-            $address->prefix = $data->prefix;
-            $address->pobox = array_key_exists("pobox", $data) ? $data->pobox : '';
-            $address->street_address = $data->street_address;
-            $address->postal_code = $data->postal_code;
-            $address->community = $data->community;
+            $address->prefix = $data['prefix'];
+            $address->pobox = array_key_exists("pobox", $data) ? $data['pobox'] : '';
+            $address->street_address = $data['street_address'];
+            $address->postal_code = $data['postal_code'];
+            $address->community = $data['community'];
             $address->save();
           }
 
@@ -422,12 +477,17 @@ class RecipientController extends Controller
         * @return \Illuminate\Http\Response
         */
         private function getFullRecipient(Recipient $recipient) {
-          return Recipient::where('id', $recipient->id)->with([
+          return Recipient::where('recipients.id', $recipient->id)->with([
             'personalAddress',
             'supervisorAddress',
             'officeAddress',
-            'award'
-            ])->firstOrFail();
+            'awards'
+            ])
+            ->leftJoin('historical_recipients', function($join) {
+              $join->on('recipients.employee_number','=','historical_recipients.employee_number');
+            })
+            ->select('recipients.*', 'historical_recipients.id AS historical')
+            ->firstOrFail();
           }
 
           public function generateAllRecipientReport() {
