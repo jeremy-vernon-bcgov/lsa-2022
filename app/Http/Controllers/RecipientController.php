@@ -30,8 +30,7 @@ class RecipientController extends Controller
     $user = $request->user();
 
     Log::info('Manage Recipients', array(
-      'user' => $user,
-      'request' => $request
+      'user' => $user
     ));
 
     // filter user-associated organizations
