@@ -8,13 +8,13 @@ use App\Mail\SupervisorRegistrationConfirm;
 use App\Models\Recipient;
 use App\Models\Address;
 use App\Models\Award;
+use App\Models\User;
 use App\Models\HistoricalRecipient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
 class RecipientController extends Controller
 {
@@ -23,11 +23,10 @@ class RecipientController extends Controller
   *
   * @return \Illuminate\Http\Response
   */
-  public function index(Request $request)
+  public function index(User $user, Request $request)
   {
 
     // $this->authorize('viewAny', Recipient::class);
-    $user = $request->user();
 
     Log::info('Manage Recipients', array(
       'user' => $user
