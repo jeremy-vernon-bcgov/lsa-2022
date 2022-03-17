@@ -27,7 +27,7 @@ class RecipientController extends Controller
   {
 
     // $this->authorize('viewAny', Recipient::class);
-    $user = $request->user();
+    $user = $request->user('web');
 
     Log::info('Manage Recipients', array(
       'user' => $user
