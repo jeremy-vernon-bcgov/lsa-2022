@@ -17,6 +17,36 @@ class PecsfCharitySeeder extends Seeder
      */
     public function run()
     {
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 1, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 2, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 3, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 4, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 5, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 6, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 7, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 8, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 9, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 10, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 11, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 12, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 13, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 14, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 15, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 16, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 17, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 18, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 19, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 20, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 21, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 22, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 23, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 24, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 25, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 26, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 27, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 28, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+        DB::table('pecsf_charities')->insert(['pecsf_region_id' => 30, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
+
         DB::table('pecsf_charities')->insert(['pecsf_region_id' => 27, 'name' => 'Vancouver Rape Relief Society', 'vendor_code' => '?DC0711']);
         DB::table('pecsf_charities')->insert(['pecsf_region_id' => 10, 'name' => 'WAVAW / RCC', 'vendor_code' => 'DC0037']);
         DB::table('pecsf_charities')->insert(['pecsf_region_id' => 13, 'name' => 'BC SPCA - Prince George', 'vendor_code' => 'DC0039']);
