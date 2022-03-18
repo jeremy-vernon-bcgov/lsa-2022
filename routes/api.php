@@ -32,8 +32,8 @@ if (App::environment('production')) {
     URL::forceScheme('https');
 }
 
-Route::middleware('auth:sanctum')->get('/isauth', function (Request $request) {
-  Log::info('Manage Recipients', array(
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+  Log::info('Sanctum Middleware', array(
     'middleware user' => $request->user()
   ));
     return $request->user();
