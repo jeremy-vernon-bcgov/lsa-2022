@@ -29,7 +29,7 @@ class RecipientController extends Controller
     // $this->authorize('viewAny', Recipient::class);
 
     Log::info('Manage Recipients', array(
-      'user' => $user
+      'user' => $user->can('view recipients')
     ));
 
     // filter user-associated organizations
