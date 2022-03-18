@@ -32,17 +32,19 @@ if (App::environment('production')) {
     URL::forceScheme('https');
 }
 
+/** Recipient administrator routes */
+Route::middleware('auth:sanctum')->group(function() {
+  Route::get('/recipients/list', [RecipientController::class, 'index']);
+  Route::get('/recipients/view/{recipient}', [RecipientController::class, 'show']);
+  Route::get('/recipients/show/{recipient}', [RecipientController::class, 'show']);
+  Route::post('/recipients/create', [RecipientController::class, 'store']);
+  Route::put('/recipients/update/{recipient}', [RecipientController::class, 'update']);
+  Route::get('/recipients/delete/{recipient}', [RecipientController::class, 'disable']);
+});
+
 /** Recipients routes */
 
 Route::controller(RecipientController::class)->group(function() {
-
-    /** Recipient administrator routes */
-    Route::get('/recipients/list', 'index');
-    Route::get('/recipients/view/{recipient}', 'show');
-    Route::get('/recipients/show/{recipient}', 'show');
-    Route::post('/recipients/create', 'store');
-    Route::put('/recipients/update/{recipient}', 'update');
-    Route::get('/recipients/delete/{recipient}', 'disable');
 
     /** Recipient self-registration workflow routes */
     Route::get('/recipients/{guid}', 'showByGUID');
