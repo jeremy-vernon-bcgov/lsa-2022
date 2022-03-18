@@ -32,7 +32,7 @@ if (App::environment('production')) {
     URL::forceScheme('https');
 }
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/testing', function (Request $request) {
   Log::info('Sanctum Middleware', array(
     'middleware user' => $request->user()
   ));
