@@ -37,7 +37,7 @@ if (App::environment('production')) {
 Route::controller(RecipientController::class)->group(function() {
 
     /** Recipient administrator routes */
-    Route::get('/recipients/list', 'index')->middleware('auth:web');
+    Route::get('/recipients/list', 'index');
     Route::get('/recipients/view/{recipient}', 'show');
     Route::get('/recipients/show/{recipient}', 'show');
     Route::post('/recipients/create', 'store');
