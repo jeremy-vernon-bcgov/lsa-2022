@@ -23,9 +23,9 @@ class RecipientController extends Controller
   *
   * @return \Illuminate\Http\Response
   */
-  public function index(Request $request)
+  public function index(User $user, Request $request)
   {
-      $user = $request->user();
+
     // $this->authorize('viewAny', Recipient::class);
 
     Log::info('Manage Recipients', array(
