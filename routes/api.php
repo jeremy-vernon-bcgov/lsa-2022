@@ -33,7 +33,7 @@ if (App::environment('production')) {
 }
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/recipients/list', 'index');
+    Route::get('/recipients/list', [RecipientController::class, 'index']);
 });
 
 /** Recipients routes */
