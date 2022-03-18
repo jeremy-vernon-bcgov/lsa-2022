@@ -32,7 +32,7 @@ class RecipientController extends Controller
       'user' => $user->can('view recipients'),
       'roles' => $user->getRoleNames(),
       'other' => $request->user(),
-      'auth' => auth()->user()
+      'auth' => $request->user('api');
     ));
 
     // filter user-associated organizations

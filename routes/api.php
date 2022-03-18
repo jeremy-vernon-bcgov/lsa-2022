@@ -32,16 +32,12 @@ if (App::environment('production')) {
     URL::forceScheme('https');
 }
 
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/recipients/list', [RecipientController::class, 'index']);
-});
-
 /** Recipients routes */
 
 Route::controller(RecipientController::class)->group(function() {
 
     /** Recipient administrator routes */
-    // Route::get('/recipients/list', 'index');
+    Route::get('/recipients/list', 'index');
     Route::get('/recipients/view/{recipient}', 'show');
     Route::get('/recipients/show/{recipient}', 'show');
     Route::post('/recipients/create', 'store');
