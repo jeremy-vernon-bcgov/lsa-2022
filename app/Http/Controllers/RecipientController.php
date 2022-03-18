@@ -30,7 +30,8 @@ class RecipientController extends Controller
 
     Log::info('Manage Recipients', array(
       'user' => $user->can('view recipients'),
-      'roles' => $user->getRoleNames()
+      'roles' => $user->getRoleNames(),
+      'other' => Auth::user()->role
     ));
 
     // filter user-associated organizations
