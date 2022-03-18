@@ -31,7 +31,8 @@ class AuthenticatedSessionController extends Controller
 
     return response()->json([
       'registered' => true
-    ]);;
+    ]);
+
   }
 
   /**

@@ -100,7 +100,9 @@ class RegisteredUserController extends Controller
 
     // Auth::login($user);
 
-    return response()->noContent();
+    return response()->json([
+      'registered' => $user->id
+    ]);
   }
 
   /**

@@ -31,7 +31,7 @@ class RecipientController extends Controller
     Log::info('Manage Recipients', array(
       'user' => $user->can('view recipients'),
       'roles' => $user->getRoleNames(),
-      'other' => auth('sanctum')->user()
+      'other' => Auth::guard('web')->user()
     ));
 
     // filter user-associated organizations
