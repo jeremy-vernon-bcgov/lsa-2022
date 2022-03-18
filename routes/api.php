@@ -32,15 +32,13 @@ if (App::environment('production')) {
     URL::forceScheme('https');
 }
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-  Log::info('Sanctum Middleware', array(
-    'middleware user' => $request->user()
-  ));
-    return $request->user();
-});
-
-Route::group(['middleware' => ['auth:sanctum']], function () {
-     Route::post('/testing', [RecipientController::class, 'index']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/user', function (Request $request) {
+      Log::info('Sanctum Middleware', array(
+        'middleware user' => $request->user()
+      ));
+        return $request->user();
+    });
 });
 
 /** Recipients routes */
