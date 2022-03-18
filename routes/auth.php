@@ -19,7 +19,7 @@ Route::get('/isauth', [AuthenticatedSessionController::class, 'check'])
                 ->name('check');
 
 Route::get('/profile', [AuthenticatedSessionController::class, 'profile'])
-                ->name('check');
+                ->name('profile');
 
 Route::get('/users', [RegisteredUserController::class, 'index'])
                 ->name('userlist');

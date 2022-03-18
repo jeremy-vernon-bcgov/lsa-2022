@@ -15,6 +15,8 @@ use App\Models\Award;
 use App\Models\Community;
 use App\Models\User;
 
+use Illuminate\Support\Facades\Log;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,6 +33,9 @@ if (App::environment('production')) {
 }
 
 Route::middleware('auth:sanctum')->get('/isauth', function (Request $request) {
+  Log::info('Manage Recipients', array(
+    'middleware user' => $request->user()
+  ));
     return $request->user();
 });
 
