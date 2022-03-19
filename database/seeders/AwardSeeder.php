@@ -33,7 +33,7 @@ class AwardSeeder extends Seeder
 
          */
 
-        DB::table('awards')->truncate();
+        DB::table('awards')->delete();
 
 
         /* 25 Milestone Awards */
