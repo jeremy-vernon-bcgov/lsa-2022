@@ -17,9 +17,6 @@ class PecsfCharitySeeder extends Seeder
      */
     public function run()
     {
-
-        DB::tabe('pecsf_charities')->truncate();
-
         DB::table('pecsf_charities')->insert(['pecsf_region_id' => 1, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
         DB::table('pecsf_charities')->insert(['pecsf_region_id' => 2, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
         DB::table('pecsf_charities')->insert(['pecsf_region_id' => 3, 'name' => 'PECSF Regional Pool', 'vendor_code' => '']);
