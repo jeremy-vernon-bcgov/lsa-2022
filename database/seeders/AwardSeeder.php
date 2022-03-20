@@ -34,8 +34,6 @@ class AwardSeeder extends Seeder
          */
 
 
-
-
         /* 25 Milestone Awards */
 
         DB::table('awards')->insert(['id'=> 1,'name' => 'Cross® Pen',
