@@ -29,9 +29,7 @@ class AuthenticatedSessionController extends Controller
 
     $request->session()->regenerate();
 
-    return response()->json([
-      'registered' => true
-    ]);
+    return array('registered' => true);
 
   }
 
@@ -43,9 +41,7 @@ class AuthenticatedSessionController extends Controller
   */
   public function check(Request $request)
   {
-    return response()->json([
-      'authenticated' => Auth::check()
-    ]);
+    return array('authenticated' => Auth::check());
   }
 
   /**
@@ -84,6 +80,6 @@ class AuthenticatedSessionController extends Controller
 
     $request->session()->regenerateToken();
 
-    return response()->noContent();
+    return array('loggedout' => true);
   }
 }

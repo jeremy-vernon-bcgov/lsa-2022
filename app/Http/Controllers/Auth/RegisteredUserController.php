@@ -95,14 +95,9 @@ class RegisteredUserController extends Controller
       endforeach;
     }
 
-
     event(new Registered($user));
+    return array('registered' => $user->id);
 
-    // Auth::login($user);
-
-    return response()->json([
-      'registered' => $user->id
-    ]);
   }
 
   /**
@@ -159,7 +154,7 @@ class RegisteredUserController extends Controller
       $user->organizations()->syncWithoutDetaching();
 
       $user->save();
-      return response()->noContent();
+      return array('userupdate' => $user->id);
     }
   }
 
@@ -177,6 +172,6 @@ class RegisteredUserController extends Controller
           Log::info('User record deleted:', array(
             'id' => $id
           ));
-          return response()->noContent();
+          return array('userdelete' => $id);
        }
 }
