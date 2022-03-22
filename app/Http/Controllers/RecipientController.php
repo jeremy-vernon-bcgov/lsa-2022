@@ -348,6 +348,8 @@ class RecipientController extends Controller
           $recipient->ceremony_opt_out = $request->ceremony_opt_out;
 
           $recipient->save();
+          $this->sendConfirmationEmails($recipient);
+
           return $this->getFullRecipient($recipient);
         }
 
