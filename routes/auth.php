@@ -24,6 +24,9 @@ Route::get('/profile', [AuthenticatedSessionController::class, 'profile'])
 Route::get('/users', [RegisteredUserController::class, 'index'])
                 ->name('userlist');
 
+Route::get('/users/{user}', [RegisteredUserController::class, 'show'])
+                ->name('show');
+
 Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
                 ->middleware('guest')
                 ->name('password.email');

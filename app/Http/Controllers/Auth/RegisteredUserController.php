@@ -44,7 +44,7 @@ class RegisteredUserController extends Controller
     $this->authorize('viewAny', User::class);
 
     return User::where('users.id', $user->id)
-    ->with(['organizations'])
+    ->with(['organizations', 'roles'])
     ->firstOrFail();
   }
 
@@ -167,11 +167,13 @@ class RegisteredUserController extends Controller
   * @throws \Illuminate\Validation\ValidationException
   */
   public function destroy($id)
-       {
-          $user = User::where('id', $id)->firstorfail()->delete();
-          Log::info('User record deleted:', array(
-            'id' => $id
-          ));
-          return array('userdelete' => $id);
-       }
+  {
+    $this->authorize('destroy', User::class);
+
+    $user = User::where('id', $id)->firstorfail()->delete();
+    Log::info('User record deleted:', array(
+      'id' => $id
+    ));
+    return array('userdelete' => $id);
+  }
 }
