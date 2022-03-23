@@ -37,6 +37,6 @@ class SupervisorRegistrationConfirm extends Mailable
      */
     public function build()
     {
-        return $this->view('email.supervisorRegistrationConfirm');
+        return $this->view('emails.supervisorRegistrationConfirm');
     }
 }

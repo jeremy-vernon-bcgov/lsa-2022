@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Recipient;
 
-class RecipientRegistrationConfirm extends Mailable
+class   RecipientRegistrationConfirm extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -35,6 +35,6 @@ class RecipientRegistrationConfirm extends Mailable
      */
     public function build()
     {
-        return $this->view('email.recipientRegistrationConfirm');
+        return $this->view('emails.recipientRegistrationConfirm');
     }
 }
