@@ -38,13 +38,17 @@ class RegisteredUserController extends Controller
   * @param  \App\Models\Recipient  $recipient
   * @return \Illuminate\Http\Response
   */
-  public function show(User $user)
+  public function show(string $id)
   {
+
+    Log::info('User Info Requested', array(
+      'user' => $id
+    ));
 
     $this->authorize('viewAny', User::class);
 
-    return User::where('users.id', $user->id)
-    ->with(['organizations', 'roles'])
+    return User::with(['organizations', 'roles'])
+    ->where('users.id', $id)
     ->firstOrFail();
   }
 
@@ -125,20 +129,20 @@ class RegisteredUserController extends Controller
   *
   * @throws \Illuminate\Validation\ValidationException
   */
-  public function update(Request $request)
+  public function update(Request $request, string $id)
   {
 
     $this->authorize('update', User::class);
 
     // find user and update profile data
-    $user = User::where('email', $request->input('email'))->firstOrFail();
+    $user = User::where('id', $id)->firstOrFail();
 
     if (!empty($user)) {
 
       // validate inputs
       $request->validate([
         'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        'email' => ['required', 'string', 'email', 'max:255'],
       ]);
 
       // update profile data
@@ -150,11 +154,20 @@ class RegisteredUserController extends Controller
       // assign user role
       $user->syncRoles([$request->input('role')]);
 
-      // update attached organizations
-      $user->organizations()->syncWithoutDetaching();
+      // If orgContact, sync associated organizations
+      if ($request->input('role') === 'orgContact' && $request->input('organizations')) {
+        $user->organizations()->sync($request->input('organizations'));
+      }
 
       $user->save();
-      return array('userupdate' => $user->id);
+      return array(
+        'id' => $user->id,
+        'name' => $user->name,
+        'email' => $user->email,
+        'idir' => $user->guid,
+        'organizations' => $user->organizations(),
+        'roles' => $user->getRoleNames()
+      );
     }
   }
 

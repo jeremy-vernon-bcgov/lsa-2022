@@ -26,23 +26,26 @@ class RecipientController extends Controller
   public function index(User $user, Request $request)
   {
 
-    // $this->authorize('viewAny', Recipient::class);
+    $this->authorize('viewAny', Recipient::class);
+
+    $authUser = auth()->user();
 
     Log::info('Manage Recipients', array(
-      'user' => $user->can('view recipients'),
+      'user' => $user,
+      'auth' => auth()->user(),
       'roles' => $user->getRoleNames(),
-      'other' => $request->user(),
-      'auth' => $request->user('web')
+      'orgs' => $authUser->organizations()->get(),
+      'filtered' => $authUser
     ));
 
     // filter user-associated organizations
     $orgs = [];
-    foreach ($user->organizations as $org){
+    foreach ($authUser->organizations()->get() as $org){
       $orgs[] = $org->id;
     }
 
-    Log::info('Org filtered by User Role', array(
-      'orgID' => $orgs
+    Log::info('Manage Recipients', array(
+      'filteredOrgs' => $orgs
     ));
 
     // get recipients list data

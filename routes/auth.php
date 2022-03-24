@@ -9,40 +9,47 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisteredUserController::class, 'store'])
-                ->name('register');
+->name('register');
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])
-                ->middleware('guest')
-                ->name('login');
+->middleware('guest')
+->name('login');
 
 Route::get('/isauth', [AuthenticatedSessionController::class, 'check'])
-                ->name('check');
+->name('check');
 
 Route::get('/profile', [AuthenticatedSessionController::class, 'profile'])
-                ->name('profile');
+->name('profile');
+
+Route::put('/users/update/{id}', [RegisteredUserController::class, 'update'])
+->name('update');
+
+Route::get('/users/delete/{id}', [RegisteredUserController::class, 'delete'])
+->name('delete');
+
+Route::get('/users/{id}', [RegisteredUserController::class, 'show'])
+->name('show');
+
 
 Route::get('/users', [RegisteredUserController::class, 'index'])
-                ->name('userlist');
-
-Route::get('/users/{user}', [RegisteredUserController::class, 'show'])
-                ->name('show');
+->name('userlist');
 
 Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-                ->middleware('guest')
-                ->name('password.email');
+->middleware('guest')
+->name('password.email');
 
 Route::post('/reset-password', [NewPasswordController::class, 'store'])
-                ->middleware('guest')
-                ->name('password.update');
+->middleware('guest')
+->name('password.update');
 
 Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-                ->middleware(['auth', 'signed', 'throttle:6,1'])
-                ->name('verification.verify');
+->middleware(['auth', 'signed', 'throttle:6,1'])
+->name('verification.verify');
 
 Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-                ->middleware(['auth', 'throttle:6,1'])
-                ->name('verification.send');
+->middleware(['auth', 'throttle:6,1'])
+->name('verification.send');
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-                ->middleware('auth')
-                ->name('logout');
+->middleware('auth')
+->name('logout');

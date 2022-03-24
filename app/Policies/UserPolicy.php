@@ -60,7 +60,7 @@ class UserPolicy
      * @param  \App\Models\Recipient  $recipient
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Recipient $recipient)
+    public function update(User $user)
     {
         return $user->can('edit users', User::class);
     }
@@ -72,7 +72,7 @@ class UserPolicy
      * @param  \App\Models\Recipient  $recipient
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Recipient $recipient)
+    public function delete(User $user)
     {
         return $user->can('destroy users', User::class);
     }
@@ -84,7 +84,7 @@ class UserPolicy
      * @param  \App\Models\Recipient  $recipient
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Recipient $recipient)
+    public function restore(User $user)
     {
         return $user->can('restore users', User::class);
     }
@@ -96,7 +96,7 @@ class UserPolicy
      * @param  \App\Models\Recipient  $recipient
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Recipient $recipient)
+    public function forceDelete(User $user)
     {
         //
     }
