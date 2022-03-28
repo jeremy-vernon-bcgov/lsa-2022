@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Mail\RecipientNoCeremonyRegistrationConfirm;
 use App\Mail\RecipientRegistrationConfirm;
 use App\Mail\SupervisorRegistrationConfirm;
-use App\Mail\TestEmail;
 use App\Models\Recipient;
 use App\Models\Address;
 use App\Models\Award;
@@ -504,10 +503,6 @@ class RecipientController extends Controller
             Mail::to($recipient->government_email)->send(new RecipientRegistrationConfirm($recipient));
           }
           Mail::to($recipient->supervisor_email)->send(new SupervisorRegistrationConfirm($recipient));
-        }
-
-        public function sendTestEmail() {
-            Mail::to('jeremy.vernon@gov.bc.ca')->send(new TestEmail());
         }
 
 
