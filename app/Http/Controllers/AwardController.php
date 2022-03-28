@@ -6,6 +6,9 @@ use App\Models\Award;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Type\Integer;
 
+use Illuminate\Support\Facades\Log;
+
+
 class AwardController extends Controller
 {
     /**
@@ -93,6 +96,10 @@ class AwardController extends Controller
 
     public function getByMilestone($milestone)
     {
+      Log::info('Awards by Milestone', array(
+        'awards' => Award::where('milestone', $milestone)->get()
+      ));
+
         return Award::where('milestone', $milestone)->get();
     }
 

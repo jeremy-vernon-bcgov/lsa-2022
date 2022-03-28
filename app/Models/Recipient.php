@@ -5,8 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Builder;
+use App\Filters\RecipientFilter;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 
 class Recipient extends Model
@@ -75,6 +77,53 @@ class Recipient extends Model
 
     public function notes() {
         return $this->morphMany(Note::class, 'notable');
+    }
+
+    // filters
+    public function scopeFilter(Builder $builder, $request)
+    {
+        return (new RecipientFilter($request))->filter($builder);
+    }
+
+    // filter out draft (undeclared) recipient registrations
+    // - applies to non-super-administrators
+    public function scopeDeclared($query, $user)
+    {
+      return $user->hasRole('super-admin') ? $query : $query->where('is_declared', 1);
+    }
+
+    // filter out deleted recipient records
+    public function scopeNotDeleted($query)
+    {
+      return $query->whereNull('deleted_at');
+    }
+
+    // filter user-associated organizations
+    public function scopeUserOrgs($query, $user)
+    {
+
+      Log::info('Restrict organizations', array(
+        'user' => $user,
+        'roles' => $user->getRoleNames(),
+        'orgs' => $user->organizations()->get(),
+        'records' => count($query->get()),
+      ));
+
+      $orgs = [];
+      foreach ($user->organizations()->get() as $org){
+        $orgs[] = $org->id;
+      }
+      return count($orgs) !== 0
+        ? $query->whereIn('organization_id', $orgs)
+        : $query;
+    }
+
+    // include historical recipient boolean
+    public function scopeHistorical($query)
+    {
+      return $query->leftJoin('historical_recipients', function($join) {
+        $join->on('recipients.employee_number','=','historical_recipients.employee_number');
+      })->select('recipients.*', 'historical_recipients.id AS historical');
     }
 
 }
