@@ -19,6 +19,6 @@ Route::get('/', function () {
 });
 
 Route::get('/reportTest', [RecipientController::class, 'generateAllRecipientReport']);
-
+Route::get('/testEmail', [RecipientController::class, 'sendTestEmail']);
 
 require __DIR__.'/auth.php';
