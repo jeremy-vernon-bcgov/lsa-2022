@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\RecipientNoCeremonyRegistrationConfirm;
 use App\Mail\RecipientRegistrationConfirm;
 use App\Mail\SupervisorRegistrationConfirm;
+use App\Mail\TestEmail;
 use App\Models\Recipient;
 use App\Models\Address;
 use App\Models\Award;
