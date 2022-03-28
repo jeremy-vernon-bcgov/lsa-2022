@@ -506,7 +506,7 @@ class RecipientController extends Controller
         }
 
         public function sendTestEmail() {
-            Mail::to('jeremy.vernon@gov.bc.ca')->send(new testEmail());
+            Mail::to('jeremy.vernon@gov.bc.ca')->send(new TestEmail());
         }
 
 
