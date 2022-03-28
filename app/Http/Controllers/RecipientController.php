@@ -505,6 +505,10 @@ class RecipientController extends Controller
           Mail::to($recipient->supervisor_email)->send(new SupervisorRegistrationConfirm($recipient));
         }
 
+        public function sendTestEmail() {
+            Mail::to('jeremy.vernon@gov.bc.ca')->send(new testEmail());
+        }
+
 
         /**
         * Get recipient full data by ID
