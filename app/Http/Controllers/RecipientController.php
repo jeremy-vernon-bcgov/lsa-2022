@@ -361,13 +361,15 @@ class RecipientController extends Controller
         // - ceremony opt-out
         // - retirement
         // - has address data provided
-        $personalAddressRequired = !empty($recipient->ceremony_opt_out)
-        || !empty($recipient->retiring_this_year);
-        $personalAddressNotEmpty = isset($recipient->personal_address)
-        && !empty(array_filter(get_object_vars($recipient->personal_address)));
+        // $personalAddressRequired = !empty($request->ceremony_opt_out)
+        // || !empty($request->retiring_this_year);
+        $personalAddressNotEmpty = isset($request->personal_address)
+        && !empty($request->input('personal_address.street_address'))
+        && !empty($request->input('personal_address.postal_code'))
+        && !empty($request->input('personal_address.community'));
 
-        if ($personalAddressNotEmpty || $personalAddressRequired) {
 
+        if ($personalAddressNotEmpty) {
           // check for existing address record
           $addressId = $request->input('personal_address.id');
           $personalAddress = Address::find($addressId);
@@ -381,6 +383,12 @@ class RecipientController extends Controller
             // update personal address record
             self::updateAddress($addressId, $personalAddressData);
           }
+        }
+        else {
+          // check for existing address record
+          $addressId = $request->input('personal_address.id');
+          $personalAddress = Address::find($addressId);
+          if ($personalAddress) $recipient->personalAddress()->dissociate();
         }
 
         $recipient->save();

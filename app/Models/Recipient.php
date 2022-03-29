@@ -102,12 +102,12 @@ class Recipient extends Model
     public function scopeUserOrgs($query, $user)
     {
 
-      Log::info('Restrict organizations', array(
-        'user' => $user,
-        'roles' => $user->getRoleNames(),
-        'orgs' => $user->organizations()->get(),
-        'records' => count($query->get()),
-      ));
+      // Log::info('Restrict organizations', array(
+      //   'user' => $user,
+      //   'roles' => $user->getRoleNames(),
+      //   'orgs' => $user->organizations()->get(),
+      //   'records' => count($query->get()),
+      // ));
 
       $orgs = [];
       foreach ($user->organizations()->get() as $org){
