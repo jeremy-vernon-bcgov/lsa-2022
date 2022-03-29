@@ -202,9 +202,14 @@ class RecipientController extends Controller
     */
     public function checkRecipientByEmployeeId (string $employee_number)
     {
+      Log::info('Employee ID', array(
+        'ID' => $employee_number,
+        'recipient' => Recipient::where('employee_number', $employee_number)->get()
+      ));
+
       return Recipient::where('employee_number', $employee_number)
       ->select('employee_number')
-      ->orWhereNotNull('employee_number')
+      ->whereNotNull('employee_number')
       ->firstOrFail();
     }
 

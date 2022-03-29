@@ -96,10 +96,6 @@ class AwardController extends Controller
 
     public function getByMilestone($milestone)
     {
-      Log::info('Awards by Milestone', array(
-        'awards' => Award::where('milestone', $milestone)->get()
-      ));
-
         return Award::where('milestone', $milestone)->get();
     }
 
