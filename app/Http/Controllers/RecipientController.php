@@ -43,7 +43,7 @@ class RecipientController extends Controller
       ->historical()
       ->notDeleted()
       ->filter($request)
-      ->distinct('recipients.id')
+      ->distinct()
       ->paginate(20);
 
     }
