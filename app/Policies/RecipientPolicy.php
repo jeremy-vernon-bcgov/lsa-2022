@@ -37,7 +37,11 @@ class RecipientPolicy
       foreach ($user->organizations as $org) {
         $orgs[] = $org->id;
       }
-      return in_array($recipient->organization_id, $orgs);
+      Log::info('Check orgs', array(
+        'orgs' => $orgs,
+        'recipient' => $recipient->organization_id
+      ));
+      return $user->can('view recipients') && in_array($recipient->organization_id, $orgs);
     }
     else {
       return $user->can('view recipients');
@@ -64,13 +68,14 @@ class RecipientPolicy
   */
   public function update(User $user, Recipient $recipient)
   {
+
     // restrict org contacts editable to associated organizations
     if ($user->hasRole('orgContact')) {
       $orgs = [];
-      foreach ($user->organizations as $org) {
+      foreach ($user->organizations()->get() as $org){
         $orgs[] = $org->id;
       }
-      return in_array($recipient->organization_id, $orgs);
+      return $user->can('edit recipients') && in_array($recipient->organization_id, $orgs);
     }
     else {
       return $user->can('edit recipients');

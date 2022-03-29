@@ -40,6 +40,7 @@ Route::middleware('auth:sanctum')->group(function() {
   Route::post('/recipients/create', [RecipientController::class, 'store']);
   Route::put('/recipients/update/{recipient}', [RecipientController::class, 'update']);
   Route::get('/recipients/delete/{recipient}', [RecipientController::class, 'disable']);
+  Route::get('/recipients/send-confirmation/{recipient}', [RecipientController::class, 'sendConfirmation']);
 });
 
 /** Recipients routes */
@@ -48,7 +49,7 @@ Route::controller(RecipientController::class)->group(function() {
 
     /** Recipient self-registration workflow routes */
     Route::get('/recipients/{guid}', 'showByGUID');
-    Route::get('/recipients/reset/{recipient}', 'reset');
+    // Route::get('/recipients/reset/{recipient}', 'reset');
     Route::get('/recipients/employee_number/{employee_number}', 'checkRecipientByEmployeeId');
     Route::get('/recipients/archived/{employee_number}', 'showArchivedRecipientByEmployeeId');
 

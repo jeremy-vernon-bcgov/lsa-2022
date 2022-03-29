@@ -24,9 +24,6 @@ class AuthenticatedSessionController extends Controller
     Log::info('User Login requested', array('context' => $request->email));
 
     $auth_result = $request->authenticate();
-
-    Log::info('User Authentication result', array('context' => $auth_result));
-
     $request->session()->regenerate();
 
     return array('registered' => true);

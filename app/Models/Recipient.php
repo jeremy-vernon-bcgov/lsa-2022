@@ -101,14 +101,6 @@ class Recipient extends Model
     // filter user-associated organizations
     public function scopeUserOrgs($query, $user)
     {
-
-      // Log::info('Restrict organizations', array(
-      //   'user' => $user,
-      //   'roles' => $user->getRoleNames(),
-      //   'orgs' => $user->organizations()->get(),
-      //   'records' => count($query->get()),
-      // ));
-
       $orgs = [];
       foreach ($user->organizations()->get() as $org){
         $orgs[] = $org->id;

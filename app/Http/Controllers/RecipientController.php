@@ -57,7 +57,6 @@ class RecipientController extends Controller
     {
       // authorize view
       $this->authorize('view', $recipient);
-
       return $this->getFullRecipient($recipient);
     }
 
@@ -135,6 +134,8 @@ class RecipientController extends Controller
     public function store(Request $request)
     {
 
+      $this->authorize('create', Recipient::class);
+
       // create new recipient record
       $recipient = self::createRecipient($request);
 
@@ -159,6 +160,8 @@ class RecipientController extends Controller
     */
     public function update(Request $request, Recipient $recipient)
     {
+      $this->authorize('update', $recipient);
+
       $recipient = self::updateRecipient($request, $recipient);
 
       // update recipient data sections
@@ -166,7 +169,7 @@ class RecipientController extends Controller
       $recipient = self::storeAward($request, $recipient);
       $recipient = self::storePersonalContact($request, $recipient);
       $recipient = self::storeServicePins($request, $recipient);
-      $recipient = self::storeDeclarations($request, $recipient);
+      $recipient = self::storeDeclarations($request, $recipient, false);
       $recipient = self::storeAdmin($request, $recipient);
 
       $recipient->save();
@@ -182,6 +185,9 @@ class RecipientController extends Controller
     */
     public function reset(Recipient $recipient)
     {
+
+      $this->authorize('create', Recipient::class);
+
       // $recipient->deleted_at = now();
       // $recipient->is_declared = 0;
       // $recipient->milestones = '';
@@ -202,11 +208,6 @@ class RecipientController extends Controller
     */
     public function checkRecipientByEmployeeId (string $employee_number)
     {
-      Log::info('Employee ID', array(
-        'ID' => $employee_number,
-        'recipient' => Recipient::where('employee_number', $employee_number)->get()
-      ));
-
       return Recipient::where('employee_number', $employee_number)
       ->select('id')
       ->whereNotNull('employee_number')
@@ -339,14 +340,18 @@ class RecipientController extends Controller
       * @param \App\Model\Recipient $recipient
       * @return \Illuminate\Http\Response
       */
-      public function storeDeclarations(Request $request, Recipient $recipient) {
+      public function storeDeclarations(Request $request, Recipient $recipient, bool $sendEmail=true) {
         $recipient->is_declared = $request->is_declared;
         $recipient->survey_participation = $request->survey_participation;
         $recipient->ceremony_opt_out = $request->ceremony_opt_out;
-
         $recipient->save();
-        // send confirmation email
-        if ($recipient->is_declared) $this->sendConfirmationEmails($recipient);
+
+        // Log::info('Confirmation', array(
+        //   'New Registration' => $sendEmail
+        // ));
+
+        // send confirmation email (if requested)
+        if ($recipient->is_declared && $sendEmail) $this->sendConfirmationEmails($recipient);
 
         return $this->getFullRecipient($recipient);
       }
@@ -453,7 +458,7 @@ class RecipientController extends Controller
       */
       public function updateRecipient(Request $request, Recipient $recipient)
       {
-        // Recipient GUID exists: update recipient identification details
+        // update recipient identification details
         $recipient->employee_number = $request->input('employee_number');
         $recipient->first_name = $request->input('first_name');
         $recipient->last_name = $request->input('last_name');
@@ -520,6 +525,18 @@ class RecipientController extends Controller
       }
 
       /**
+      * Send confirmation emails for ceremony sign-up (authorized)
+      *
+      * @param \Illuminate\Http\Request $request
+      * @param \App\Model\Recipient $recipient
+      * @return \Illuminate\Http\Response
+      */
+      private function sendConfirmation(Recipient $recipient) {
+        $this->authorize('viewAny', Recipient::class);
+        $this->sendConfirmationEmails($recipient);
+      }
+
+      /**
       * Send confirmation emails for ceremony sign-up
       *
       * @param \Illuminate\Http\Request $request
@@ -562,8 +579,18 @@ class RecipientController extends Controller
         ->firstOrFail();
       }
 
+      /**
+      * Generate Recipient Reports
+      *
+      * @param \Illuminate\Http\Request $request
+      * @param \App\Model\Recipient $recipient
+      * @return \Illuminate\Http\Response
+      */
+
       public function generateAllRecipientReport() {
         //return view ('documents.recipientsByMinistry');
+
+        $this->authorize('viewAny', Recipient::class);
 
         $pdf = PDF::loadView('documents.recipientsByMinistry');
         return $pdf->download('recipients-by-ministry.pdf');
