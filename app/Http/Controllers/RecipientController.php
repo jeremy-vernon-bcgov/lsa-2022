@@ -208,7 +208,7 @@ class RecipientController extends Controller
       ));
 
       return Recipient::where('employee_number', $employee_number)
-      ->select('employee_number')
+      ->select('id')
       ->whereNotNull('employee_number')
       ->firstOrFail();
     }
