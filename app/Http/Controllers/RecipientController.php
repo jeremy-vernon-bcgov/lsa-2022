@@ -42,6 +42,7 @@ class RecipientController extends Controller
       ->userOrgs($authUser)
       ->historical()
       ->notDeleted()
+      ->distinct()
       ->filter($request)
       ->paginate(20);
 
