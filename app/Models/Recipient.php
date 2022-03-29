@@ -116,8 +116,7 @@ class Recipient extends Model
       return $query->leftJoin('historical_recipients', function($join) {
         $join->on('recipients.employee_number','=','historical_recipients.employee_number');
       })
-      ->select('recipients.*', 'historical_recipients.id AS historical')
-      ->distinct('recipients.id');
+      ->select('recipients.*', 'historical_recipients.id AS historical');
     }
 
 }
