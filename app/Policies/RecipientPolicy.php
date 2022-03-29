@@ -37,10 +37,10 @@ class RecipientPolicy
       foreach ($user->organizations as $org) {
         $orgs[] = $org->id;
       }
-      Log::info('Check orgs', array(
-        'orgs' => $orgs,
-        'recipient' => $recipient->organization_id
-      ));
+      // Log::info('Check orgs', array(
+      //   'orgs' => $orgs,
+      //   'recipient' => $recipient->organization_id
+      // ));
       return $user->can('view recipients') && in_array($recipient->organization_id, $orgs);
     }
     else {
