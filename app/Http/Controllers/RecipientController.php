@@ -43,7 +43,6 @@ class RecipientController extends Controller
       ->historical()
       ->notDeleted()
       ->filter($request)
-      ->distinct()
       ->paginate(20);
 
     }

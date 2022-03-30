@@ -113,9 +113,8 @@ class Recipient extends Model
     // include historical recipient boolean
     public function scopeHistorical($query)
     {
-      return $query->leftJoin('historical_recipients', function($join) {
-        $join->on('recipients.employee_number','=','historical_recipients.employee_number');
-      })
+      return $query
+      ->leftJoin('historical_recipients', 'recipients.employee_number','=','historical_recipients.employee_number')
       ->select('recipients.*', 'historical_recipients.id AS historical');
     }
 
