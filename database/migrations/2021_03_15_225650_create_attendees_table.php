@@ -19,8 +19,7 @@ class CreateAttendeesTable extends Migration
             $table->enum('status',['','assigned','invited','attending','declined','waitlisted']);
             $table->foreignId('attendable_id');
             $table->string('attendable_type');
-
-
+            $table->foreignId('ceremonies_id');
         });
     }
 

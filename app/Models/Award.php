@@ -14,4 +14,14 @@ class Award extends Model
         return $this->belongsToMany(Recipient::class)->withPivot('options','status');
     }
 
+    public function getOptions($query)
+    {
+      return $query
+      ->select(
+        'recipients.id',
+        'award_recipient.award_id AS award',
+        'award_recipient.options->selections AS selections')
+      ->flatten();
+    }
+
 }

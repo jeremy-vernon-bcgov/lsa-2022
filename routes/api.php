@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\RecipientController;
@@ -8,6 +9,8 @@ use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\AwardController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\PecsfController;
+use App\Http\Controllers\CeremonyController;
+use App\Http\Controllers\ReportsController;
 
 use App\Models\Recipient;
 use App\Models\Organization;
@@ -32,6 +35,20 @@ if (App::environment('production')) {
     URL::forceScheme('https');
 }
 
+/** Organization routes */
+route::get('/organizations/', [OrganizationController::class, 'index']);
+
+/** Community routes */
+route::get('/communities/', [CommunityController::class, 'index']);
+
+/** Awards routes */
+Route::get('/milestones/{milestone}/awards', [AwardController::class, 'getByMilestone']);
+// Route::get('/awards/{id}/options', [AwardController::class, 'getAwardOptions']);
+
+/** PECSF routes */
+Route::get('/pecsf/charities', [PecsfController::class, 'getCharities']);
+Route::get('/pecsf/regions', [PecsfController::class, 'getRegions']);
+
 /** Recipient administrator routes */
 Route::middleware('auth:sanctum')->group(function() {
   Route::get('/recipients/list', [RecipientController::class, 'index']);
@@ -40,11 +57,11 @@ Route::middleware('auth:sanctum')->group(function() {
   Route::post('/recipients/create', [RecipientController::class, 'store']);
   Route::put('/recipients/update/{recipient}', [RecipientController::class, 'update']);
   Route::get('/recipients/delete/{recipient}', [RecipientController::class, 'disable']);
+  Route::put('/recipients/assign/{recipient}', [RecipientController::class, 'assign']);
   Route::get('/recipients/send-confirmation/{recipient}', [RecipientController::class, 'sendConfirmation']);
 });
 
-/** Recipients routes */
-
+/** Recipients self-registration routes */
 Route::controller(RecipientController::class)->group(function() {
 
     /** Recipient self-registration workflow routes */
@@ -61,19 +78,34 @@ Route::controller(RecipientController::class)->group(function() {
     Route::post('/recipients/{recipient}/servicepins', 'storeServicePins');
     Route::post('/recipients/{recipient}/declarations', 'storeDeclarations');
     Route::post('/recipients/{recipient}/contact', 'storePersonalContact');
-
 });
 
-/** Organization routes */
-route::get('/organizations/', [OrganizationController::class, 'index']);
-
-/** Community routes */
-route::get('/communities/', [CommunityController::class, 'index']);
-
 /** Awards routes */
-Route::get('/milestones/{milestone}/awards', [AwardController::class, 'getByMilestone']);
-// Route::get('/awards/{id}/options', [AwardController::class, 'getAwardOptions']);
+Route::controller(AwardController::class)->group(function() {
+  Route::get('/awards/list', 'index');
+  Route::get('/awards/show/{ceremony}', 'show');
+  Route::post('/awards/create', 'store');
+  Route::put('/awards/update/{ceremony}', 'update');
+  Route::get('/awards/delete/{ceremony}', 'destroy');
+});
 
-/** PECSF routes */
-Route::get('/pecsf/charities', [PecsfController::class, 'getCharities']);
-Route::get('/pecsf/regions', [PecsfController::class, 'getRegions']);
+/** Ceremonies routes */
+Route::controller(CeremonyController::class)->group(function() {
+  Route::get('/ceremonies/list', 'index');
+  Route::get('/ceremonies/show/{ceremony}', 'show');
+  Route::post('/ceremonies/create', 'store');
+  Route::put('/ceremonies/update/{ceremony}', 'update');
+  Route::get('/ceremonies/delete/{ceremony}', 'destroy');
+});
+
+/** Attendees routes */
+Route::controller(AttendeeController::class)->group(function() {
+  Route::get('/attendees/list', 'index');
+  Route::get('/attendees/show/{attendee}', 'show');
+});
+
+/** Reports routes */
+Route::controller(ReportsController::class)->group(function() {
+    Route::get('/reports/awards/summary/{format}', 'awardsSummary');
+    Route::get('/reports/recipients/summary/{format}', 'recipientsSummary');
+});

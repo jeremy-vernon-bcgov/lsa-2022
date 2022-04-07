@@ -8,6 +8,8 @@ use App\Mail\SupervisorRegistrationConfirm;
 use App\Models\Recipient;
 use App\Models\Address;
 use App\Models\Award;
+use App\Models\Attendee;
+use App\Models\Ceremony;
 use App\Models\User;
 use App\Models\HistoricalRecipient;
 use Illuminate\Http\Request;
@@ -95,7 +97,8 @@ class RecipientController extends Controller
     public function disable(Recipient $recipient)
     {
       // authorize view
-      $this->authorize('viewAny', Recipient::class);
+      $this->authorize('update', $recipient);
+
       $recipient->deleted_at = date("Y-m-d H:i:s");
       $recipient->save();
 
@@ -186,7 +189,7 @@ class RecipientController extends Controller
     public function reset(Recipient $recipient)
     {
 
-      $this->authorize('create', Recipient::class);
+      $this->authorize('update', $recipient);
 
       // $recipient->deleted_at = now();
       // $recipient->is_declared = 0;
@@ -346,10 +349,6 @@ class RecipientController extends Controller
         $recipient->ceremony_opt_out = $request->ceremony_opt_out;
         $recipient->save();
 
-        // Log::info('Confirmation', array(
-        //   'New Registration' => $sendEmail
-        // ));
-
         // send confirmation email (if requested)
         if ($recipient->is_declared && $sendEmail) $this->sendConfirmationEmails($recipient);
 
@@ -417,6 +416,30 @@ class RecipientController extends Controller
         $recipient->admin_notes = $request->admin_notes;
         $recipient->save();
         return $this->getFullRecipient($recipient);
+      }
+
+      /**
+      * Assign ceremony to recipient
+      *
+      * @param \Illuminate\Http\Request $request
+      * @param \App\Model\Recipient $recipient
+      * @return \Illuminate\Http\Response
+      */
+      public function assign(Request $request, Recipient $recipient) {
+
+        $attendee = new Attendee([
+          'status' => $request->input('status'),
+          'ceremonies_id' => $request->input('ceremony')
+        ]);
+
+        Log::info('Check orgs', array(
+          'id' => $request->input('ceremony'),
+          'ceremony' => $request->input('ceremony'),
+          'recipient' => $recipient
+        ));
+
+        $recipient->attendee()->save($attendee);
+
       }
 
 
@@ -597,4 +620,4 @@ class RecipientController extends Controller
 
       }
 
-    }
+}

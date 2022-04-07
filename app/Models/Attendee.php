@@ -18,7 +18,9 @@ class Attendee extends Model
                             'vip_id'
                           ];
 
-
+    /**
+      * Get the parent attendable model (recipient, guest, vip).
+    */
     public function attendable()
     {
         return $this->morphTo();

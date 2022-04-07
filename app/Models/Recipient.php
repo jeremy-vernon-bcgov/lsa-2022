@@ -17,28 +17,6 @@ class Recipient extends Model
 
     protected $guarded = [];
 
-    /* protected $fillable = [
-        'idir',
-        'guid',
-        'employee_number',
-        'first_name',
-        'last_name',
-        'is_bcgeu_member',
-        'award_id',
-        'milestone',
-        'retiring_this_year',
-        'retirement_date',
-        'survey_participation',
-        'government_email',
-        'government_phone_number',
-        'organization_id',
-        'branch_name',
-        'personal_email',
-        ''
-        //TODO specify all mass-assignable fields.
-        ];
-    */
-
     public function personalAddress() {
         return $this->belongsTo(Address::class);
     }
@@ -71,8 +49,11 @@ class Recipient extends Model
         ->withPivot('qualifying_year', 'options', 'status')->withTimestamps();
     }
 
-    public function ceremony() {
-        return $this->belongsTo(Ceremony::class, 'ceremony_id');
+    /**
+     * Get all of the recipient's ceremonies.
+     */
+    public function ceremonies() {
+        return $this->hasOne(Ceremony::class);
     }
 
     public function notes() {

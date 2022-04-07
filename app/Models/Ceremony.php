@@ -9,10 +9,14 @@ class Ceremony extends Model
 {
     use HasFactory;
 
+    public $identifiableAttribute = 'scheduled_datetime';
+    public $fillable = ['scheduled_datetime'];
+
     public function attendees ()
     {
         return $this->hasMany(Attendee::class);
     }
+
     public function recipients()
     {
         return $this->hasManyThrough(Recipient::class, Attendee::class);
@@ -22,8 +26,5 @@ class Ceremony extends Model
     {
         return $this->hasManyThrough(Guest::class, Attendee::class);
     }
-
-    public $identifiableAttribute = 'scheduled_datetime';
-
 
 }

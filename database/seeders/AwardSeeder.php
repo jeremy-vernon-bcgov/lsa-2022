@@ -177,7 +177,7 @@ class AwardSeeder extends Seeder
         DB::table('awards')->insert(['name' => 'Genuine diamond stud earrings',
             'short_name' => '40-diamond-earrings' ,
             'image_url' => 'wp-content/uploads/2022/03/diamond-earrings-compass.jpg',
-            'description' => 'These 14 kt white gold stud earrings feature brilliant round cut diamonds, 0.25 carat total weight. The Earrings have four white gold claws and butterfly backs. Presented in a box engraved with "In recognition of fifty years of service."',
+            'description' => 'These 14 kt white gold stud earrings feature brilliant round cut diamonds, 0.25 carat total weight. The Earrings have four white gold claws and butterfly backs. Presented in a box engraved with "In recognition of forty years of service."',
             'milestone' => 40,
             'sort_order' => 5,
             'quantity' => -1]);

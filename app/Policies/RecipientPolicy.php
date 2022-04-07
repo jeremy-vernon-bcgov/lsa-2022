@@ -127,4 +127,15 @@ class RecipientPolicy
   {
     //
   }
+
+  /**
+  * Determine whether the user can create models.
+  *
+  * @param  \App\Models\User  $user
+  * @return \Illuminate\Auth\Access\Response|bool
+  */
+  public function export(User $user)
+  {
+    return $user->hasRole('admin') || $user->hasRole('super-admin');
+  }
 }
