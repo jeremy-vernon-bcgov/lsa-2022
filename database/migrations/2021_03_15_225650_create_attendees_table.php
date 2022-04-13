@@ -16,7 +16,7 @@ class CreateAttendeesTable extends Migration
         Schema::create('attendees', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->enum('status',['','assigned','invited','attending','declined','waitlisted']);
+            $table->enum('status',['assigned','invited','attending','declined','waitlisted']);
             $table->foreignId('attendable_id');
             $table->string('attendable_type');
             $table->foreignId('ceremonies_id');

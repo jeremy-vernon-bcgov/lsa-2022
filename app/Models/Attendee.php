@@ -10,13 +10,7 @@ class Attendee extends Model
 {
     use HasFactory;
 
-    protected $fillable = [ 'ceremony_id',
-                            'type',
-                            'status',
-                            'guest_id',
-                            'recipient_id',
-                            'vip_id'
-                          ];
+    protected $fillable = [ 'status', 'ceremonies_id' ];
 
     /**
       * Get the parent attendable model (recipient, guest, vip).

@@ -100,7 +100,7 @@ class RecipientPolicy
       return in_array($recipient->organization_id, $orgs);
     }
     else {
-      return $user->can('delete recipients');
+      return $user->can('destroy recipients');
     }
   }
 

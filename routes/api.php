@@ -56,7 +56,7 @@ Route::middleware('auth:sanctum')->group(function() {
   Route::get('/recipients/show/{recipient}', [RecipientController::class, 'show']);
   Route::post('/recipients/create', [RecipientController::class, 'store']);
   Route::put('/recipients/update/{recipient}', [RecipientController::class, 'update']);
-  Route::get('/recipients/delete/{recipient}', [RecipientController::class, 'disable']);
+  Route::get('/recipients/delete/{recipient}', [RecipientController::class, 'destroy']);
   Route::put('/recipients/assign/{recipient}', [RecipientController::class, 'assign']);
   Route::get('/recipients/send-confirmation/{recipient}', [RecipientController::class, 'sendConfirmation']);
 });
@@ -83,10 +83,10 @@ Route::controller(RecipientController::class)->group(function() {
 /** Awards routes */
 Route::controller(AwardController::class)->group(function() {
   Route::get('/awards/list', 'index');
-  Route::get('/awards/show/{ceremony}', 'show');
+  Route::get('/awards/show/{award}', 'show');
   Route::post('/awards/create', 'store');
-  Route::put('/awards/update/{ceremony}', 'update');
-  Route::get('/awards/delete/{ceremony}', 'destroy');
+  Route::put('/awards/update/{award}', 'update');
+  Route::get('/awards/delete/{award}', 'destroy');
 });
 
 /** Ceremonies routes */

@@ -49,13 +49,6 @@ class Recipient extends Model
         ->withPivot('qualifying_year', 'options', 'status')->withTimestamps();
     }
 
-    /**
-     * Get all of the recipient's ceremonies.
-     */
-    public function ceremonies() {
-        return $this->hasOne(Ceremony::class);
-    }
-
     public function notes() {
         return $this->morphMany(Note::class, 'notable');
     }
@@ -71,12 +64,6 @@ class Recipient extends Model
     public function scopeDeclared($query, $user)
     {
       return $user->hasRole('super-admin') ? $query : $query->where('is_declared', 1);
-    }
-
-    // filter out deleted recipient records
-    public function scopeNotDeleted($query)
-    {
-      return $query->whereNull('deleted_at');
     }
 
     // filter user-associated organizations

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Classes\AttendeesHelper;
 
 class RecipientController extends Controller
 {
@@ -34,6 +35,9 @@ class RecipientController extends Controller
     // get authenticated user
     $authUser = auth()->user();
 
+    // get pagination
+    $resultsPerPage = $request->query('results_per_page', 25);
+
     // get recipients
     return Recipient::with([
       'personalAddress',
@@ -43,10 +47,8 @@ class RecipientController extends Controller
       ->declared($authUser)
       ->userOrgs($authUser)
       ->historical()
-      ->notDeleted()
       ->filter($request)
-      ->paginate(20);
-
+      ->paginate($resultsPerPage);
     }
 
     /**
@@ -63,46 +65,17 @@ class RecipientController extends Controller
     }
 
     /**
-    * Return a listing of Recipients.
-    *
-    * @return \Illuminate\Http\Response
-    */
-    public function showDeleted()
-    {
-      $this->authorize('viewAny', Recipient::class);
-
-      // get authenticated user
-      $authUser = auth()->user();
-
-      // get recipients
-      return Recipient::with([
-        'personalAddress',
-        'supervisorAddress',
-        'officeAddress',
-        'awards'])
-        ->declared($authUser)
-        ->userOrgs($authUser)
-        ->historical()
-        ->filter($request)
-        ->paginate(20);
-
-    }
-
-    /**
-    * Delete (Disable) recipient.
+    * Delete recipient.
     *
     * @param  \App\Models\Recipient  $recipient
     * @return \Illuminate\Http\Response
     */
-    public function disable(Recipient $recipient)
+    public function destroy(Recipient $recipient)
     {
       // authorize view
-      $this->authorize('update', $recipient);
-
-      $recipient->deleted_at = date("Y-m-d H:i:s");
-      $recipient->save();
-
-      return $this->getFullRecipient($recipient);
+      $this->authorize('delete', $recipient);
+      $recipient->delete();
+      return $recipient;
     }
 
 
@@ -190,11 +163,6 @@ class RecipientController extends Controller
     {
 
       $this->authorize('update', $recipient);
-
-      // $recipient->deleted_at = now();
-      // $recipient->is_declared = 0;
-      // $recipient->milestones = '';
-      // $recipient->qualifying_year = NULL;
 
       // detach awards
       $recipient->awards()->detach();
@@ -419,7 +387,14 @@ class RecipientController extends Controller
       }
 
       /**
-      * Assign ceremony to recipient
+      * Assign ceremony status to recipient
+      *
+      * If the recipient has a status other than "assigned" or "waitlisted"
+      * (e.g. RSVP-yes, invited) for any other ceremony night, the system
+      * will not change their record. If they have a status of “assigned”
+      * for another ceremony, it will be overwritten. They will then have
+      * an association with a ceremony night marked with a status of “assigned”
+
       *
       * @param \Illuminate\Http\Request $request
       * @param \App\Model\Recipient $recipient
@@ -427,19 +402,15 @@ class RecipientController extends Controller
       */
       public function assign(Request $request, Recipient $recipient) {
 
-        $attendee = new Attendee([
-          'status' => $request->input('status'),
-          'ceremonies_id' => $request->input('ceremony')
-        ]);
+        // get requested status, ceremony update
+        $status = $request->input('status');
+        $ceremony = $request->input('ceremony');
 
-        Log::info('Check orgs', array(
-          'id' => $request->input('ceremony'),
-          'ceremony' => $request->input('ceremony'),
-          'recipient' => $recipient
-        ));
+        // create helper utility instance
+        $processor = new AttendeesHelper();
+        $recipient = $processor.assignStatus($recipient, $status, $ceremony);
 
-        $recipient->attendee()->save($attendee);
-
+        return $recipient;
       }
 
 

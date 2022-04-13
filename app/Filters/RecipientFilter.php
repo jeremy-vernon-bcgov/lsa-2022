@@ -15,7 +15,9 @@ class RecipientFilter extends AbstractFilter
         'organization' => OrganizationFilter::class,
         'retirement' => RetirementFilter::class,
         'milestone' => MilestoneFilter::class,
+        'ceremony_opt_out' => CeremonyOptOutFilter::class,
+        'employee_number' => EmployeeNumberFilter::class,
         'name' => NameFilter::class,
-        'sort' => SortByFilter::class
+        'sort' => SortByFilter::class,
     ];
 }
