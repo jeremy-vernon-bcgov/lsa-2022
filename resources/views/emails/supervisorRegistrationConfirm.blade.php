@@ -23,7 +23,7 @@
 
 <p>For Victoria-based recipients, taxi expenses to and from their ceremony are covered by their organization. In addition, Victoria-based recipients must be provided a reasonable amount of time to prepare for their ceremony. It is recommended that recipients are able to leave their workplace by at least 2 pm on the day of their event without any negative impact to their pay. In cases where the recipient is a front-line worker, arrangements for coverage should be made in advance.</p>
 
-<p>If you have additional questions, contact your Long Service Award contact.</p>
+<p>If you have additional questions, contact your <a href="https://longserviceawards.gww.gov.bc.ca/contacts/">Long Service Award contact.</a></p>
 
 </body>
 </html>

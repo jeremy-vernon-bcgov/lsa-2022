@@ -37,6 +37,7 @@ class SupervisorRegistrationConfirm extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.supervisorRegistrationConfirm');
+        return $this->from('longserviceawards@gov.bc.ca', 'Long Service Award - Supervisor Confirmation')
+                    ->view('emails.supervisorRegistrationConfirm');
     }
 }
