@@ -63,7 +63,7 @@ class Recipient extends Model
     // - applies to non-super-administrators
     public function scopeDeclared($query, $user)
     {
-      return $user->hasRole('super-admin') ? $query : $query->where('is_declared', 1);
+      return $user->hasRole('super-admin') || $user->hasRole('admin') ? $query : $query->where('is_declared', 1);
     }
 
     // filter user-associated organizations
@@ -84,6 +84,20 @@ class Recipient extends Model
       return $query
       ->leftJoin('historical_recipients', 'recipients.employee_number','=','historical_recipients.employee_number')
       ->select('recipients.*', 'historical_recipients.id AS historical');
+    }
+
+    // include ceremony attendance
+    public function scopeAttendees($query)
+    {
+      return $query
+      ->leftJoin('attendees', 'attendees.attendable_id','=','recipients.id')
+      ->leftJoin('ceremonies', 'attendees.ceremonies_id','=','ceremonies.id')
+      ->select(
+        'recipients.*',
+        'historical_recipients.id AS historical',
+        'attendees.status AS status',
+        'ceremonies.scheduled_datetime AS scheduled_datetime'
+      );
     }
 
 }

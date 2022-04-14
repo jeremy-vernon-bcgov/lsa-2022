@@ -47,6 +47,7 @@ class RecipientController extends Controller
       ->declared($authUser)
       ->userOrgs($authUser)
       ->historical()
+      ->attendees()
       ->filter($request)
       ->paginate($resultsPerPage);
     }
