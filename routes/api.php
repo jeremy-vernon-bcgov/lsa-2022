@@ -66,7 +66,6 @@ Route::controller(RecipientController::class)->group(function() {
 
     /** Recipient self-registration workflow routes */
     Route::get('/recipients/{guid}', 'showByGUID');
-    // Route::get('/recipients/reset/{recipient}', 'reset');
     Route::get('/recipients/employee_number/{employee_number}', 'checkRecipientByEmployeeId');
     Route::get('/recipients/archived/{employee_number}', 'showArchivedRecipientByEmployeeId');
 

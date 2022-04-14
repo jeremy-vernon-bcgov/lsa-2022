@@ -75,6 +75,7 @@ class RecipientController extends Controller
     {
       // authorize view
       $this->authorize('delete', $recipient);
+      $recipient->awards()->detach();
       $recipient->delete();
       return $recipient;
     }
@@ -152,23 +153,6 @@ class RecipientController extends Controller
       $recipient->save();
       return $this->getFullRecipient($recipient);
 
-    }
-
-    /**
-    * Clear recipient data
-    *
-    * @param  \App\Models\Recipient  $recipient
-    * @return \Illuminate\Http\Response
-    */
-    public function reset(Recipient $recipient)
-    {
-
-      $this->authorize('update', $recipient);
-
-      // detach awards
-      $recipient->awards()->detach();
-      $recipient->delete();
-      return $recipient;
     }
 
     /**
@@ -263,11 +247,16 @@ class RecipientController extends Controller
 
       $award = Award::find($request->input('award.id'));
       if (!empty($award)) {
+        // update award requested
         $recipient->awards()->syncWithoutDetaching([$award->id => [
           'qualifying_year' => $request->input('qualifying_year'),
           'options' => $request->input('award.options'),
           'status' => $request->input('award.status')
           ]]);
+        }
+        else {
+          // remove any award relations
+          $recipient->awards()->detach();
         }
 
         return $this->getFullRecipient($recipient);
