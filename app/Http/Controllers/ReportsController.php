@@ -39,7 +39,6 @@ class ReportsController extends Controller
       ->declared($authUser)
       ->userOrgs($authUser)
       ->historical()
-      ->notDeleted()
       ->get()
       ->toArray();
 
@@ -110,6 +109,8 @@ class ReportsController extends Controller
 
             'award' => $award['name'],
             'award_options' => $award['options'],
+
+            'admin_notes' => $recipient['admin_notes'],
 
             'updated_at' => $recipient['updated_at'],
             'created_at' => $recipient['created_at'],

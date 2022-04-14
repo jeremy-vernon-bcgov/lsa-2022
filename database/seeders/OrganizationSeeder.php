@@ -68,8 +68,8 @@ class OrganizationSeeder extends Seeder
         ]);
         DB::table('organizations')->insert([
             ['id'   =>  10,
-                'name' => 'Forests, Lands, Natural Resource Operations & Rural Development',
-                'short_name' => 'FLNROD']
+                'name' => 'Forests',
+                'short_name' => 'FOR']
         ]);
         DB::table('organizations')->insert([
             ['id'   => 11 ,
