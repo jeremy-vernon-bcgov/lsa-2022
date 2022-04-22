@@ -9,7 +9,7 @@
 
 <p>Good afternoon (or morning),</p>
 
-<p>We are contacting you today as your registration for the Long Service Awards remains incomplete. Please fill in your missing registration details here.</p>
+<p>We are contacting you today as your registration for the Long Service Awards remains incomplete. Please fill in your missing registration details <a href="https://lsaapp.gww.gov.bc.ca/registration/">here</a>.</p>
 
 <p>If you experience any technical issues please email us and we will work with you to resolve them.</p>
 
