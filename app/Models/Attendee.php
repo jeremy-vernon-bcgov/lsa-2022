@@ -20,6 +20,11 @@ class Attendee extends Model
         return $this->morphTo();
     }
 
+    public function ceremonies()
+    {
+        return $this->belongsTo(Ceremony::class);
+    }
+
      /**** RSVP form functions *****/
 
     /**

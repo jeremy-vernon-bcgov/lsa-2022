@@ -40,52 +40,25 @@ class AttendeeController extends Controller
   }
 
   /**
-  * Create new attendee.
+  * Retrieve attendees of requested ceremony.
   *
-  * @param Attendee $attendee
+  * @param Ceremony $ceremony
   */
 
-  public function assign (Request $request, Recipient $recipient) {
-    $this->authorize('update', Attendee::class);
+  public function getByCeremony (Ceremony $ceremony) {
+    $this->authorize('view', Ceremony::class);
 
-    Log::info('Assign Recipient', array('context' => $recipient));
-    $attendee = Attendee::find($recipient->id);
+    Log::info(
+      'Ceremony', array(
+        'context' => $ceremony,
+      ));
 
-    // check if existing award record exists for:
-    // - status: 'self-registration'
-    // - qualifying_year: matches
-    $recipient->ceremony()
-    ->wherePivot('status', '=', $request->input('award.status'))
-    ->wherePivot('qualifying_year', '=', $request->input('qualifying_year'))
-    ->detach();
+    return Attendee::where('ceremonies_id', $ceremony->id)
+    ->with([
+      'ceremonies',
+    ])
+    ->get();
 
-    $ceremony = Award::find($request->input('award.id'));
-    if (!empty($award)) {
-      $recipient->awards()->syncWithoutDetaching([$award->id => [
-        'attendable_id' => $request->input('attendable_id'),
-        'attendable_type' => $request->input('attendable_type'),
-        'status' => $request->input('status')
-        ]]);
-      }
-
-      return $this->getFullRecipient($recipient);
-
-    if (empty($attendee)) {
-      // create new attendee
-      $attendee = Attendee::create([
-        'attendable_id' => $request->input('attendable_id'),
-        'attendable_type' => $request->input('attendable_type'),
-        'status' => $request->input('status')
-      ]);
-    } else {
-      // update attendee date time
-      $attendee->attendable_id = $request->input('attendable_id');
-      $attendee->attendable_type = $request->input('attendable_type');
-      $attendee->status = $request->input('status');
-    }
-
-    $attendee->save();
-    return $attendee;
   }
 
   /**

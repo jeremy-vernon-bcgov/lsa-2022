@@ -39,6 +39,7 @@ class ReportsController extends Controller
       ->declared($authUser)
       ->userOrgs($authUser)
       ->historical()
+      ->orgs()
       ->get()
       ->toArray();
 
@@ -67,6 +68,8 @@ class ReportsController extends Controller
             'government_email' => $recipient['government_email'],
             'government_phone_number' => $recipient['government_phone_number'],
             'personal_email' => $recipient['personal_email'],
+            'organization' => $recipient['organization_name'],
+            'organization_short_name' => $recipient['organization_short_name'],
             'branch_name' => $recipient['branch_name'],
 
             'milestone' => strval($recipient['milestones']),
@@ -106,6 +109,10 @@ class ReportsController extends Controller
             ? $recipient['supervisor_address']['postal_code'] : '',
             'supervisor_community' => is_array($recipient['supervisor_address'])
             ? $recipient['supervisor_address']['community'] : '',
+
+            'bcgeu' => $recipient['is_bcgeu_member'] ? 'Yes' : 'No',
+            'ceremony_opt_out' => $recipient['ceremony_opt_out'] ? 'Yes' : 'No',
+            'survey_participation' => $recipient['survey_participation'] ? 'Yes' : 'No',
 
             'award' => $award['name'],
             'award_options' => $award['options'],

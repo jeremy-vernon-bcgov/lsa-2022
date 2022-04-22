@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\RecipientNoCeremonyRegistrationConfirm;
 use App\Mail\RecipientRegistrationConfirm;
 use App\Mail\SupervisorRegistrationConfirm;
+use App\Mail\RecipientRegistrationReminder;
 use App\Models\Recipient;
 use App\Models\Address;
 use App\Models\Award;
@@ -43,11 +44,11 @@ class RecipientController extends Controller
       'personalAddress',
       'supervisorAddress',
       'officeAddress',
+      'attendee',
       'awards'])
       ->declared($authUser)
       ->userOrgs($authUser)
       ->historical()
-      ->attendees()
       ->filter($request)
       ->paginate($resultsPerPage);
     }
@@ -390,17 +391,26 @@ class RecipientController extends Controller
       * @param \App\Model\Recipient $recipient
       * @return \Illuminate\Http\Response
       */
-      public function assign(Request $request, Recipient $recipient) {
+      public function assign(Request $request) {
 
         // get requested status, ceremony update
         $status = $request->input('status');
         $ceremony = $request->input('ceremony');
+        $attendees = $request->input('attendees');
 
-        // create helper utility instance
-        $processor = new AttendeesHelper();
-        $recipient = $processor.assignStatus($recipient, $status, $ceremony);
+        foreach ($attendees as $attendee) {
+          Log::info('Recipient', array(
+            'data' => $attendee['id'],
+            'ceremony' => $ceremony,
+            'status' => $status,
+          ));
+          $recipient = Recipient::find($attendee['id']);
+          // create helper utility instance
+          $processor = new AttendeesHelper();
+          $attendees = $processor->assignStatus($recipient, $status, $ceremony);
+        }
 
-        return $recipient;
+        return $attendees;
       }
 
 
@@ -509,7 +519,7 @@ class RecipientController extends Controller
       }
 
       /**
-      * Send confirmation emails for ceremony sign-up (authorized)
+      * Send confirmation emails for registrations (authorized)
       *
       * @param \Illuminate\Http\Request $request
       * @param \App\Model\Recipient $recipient
@@ -536,6 +546,24 @@ class RecipientController extends Controller
         Mail::to($recipient->supervisor_email)->send(new SupervisorRegistrationConfirm($recipient));
       }
 
+      /**
+      * Send reminder emails for registrations (authorized)
+      *
+      * @param \Illuminate\Http\Request $request
+      * @param \App\Model\Recipient $recipient
+      * @return \Illuminate\Http\Response
+      */
+      public function sendRegReminder(Request $request) {
+        $this->authorize('viewAny', Recipient::class);
+
+        $attendees = $request->input('attendees');
+        foreach ($attendees as $attendee) {
+          $recipient = Recipient::find($attendee['id']);
+          Mail::to($recipient->government_email)->send(new RecipientRegistrationReminder($recipient));
+        }
+        return $attendees;
+      }
+
 
       /**
       * Get recipient full data by ID
@@ -549,17 +577,10 @@ class RecipientController extends Controller
           'personalAddress',
           'supervisorAddress',
           'officeAddress',
-          'awards'
+          'awards',
+          'attendee'
         ])
-        ->leftJoin('historical_recipients', function($join) {
-          $join->on('recipients.employee_number','=','historical_recipients.employee_number');
-        })
-        ->select('recipients.*',
-        'historical_recipients.id AS historical',
-        'historical_recipients.government_email AS historical_government_email',
-        'historical_recipients.milestone AS historical_milestone',
-        'historical_recipients.milestone_year AS historical_milestone_year'
-        )
+        ->historical()
         ->firstOrFail();
       }
 

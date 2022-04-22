@@ -10,6 +10,7 @@ use App\Http\Controllers\AwardController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\PecsfController;
 use App\Http\Controllers\CeremonyController;
+use App\Http\Controllers\AttendeeController;
 use App\Http\Controllers\ReportsController;
 
 use App\Models\Recipient;
@@ -57,8 +58,9 @@ Route::middleware('auth:sanctum')->group(function() {
   Route::post('/recipients/create', [RecipientController::class, 'store']);
   Route::put('/recipients/update/{recipient}', [RecipientController::class, 'update']);
   Route::get('/recipients/delete/{recipient}', [RecipientController::class, 'destroy']);
-  Route::put('/recipients/assign/{recipient}', [RecipientController::class, 'assign']);
+  Route::put('/recipients/assign/', [RecipientController::class, 'assign']);
   Route::get('/recipients/send-confirmation/{recipient}', [RecipientController::class, 'sendConfirmation']);
+  Route::put('/recipients/send-registration-reminder/', [RecipientController::class, 'sendRegReminder']);
 });
 
 /** Recipients self-registration routes */
@@ -100,6 +102,7 @@ Route::controller(CeremonyController::class)->group(function() {
 /** Attendees routes */
 Route::controller(AttendeeController::class)->group(function() {
   Route::get('/attendees/list', 'index');
+  Route::get('/attendees/list/{ceremony}', 'getByCeremony');
   Route::get('/attendees/show/{attendee}', 'show');
 });
 

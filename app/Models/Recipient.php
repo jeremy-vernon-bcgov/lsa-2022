@@ -30,7 +30,7 @@ class Recipient extends Model
     }
 
     public function attendee() {
-        return $this->morphOne(Attendee::class, 'attendable');
+        return $this->morphMany(Attendee::class, 'attendable')->with('ceremonies');
     }
     public function accommodations()
     {
@@ -44,6 +44,8 @@ class Recipient extends Model
     {
         return $this->hasOne(Guest::class);
     }
+
+
     public function awards() {
         return $this->belongsToMany(Award::class)
         ->withPivot('qualifying_year', 'options', 'status')->withTimestamps();
@@ -83,20 +85,21 @@ class Recipient extends Model
     {
       return $query
       ->leftJoin('historical_recipients', 'recipients.employee_number','=','historical_recipients.employee_number')
-      ->select('recipients.*', 'historical_recipients.id AS historical');
+      ->select('recipients.*',
+        'historical_recipients.id AS historical',
+        'historical_recipients.government_email AS historical_government_email',
+        'historical_recipients.milestone AS historical_milestone',
+        'historical_recipients.milestone_year AS historical_milestone_year');
     }
 
-    // include ceremony attendance
-    public function scopeAttendees($query)
+    // include organization full name
+    public function scopeOrgs($query)
     {
       return $query
-      ->leftJoin('attendees', 'attendees.attendable_id','=','recipients.id')
-      ->leftJoin('ceremonies', 'attendees.ceremonies_id','=','ceremonies.id')
-      ->select(
-        'recipients.*',
-        'historical_recipients.id AS historical',
-        'attendees.status AS status',
-        'ceremonies.scheduled_datetime AS scheduled_datetime'
+      ->leftJoin('organizations', 'recipients.organization_id','=','organizations.id')
+      ->select('recipients.*',
+        'organizations.short_name AS organization_short_name',
+        'organizations.name AS organization_name'
       );
     }
 
