@@ -7,15 +7,13 @@
 </head>
 <body>
 
-<p><strong>THIS IS AN AUTOMATED EMAIL. NO RESPONSE IS REQUIRED.</strong></p>
+<p>Good afternoon (or morning),</p>
 
-<p>This is a reminder to complete your Long Service Award registration.</p>
+<p>We are contacting you today as your registration for the Long Service Awards remains incomplete. Please fill in your missing registration details here.</p>
 
-<p>Find details about the program including the ceremony, travel policies and more on the Long Service Awards website.</p>
+<p>If you experience any technical issues please email us and we will work with you to resolve them.</p>
 
-<p>We hope to see you at the ceremony this fall.</p>
-
-<p>Long Service Awards team</p>
+<p>If you would like to cancel your registration please respond to this email and let us know.</p>
 
 </body>
 </html>

@@ -35,6 +35,8 @@ class   RecipientRegistrationReminder extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.recipientRegistrationReminder');
+        return $this
+        ->subject('Incomplete Long Service Awards Registration')
+        ->view('emails.recipientRegistrationReminder');
     }
 }
