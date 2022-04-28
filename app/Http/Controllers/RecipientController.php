@@ -517,6 +517,8 @@ class RecipientController extends Controller
       */
       public function assign(Request $request) {
 
+        $this->authorize('assign', Recipient::class);
+
         // get requested status, ceremony update
         $status = $request->input('status');
         $ceremony = $request->input('ceremony');
@@ -529,7 +531,7 @@ class RecipientController extends Controller
           $recipient = Recipient::find($attendee['id']);
           $attendees = $attendeeHelper->assignStatus($recipient, $status, $ceremony);
         }
-        
+
         return $attendees;
       }
 
@@ -541,7 +543,7 @@ class RecipientController extends Controller
       * @return \Illuminate\Http\Response
       */
       public function remind(Request $request) {
-        $this->authorize('update', Recipient::class);
+        $this->authorize('assign', Recipient::class);
         // create mail helper utility instance
         $mailer = new MailHelper();
 
