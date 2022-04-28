@@ -327,11 +327,13 @@ class ReportsHelper
       $charities = PecsfCharity::all()->keyBy('id');
       $regions = PecsfRegion::all()->keyBy('id');
 
-      if (!isset(json_decode($jsonOptions)->selections)) Log::info('PECSF', array('Options' => $jsonOptions,));
+      $optionData = json_decode($jsonOptions);
+
+      if (!isset($optionData->selections)) Log::info('PECSF', array('Options' => $optionData,));
 
       // index selected options by ID
-      $options = isset(json_decode($jsonOptions)->selections)
-        ? json_decode($jsonOptions)->selections
+      $options = isset($optionData->selections)
+        ? $optionData->selections
         : array();
 
       $indexedOptions = array();
