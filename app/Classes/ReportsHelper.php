@@ -328,7 +328,10 @@ class ReportsHelper
       $regions = PecsfRegion::all()->keyBy('id');
 
       // index selected options by ID
-      $options = json_decode($jsonOptions)->selections;
+      $options = isset(json_decode($jsonOptions)->selections)
+        ? json_decode($jsonOptions)->selections
+        : json_decode($jsonOptions);
+
       $indexedOptions = array();
       foreach ($options as $option) {
         $indexedOptions[$option->key] = $option->value;
