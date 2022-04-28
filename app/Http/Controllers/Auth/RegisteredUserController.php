@@ -41,10 +41,6 @@ class RegisteredUserController extends Controller
   public function show(string $id)
   {
 
-    Log::info('User Info Requested', array(
-      'user' => $id
-    ));
-
     $this->authorize('viewAny', User::class);
 
     return User::with(['organizations', 'roles'])
@@ -170,6 +166,40 @@ class RegisteredUserController extends Controller
       );
     }
   }
+
+
+    /**
+    * Handle an incoming user profile update role request.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @return \Illuminate\Http\Response
+    *
+    * @throws \Illuminate\Validation\ValidationException
+    */
+    public function updateRole(Request $request, string $id)
+    {
+
+      $this->authorize('update', User::class);
+
+      // find user and update profile data
+      $user = User::where('id', $id)->firstOrFail();
+
+      if (!empty($user)) {
+
+        // (re)assign user role
+        $user->syncRoles([$request->input('role')]);
+
+        $user->save();
+        return array(
+          'id' => $user->id,
+          'name' => $user->name,
+          'email' => $user->email,
+          'idir' => $user->guid,
+          'organizations' => $user->organizations(),
+          'roles' => $user->getRoleNames()
+        );
+      }
+    }
 
   /**
   * Delete user record by ID

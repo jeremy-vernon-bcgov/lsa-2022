@@ -2,10 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\RecipientNoCeremonyRegistrationConfirm;
-use App\Mail\RecipientRegistrationConfirm;
-use App\Mail\SupervisorRegistrationConfirm;
-use App\Mail\RecipientRegistrationReminder;
 use App\Models\Recipient;
 use App\Models\Address;
 use App\Models\Award;
@@ -14,14 +10,34 @@ use App\Models\Ceremony;
 use App\Models\User;
 use App\Models\HistoricalRecipient;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Classes\AttendeesHelper;
+use App\Classes\MailHelper;
 
 class RecipientController extends Controller
 {
+
+  /**
+  * Get recipient full data by ID
+  *
+  * @param \Illuminate\Http\Request $request
+  * @param \App\Model\Recipient $recipient
+  * @return \Illuminate\Http\Response
+  */
+  private function getFullRecipient(Recipient $recipient) {
+    return Recipient::where('recipients.id', $recipient->id)->with([
+      'personalAddress',
+      'supervisorAddress',
+      'officeAddress',
+      'awards',
+      'attendee'
+    ])
+    ->historical()
+    ->firstOrFail();
+  }
 
   /**
   * Return a filtered list of Recipients.
@@ -308,8 +324,11 @@ class RecipientController extends Controller
         $recipient->ceremony_opt_out = $request->ceremony_opt_out;
         $recipient->save();
 
+        // create mail helper utility instance
+        $mailer = new MailHelper();
+
         // send confirmation email (if requested)
-        if ($recipient->is_declared && $sendEmail) $this->sendConfirmationEmails($recipient);
+        if ($recipient->is_declared && $sendEmail) $mailer->sendConfirmation($recipient);
 
         return $this->getFullRecipient($recipient);
       }
@@ -375,42 +394,6 @@ class RecipientController extends Controller
         $recipient->admin_notes = $request->admin_notes;
         $recipient->save();
         return $this->getFullRecipient($recipient);
-      }
-
-      /**
-      * Assign ceremony status to recipient
-      *
-      * If the recipient has a status other than "assigned" or "waitlisted"
-      * (e.g. RSVP-yes, invited) for any other ceremony night, the system
-      * will not change their record. If they have a status of “assigned”
-      * for another ceremony, it will be overwritten. They will then have
-      * an association with a ceremony night marked with a status of “assigned”
-
-      *
-      * @param \Illuminate\Http\Request $request
-      * @param \App\Model\Recipient $recipient
-      * @return \Illuminate\Http\Response
-      */
-      public function assign(Request $request) {
-
-        // get requested status, ceremony update
-        $status = $request->input('status');
-        $ceremony = $request->input('ceremony');
-        $attendees = $request->input('attendees');
-
-        foreach ($attendees as $attendee) {
-          Log::info('Recipient', array(
-            'data' => $attendee['id'],
-            'ceremony' => $ceremony,
-            'status' => $status,
-          ));
-          $recipient = Recipient::find($attendee['id']);
-          // create helper utility instance
-          $processor = new AttendeesHelper();
-          $attendees = $processor->assignStatus($recipient, $status, $ceremony);
-        }
-
-        return $attendees;
       }
 
 
@@ -519,87 +502,56 @@ class RecipientController extends Controller
       }
 
       /**
-      * Send confirmation emails for registrations (authorized)
+      * Assign ceremony status to recipient
       *
-      * @param \Illuminate\Http\Request $request
-      * @param \App\Model\Recipient $recipient
-      * @return \Illuminate\Http\Response
-      */
-      private function sendConfirmation(Recipient $recipient) {
-        $this->authorize('viewAny', Recipient::class);
-        $this->sendConfirmationEmails($recipient);
-      }
+      * If the recipient has a status other than "assigned" or "waitlisted"
+      * (e.g. RSVP-yes, invited) for any other ceremony night, the system
+      * will not change their record. If they have a status of “assigned”
+      * for another ceremony, it will be overwritten. They will then have
+      * an association with a ceremony night marked with a status of “assigned”
 
-      /**
-      * Send confirmation emails for ceremony sign-up
       *
       * @param \Illuminate\Http\Request $request
       * @param \App\Model\Recipient $recipient
       * @return \Illuminate\Http\Response
       */
-      private function sendConfirmationEmails(Recipient $recipient) {
-        if ($recipient->ceremony_opt_out == true) {
-          Mail::to($recipient->government_email)->send(new RecipientNoCeremonyRegistrationConfirm($recipient));
-        } else {
-          Mail::to($recipient->government_email)->send(new RecipientRegistrationConfirm($recipient));
+      public function assign(Request $request) {
+
+        // get requested status, ceremony update
+        $status = $request->input('status');
+        $ceremony = $request->input('ceremony');
+        $attendees = $request->input('attendees');
+
+        // create attendees utitlity helper
+        $attendeeHelper = new AttendeesHelper();
+
+        foreach ($attendees as $attendee) {
+          $recipient = Recipient::find($attendee['id']);
+          $attendees = $attendeeHelper->assignStatus($recipient, $status, $ceremony);
         }
-        Mail::to($recipient->supervisor_email)->send(new SupervisorRegistrationConfirm($recipient));
+        
+        return $attendees;
       }
 
       /**
-      * Send reminder emails for registrations (authorized)
+      * Send reminder notification for registrations (authorized)
       *
       * @param \Illuminate\Http\Request $request
       * @param \App\Model\Recipient $recipient
       * @return \Illuminate\Http\Response
       */
-      public function sendRegReminder(Request $request) {
-        $this->authorize('viewAny', Recipient::class);
+      public function remind(Request $request) {
+        $this->authorize('update', Recipient::class);
+        // create mail helper utility instance
+        $mailer = new MailHelper();
 
         $attendees = $request->input('attendees');
         foreach ($attendees as $attendee) {
           $recipient = Recipient::find($attendee['id']);
-          Mail::to($recipient->government_email)->send(new RecipientRegistrationReminder($recipient));
+          $mailer->sendRegistrationReminder($recipient);
         }
         return $attendees;
       }
 
-
-      /**
-      * Get recipient full data by ID
-      *
-      * @param \Illuminate\Http\Request $request
-      * @param \App\Model\Recipient $recipient
-      * @return \Illuminate\Http\Response
-      */
-      private function getFullRecipient(Recipient $recipient) {
-        return Recipient::where('recipients.id', $recipient->id)->with([
-          'personalAddress',
-          'supervisorAddress',
-          'officeAddress',
-          'awards',
-          'attendee'
-        ])
-        ->historical()
-        ->firstOrFail();
-      }
-
-      /**
-      * Generate Recipient Reports
-      *
-      * @param \Illuminate\Http\Request $request
-      * @param \App\Model\Recipient $recipient
-      * @return \Illuminate\Http\Response
-      */
-
-      public function generateAllRecipientReport() {
-        //return view ('documents.recipientsByMinistry');
-
-        $this->authorize('viewAny', Recipient::class);
-
-        $pdf = PDF::loadView('documents.recipientsByMinistry');
-        return $pdf->download('recipients-by-ministry.pdf');
-
-      }
 
 }

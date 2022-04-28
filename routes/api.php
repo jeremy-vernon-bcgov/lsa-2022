@@ -59,8 +59,7 @@ Route::middleware('auth:sanctum')->group(function() {
   Route::put('/recipients/update/{recipient}', [RecipientController::class, 'update']);
   Route::get('/recipients/delete/{recipient}', [RecipientController::class, 'destroy']);
   Route::put('/recipients/assign/', [RecipientController::class, 'assign']);
-  Route::get('/recipients/send-confirmation/{recipient}', [RecipientController::class, 'sendConfirmation']);
-  Route::put('/recipients/send-registration-reminder/', [RecipientController::class, 'sendRegReminder']);
+  Route::put('/recipients/remind/', [RecipientController::class, 'remind']);
 });
 
 /** Recipients self-registration routes */
@@ -104,10 +103,12 @@ Route::controller(AttendeeController::class)->group(function() {
   Route::get('/attendees/list', 'index');
   Route::get('/attendees/list/{ceremony}', 'getByCeremony');
   Route::get('/attendees/show/{attendee}', 'show');
+  Route::post('/attendees/rsvp/', 'rsvp');
 });
 
 /** Reports routes */
 Route::controller(ReportsController::class)->group(function() {
     Route::get('/reports/awards/summary/{format}', 'awardsSummary');
+    Route::get('/reports/awards/pecsf/{format}', 'pecsfSummary');
     Route::get('/reports/recipients/summary/{format}', 'recipientsSummary');
 });

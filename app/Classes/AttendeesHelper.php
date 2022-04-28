@@ -1,10 +1,15 @@
 <?php
 namespace App\Classes;
 use App\Models\Attendee;
+use App\Models\Ceremony;
+use App\Classes\MailHelper;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+
 class AttendeesHelper
 {
-
 
   /**
   * Get ceremony from list of attendees
@@ -14,9 +19,39 @@ class AttendeesHelper
 
   private function getAttendanceByCeremonyID($attendee, $ceremony_id) {
     $attendances = $attendee->attendee()->get()->toArray();
-    return current(array_filter($attendances, function($attendance) {
+    return current(array_filter($attendances, function($attendance) use($ceremony_id) {
       return isset($attendance['ceremonies_id']) && $ceremony_id == $attendance['ceremonies_id'];
     }));
+  }
+
+  /**
+  * Get assigned ceremony for attendee
+  *
+  * @return Array
+  */
+
+  public function getAssignedCeremony($attendee) {
+    $attendances = $attendee->attendee()->get()->toArray();
+    return current(array_filter($attendances, function($attendance) {
+      return isset($attendance['status']) && 'assigned' == $attendance['status'];
+    }));
+  }
+
+  /**
+  * Get top level status for attendee
+  *
+  * @return Array
+  */
+
+  public function getStatus($attendee) {
+    $attendances = $attendee->attendee()->get()->toArray();
+    $status = '';
+    return current(array_filter($attendances, function($attendance) {
+      if (empty($status) || $attendance['status'] !== 'waitlisted') {
+        $status = $attendance['status'];
+      }
+    }));
+    return $status;
   }
 
   /**
@@ -39,7 +74,7 @@ class AttendeesHelper
   */
 
   private function update($attendee, $status, $ceremony_id) {
-    $thisAttendance = getAttendanceByCeremonyID($attendee, $ceremony_id);
+    $thisAttendance = $this->getAttendanceByCeremonyID($attendee, $ceremony_id);
     $attendance = Attendee::where([
       'id' => $thisAttendance->id,
       'ceremonies_id' => $ceremony_id
@@ -76,6 +111,16 @@ class AttendeesHelper
       break;
 
       case 'waitlisted':
+        // check attendee status
+        $status = $this->getStatus($attendee);
+
+        // check that attendee can waitlist
+        if ($status === 'invited' || $status === 'declined' || $status === 'attending') {
+          return response()->json([
+                'errors' => "Attendee cannot be waitlisted for this ceremony",
+            ], 500);
+        }
+
         // get attendance record for requested ceremony
         $attendance = Attendee::where([
           'attendable_id' => $attendee->id,
@@ -90,8 +135,31 @@ class AttendeesHelper
       break;
 
       case 'invited':
-        $attendance = $this->update($attendee, 'invited', $ceremony_id);
+        // get assigned ceremony
+        $ceremonyData = $this->getAssignedCeremony($attendee);
+        $ceremony = Ceremony::find($ceremonyData['ceremonies_id']);
+
+        // clear all existing assignments
+        $attendee->attendee()->delete();
+
+        Log::info('Invitation', array(
+          'id' => $attendee->id,
+          'class' => class_basename($attendee),
+        ));
+
+        // assign attendee as invited to ceremony
+        $attendance = $this->create('invited', $ceremonyData['ceremonies_id']);
         $attendee->attendee()->save($attendance);
+
+        // generate and store RSVP access token
+        $token = Str::random(60);
+        $key = Hash::make(class_basename($attendee) . $attendee->id);
+        Cache::put($key, $token);
+
+        // send invitation email
+        $mailer = new MailHelper();
+        $mailer->sendInvitation($attendee, $ceremony, $key, $token);
+
       break;
 
       case 'attending':
@@ -112,7 +180,7 @@ class AttendeesHelper
       // code...
       break;
     }
-
     return $attendee;
   }
+
 }

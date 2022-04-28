@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Log;
 
-class UserPolicy
+class PermissionPolicy
 {
     use HandlesAuthorization;
 
@@ -19,15 +19,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-      Log::info('View user list', array(
-        'user' => $user
-      ));
-
-      if (!$user->hasRole('super-admin') && !$user->hasRole('admin')) {
-        return false;
-      }
-
-        return $user->can('view users', User::class);
+      return $user->hasRole('super-admin');
     }
 
     /**
@@ -39,7 +31,7 @@ class UserPolicy
      */
     public function view(User $user)
     {
-        return $user->can('view users', User::class);
+        return $user->hasRole('super-admin');
     }
 
     /**
@@ -50,7 +42,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return $user->can('add users', User::class);
+        return $user->hasRole('super-admin');
     }
 
     /**
@@ -62,7 +54,7 @@ class UserPolicy
      */
     public function update(User $user)
     {
-        return $user->can('edit users', User::class);
+        return $user->hasRole('super-admin');
     }
 
     /**
@@ -74,7 +66,7 @@ class UserPolicy
      */
     public function delete(User $user)
     {
-        return $user->can('destroy users', User::class);
+        return $user->hasRole('super-admin');
     }
 
     /**
@@ -86,7 +78,7 @@ class UserPolicy
      */
     public function restore(User $user)
     {
-        return $user->can('restore users', User::class);
+        return $user->hasRole('super-admin');
     }
 
     /**
@@ -98,18 +90,6 @@ class UserPolicy
      */
     public function forceDelete(User $user)
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can update the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Recipient  $recipient
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function assign(User $user)
-    {
-        return $user->can('assign users', User::class);
+        return $user->hasRole('super-admin');
     }
 }

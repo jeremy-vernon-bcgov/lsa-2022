@@ -11,10 +11,6 @@ class CeremonyFilter
     public function filter($builder, $value)
     {
       $statuses = ['assigned', 'waitlisted', 'invited', 'attending', 'declined'];
-      
-      Log::info('Ceremony Filter', array(
-        'Filter By' => $value,
-      ));
 
       // apply ceremony opt-out filter
       if ($value === 'true' || $value === 'false') {

@@ -58,6 +58,7 @@ class AuthenticatedSessionController extends Controller
         ->with(['organizations'])
         ->firstOrFail();
       $user->getRoleNames();
+      $user->getAllPermissions();
     }
 
     return $user;
@@ -74,7 +75,6 @@ class AuthenticatedSessionController extends Controller
     Auth::guard('web')->logout();
 
     $request->session()->invalidate();
-
     $request->session()->regenerateToken();
 
     return array('loggedout' => true);

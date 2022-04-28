@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Recipient;
+use Spatie\Permission\Models\Permission;
 use App\Policies\AwardPolicy;
 use App\Policies\RecipientPolicy;
 use App\Policies\CeremonyPolicy;
 use App\Policies\AttendeePolicy;
 use App\Policies\UserPolicy;
+use App\Policies\PermissionPolicy;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
@@ -26,6 +28,7 @@ class AuthServiceProvider extends ServiceProvider
         Ceremony::class => CeremonyPolicy::class,
         Attendee::class => AttendeePolicy::class,
         User::class => UserPolicy::class,
+        Permission::class => PermissionPolicy::class,
     ];
 
     /**

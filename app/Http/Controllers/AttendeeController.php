@@ -48,11 +48,6 @@ class AttendeeController extends Controller
   public function getByCeremony (Ceremony $ceremony) {
     $this->authorize('view', Ceremony::class);
 
-    Log::info(
-      'Ceremony', array(
-        'context' => $ceremony,
-      ));
-
     return Attendee::where('ceremonies_id', $ceremony->id)
     ->with([
       'ceremonies',

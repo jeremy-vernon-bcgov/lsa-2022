@@ -129,6 +129,17 @@ class RecipientPolicy
   }
 
   /**
+  * Determine whether the user can assign recipients.
+  *
+  * @param  \App\Models\User  $user
+  * @return \Illuminate\Auth\Access\Response|bool
+  */
+  public function assign(User $user)
+  {
+    return $user->can('assign recipients');
+  }
+
+  /**
   * Determine whether the user can create models.
   *
   * @param  \App\Models\User  $user

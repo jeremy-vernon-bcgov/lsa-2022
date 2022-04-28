@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\PermissionsController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisteredUserController::class, 'store'])
@@ -24,12 +25,14 @@ Route::get('/profile', [AuthenticatedSessionController::class, 'profile'])
 Route::put('/users/update/{id}', [RegisteredUserController::class, 'update'])
 ->name('update');
 
+Route::put('/users/role/{id}', [RegisteredUserController::class, 'updateRole'])
+->name('update');
+
 Route::get('/users/delete/{id}', [RegisteredUserController::class, 'delete'])
 ->name('delete');
 
 Route::get('/users/{id}', [RegisteredUserController::class, 'show'])
 ->name('show');
-
 
 Route::get('/users', [RegisteredUserController::class, 'index'])
 ->name('userlist');
@@ -53,3 +56,12 @@ Route::post('/email/verification-notification', [EmailVerificationNotificationCo
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 ->middleware('auth')
 ->name('logout');
+
+Route::get('/permissions/{role}', [PermissionsController::class, 'view'])
+->name('view');
+
+Route::get('/permissions', [PermissionsController::class, 'index'])
+->name('index');
+
+Route::put('/permissions/update/{role}', [PermissionsController::class, 'update'])
+->name('update');
