@@ -36,8 +36,8 @@ class ReportsController extends Controller
       'awards'])
       ->declared($authUser)
       ->userOrgs($authUser)
-      ->historical()
       ->orgs()
+      ->historical()
       ->get()
       ->toArray();
 
