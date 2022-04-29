@@ -37,7 +37,6 @@ class ReportsController extends Controller
       ->declared($authUser)
       ->userOrgs($authUser)
       ->orgs()
-      ->historical()
       ->get()
       ->toArray();
 
