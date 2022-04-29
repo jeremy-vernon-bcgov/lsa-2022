@@ -262,7 +262,7 @@ class ReportsHelper
       'organization_short_name' => $recipient['organization_short_name'],
       'branch_name' => $recipient['branch_name'],
 
-      'historical' => strval($recipient['historical']),
+      // 'historical' => strval($recipient['historical']),
       'milestone' => strval($recipient['milestones']),
       'qualifying_year' => strval($recipient['qualifying_year']),
       'retirement_date' => $recipient['retirement_date'],
