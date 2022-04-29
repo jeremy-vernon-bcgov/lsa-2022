@@ -74,6 +74,7 @@ class ReportsController extends Controller
       ->get();
 
       // get recipient selections
+      // - exclude draft registrations
       $selections = Recipient::join(
         'award_recipient',
         'recipients.id','=','award_recipient.recipient_id')
@@ -81,6 +82,7 @@ class ReportsController extends Controller
           'recipients.id',
           'award_recipient.award_id AS award',
           'award_recipient.options AS options')
+        ->where('recipients.is_declared', 1)
         ->get();
 
         // calculate award totals for output

@@ -20,6 +20,24 @@ class   RecipientCeremonyInvitation extends Mailable
   * @var \App\Models\Recipient;
   */
   public $recipient;
+
+  /**
+  * The Assigned Ceremony
+  *
+  * @var \App\Models\Ceremony;
+  */
+  public $ceremony;
+
+  /**
+  * RSVP key
+  */
+  public $key;
+
+  /**
+  * RSVP token
+  */
+  public $token;
+
   /**
   * Create a new message instance.
   *
@@ -40,22 +58,24 @@ class   RecipientCeremonyInvitation extends Mailable
   */
   public function build()
   {
-    $baseURL = env('FRONTEND_URL') . '/admin/rsvp';
+    $baseURL = env('FRONTEND_URL') . '/registration/rsvp';
     $query = http_build_query(array(
       'key' => $this->key,
       'token' => $this->token
       ));
     $declinedURL = "$baseURL/declined/?$query";
     $attendingURL = "$baseURL/attending/?$query";
-    $scheduled_datetime = date_format(date_create($this->ceremony->scheduled_datetime), 'g:ia \o\n l jS F Y');
+    $scheduled_datetime = date_format(date_create(
+      $this->ceremony->scheduled_datetime), 'g:ia \o\n l jS F Y'
+    );
 
-    Log::info('RSVP', array(
-      'first_name' => $this->recipient->first_name,
-      'last_name' => $this->recipient->last_name,
-      'scheduled_datetime' => $this->ceremony->scheduled_datetime,
-      'declinedURL' =>  $declinedURL,
-      'attendingURL' => $attendingURL
-    ));
+    // Log::info('RSVP', array(
+    //   'first_name' => $this->recipient->first_name,
+    //   'last_name' => $this->recipient->last_name,
+    //   'scheduled_datetime' => $this->ceremony->scheduled_datetime,
+    //   'declinedURL' =>  $declinedURL,
+    //   'attendingURL' => $attendingURL
+    // ));
 
     return $this
     ->subject('Invitation to Long Service Awards Ceremony')

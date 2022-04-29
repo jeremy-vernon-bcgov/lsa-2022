@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\PermissionsController;
+use App\Http\Controllers\Auth\OptionsController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisteredUserController::class, 'store'])
@@ -57,11 +58,23 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 ->middleware('auth')
 ->name('logout');
 
-Route::get('/permissions/{role}', [PermissionsController::class, 'view'])
-->name('view');
-
 Route::get('/permissions', [PermissionsController::class, 'index'])
 ->name('index');
 
 Route::put('/permissions/update/{role}', [PermissionsController::class, 'update'])
 ->name('update');
+
+Route::get('/permissions/{role}', [PermissionsController::class, 'view'])
+->name('view');
+
+Route::get('/options', [OptionsController::class, 'index'])
+->name('index');
+
+Route::put('/options/create', [OptionsController::class, 'store'])
+->name('store');
+
+Route::put('/options/update/{option}', [OptionsController::class, 'update'])
+->name('update');
+
+Route::get('/options/delete/{option}', [OptionsController::class, 'update'])
+->name('destroy');

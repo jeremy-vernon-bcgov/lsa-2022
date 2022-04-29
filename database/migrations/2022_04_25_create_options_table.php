@@ -14,15 +14,11 @@ return new class extends Migration
      */
     public function up()
     {
-      Schema::rename('personal_access_tokens', 'cache');
-      Schema::table('cache', function (Blueprint $table) {
-          $table->string('key')->unique();
-          $table->text('value');
-          $table->integer('expiration');
-          $table->dropColumn('abilities');
-          $table->dropColumn('last_used_at');
-          $table->dropColumn('token');
-          $table->dropColumn('name');
+      Schema::create('options', function (Blueprint $table) {
+        $table->id();
+        $table->string('key')->unique();
+        $table->string('value')->nullable();
+        $table->timestamps();
       });
     }
 

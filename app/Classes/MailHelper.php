@@ -37,7 +37,7 @@ class MailHelper
   * @return \Illuminate\Http\Response
   */
   public function sendRegistrationReminder(Recipient $recipient) {
-    Mail::to($recipient->government_email)->send(new RecipientRegistrationReminder($recipient));
+    Mail::to($recipient->government_email)->queue(new RecipientRegistrationReminder($recipient));
   }
 
   /**
@@ -49,7 +49,7 @@ class MailHelper
   */
   public function sendInvitation(Recipient $recipient, Ceremony $ceremony, string $key, string $token) {
     // TODO: select preferred email
-    Mail::to($recipient->government_email)->send(
+    Mail::to($recipient->government_email)->queue(
       new RecipientCeremonyInvitation($recipient, $ceremony, $key, $token)
     );
   }

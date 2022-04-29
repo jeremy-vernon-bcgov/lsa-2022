@@ -29,6 +29,7 @@ class AuthServiceProvider extends ServiceProvider
         Attendee::class => AttendeePolicy::class,
         User::class => UserPolicy::class,
         Permission::class => PermissionPolicy::class,
+        Option::class => OptionPolicy::class,
     ];
 
     /**

@@ -15,6 +15,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Classes\AttendeesHelper;
+use App\Classes\StatusHelper;
 use App\Classes\MailHelper;
 
 class RecipientController extends Controller
@@ -106,6 +107,12 @@ class RecipientController extends Controller
     */
     public function showByGUID(string $guid)
     {
+      // check registration system status
+      $processor = new StatusHelper();
+      if (!$processor->isRegistrationActive()) {
+        return response()->json(['error' => 'Unauthorized.'], 401);
+      }
+
       return Recipient::where('guid', $guid)->with([
         'personalAddress',
         'supervisorAddress',
@@ -207,6 +214,12 @@ class RecipientController extends Controller
     * @return \Illuminate\Http\Response
     */
     public function storeIdentification(Request $request) {
+
+      // check registration system status
+      $processor = new StatusHelper();
+      if (!$processor->isRegistrationActive()) {
+        return response()->json(['error' => 'Unauthorized.'], 401);
+      }
 
       //  reject missing GUIDs for self-registration
       if (empty($request->input('guid'))) return null;

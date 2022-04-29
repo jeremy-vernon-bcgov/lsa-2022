@@ -12,6 +12,7 @@ use App\Http\Controllers\PecsfController;
 use App\Http\Controllers\CeremonyController;
 use App\Http\Controllers\AttendeeController;
 use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\StatusController;
 
 use App\Models\Recipient;
 use App\Models\Organization;
@@ -36,11 +37,15 @@ if (App::environment('production')) {
     URL::forceScheme('https');
 }
 
+/** System status routes */
+Route::get('/registration-status', [StatusController::class, 'registrationStatus'])
+->name('reg-status');
+
 /** Organization routes */
-route::get('/organizations/', [OrganizationController::class, 'index']);
+Route::get('/organizations/', [OrganizationController::class, 'index']);
 
 /** Community routes */
-route::get('/communities/', [CommunityController::class, 'index']);
+Route::get('/communities/', [CommunityController::class, 'index']);
 
 /** Awards routes */
 Route::get('/milestones/{milestone}/awards', [AwardController::class, 'getByMilestone']);
