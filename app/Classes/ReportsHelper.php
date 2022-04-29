@@ -365,7 +365,10 @@ class ReportsHelper
       'recipients.id','=','award_recipient.recipient_id')
       ->join('awards',
       'award_recipient.award_id', '=', 'awards.id')
-      ->where('awards.short_name', 'LIKE', '%pecsf%')
+      ->where([
+        ['awards.short_name', 'LIKE', '%pecsf%'],
+        ['recipients.is_declared', '=', 1]
+      ])
       ->select(
         'recipients.*',
         'awards.*',
