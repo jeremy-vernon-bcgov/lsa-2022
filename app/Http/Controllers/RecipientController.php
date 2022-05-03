@@ -271,7 +271,6 @@ class RecipientController extends Controller
       // - status: 'self-registration'
       // - qualifying_year: matches
       $recipient->awards()
-      ->wherePivot('status', '=', $request->input('award.status'))
       ->wherePivot('qualifying_year', '=', $request->input('qualifying_year'))
       ->detach();
 
