@@ -27,4 +27,8 @@ class Ceremony extends Model
         return $this->hasManyThrough(Guest::class, Attendee::class);
     }
 
+    public function locationAddress() {
+        return $this->belongsTo(Address::class);
+    }
+
 }

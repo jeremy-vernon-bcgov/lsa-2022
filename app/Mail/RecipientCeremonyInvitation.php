@@ -9,6 +9,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use App\Models\Recipient;
 use App\Models\Ceremony;
+use App\Models\Attendee;
+use DateTime;
+use DateTimeZone;
 
 class   RecipientCeremonyInvitation extends Mailable
 {
@@ -22,16 +25,16 @@ class   RecipientCeremonyInvitation extends Mailable
   public $recipient;
 
   /**
-  * The Assigned Ceremony
+  * Ceremony
   *
   * @var \App\Models\Ceremony;
   */
   public $ceremony;
 
   /**
-  * RSVP key
+  * Attendee
   */
-  public $key;
+  public $attendee;
 
   /**
   * RSVP token
@@ -39,16 +42,23 @@ class   RecipientCeremonyInvitation extends Mailable
   public $token;
 
   /**
+  * RSVP token
+  */
+  public $expiry;
+
+  /**
   * Create a new message instance.
   *
   * @return void
   */
-  public function __construct(Recipient $recipient, Ceremony $ceremony, string $key, string $token)
+  public function __construct(
+    Recipient $recipient, Ceremony $ceremony, Attendee $attendee, string $token, DateTime $expiry)
   {
     $this->recipient = $recipient;
     $this->ceremony = $ceremony;
-    $this->key = $key;
+    $this->attendee = $attendee;
     $this->token = $token;
+    $this->expiry = $expiry->format('g:ia T \o\n l jS F Y');
   }
 
   /**
@@ -58,31 +68,26 @@ class   RecipientCeremonyInvitation extends Mailable
   */
   public function build()
   {
+    // build attendee RSVP URL
     $baseURL = env('FRONTEND_URL') . '/registration/rsvp';
-    $query = http_build_query(array(
-      'key' => $this->key,
-      'token' => $this->token
-      ));
-    $declinedURL = "$baseURL/declined/?$query";
-    $attendingURL = "$baseURL/attending/?$query";
-    $scheduled_datetime = date_format(date_create(
-      $this->ceremony->scheduled_datetime), 'g:ia \o\n l jS F Y'
-    );
 
-    // Log::info('RSVP', array(
-    //   'first_name' => $this->recipient->first_name,
-    //   'last_name' => $this->recipient->last_name,
-    //   'scheduled_datetime' => $this->ceremony->scheduled_datetime,
-    //   'declinedURL' =>  $declinedURL,
-    //   'attendingURL' => $attendingURL
-    // ));
+    // send attendee ID as RSVP key
+    $id = $this->attendee->id;
+    $token = $this->token;
+    $declinedURL = "$baseURL/declined/$id/$token";
+    $attendingURL = "$baseURL/attending/$id/$token";
+
+    // format scheduled ceremony date/time
+    $scheduled_datetime = new DateTime($this->ceremony->scheduled_datetime);
+    $scheduled_datetime->setTimezone(new DateTimeZone('America/Vancouver'));
 
     return $this
     ->subject('Invitation to Long Service Awards Ceremony')
     ->view('emails.RecipientCeremonyInvitation', [
       'first_name' => $this->recipient->first_name,
       'last_name' => $this->recipient->last_name,
-      'scheduled_datetime' => $scheduled_datetime,
+      'scheduled_datetime' => $scheduled_datetime->format('g:ia T \o\n l jS F Y'),
+      'expiry' => $this->expiry,
       'declinedURL' =>  $declinedURL,
       'attendingURL' => $attendingURL
     ]);

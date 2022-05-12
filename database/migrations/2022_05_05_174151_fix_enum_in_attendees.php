@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-      DB::statement("ALTER TABLE attendees MODIFY COLUMN status ENUM('assigned','invited','attending','declined','waitlisted') NOT NULL");
+      DB::statement("ALTER TABLE attendees MODIFY COLUMN status ENUM('assigned','invited','attending','declined','waitlisted', 'expired') NOT NULL");
     }
 
     /**

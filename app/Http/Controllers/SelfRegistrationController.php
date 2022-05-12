@@ -15,6 +15,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Classes\AttendeesHelper;
+use App\Classes\AddressHelper;
 use App\Classes\StatusHelper;
 use App\Classes\MailHelper;
 
@@ -39,68 +40,6 @@ class RecipientController extends Controller
     ->historical()
     ->firstOrFail();
   }
-
-  /**
-  * Return a filtered list of Recipients.
-  *
-  * @return \Illuminate\Http\Response
-  */
-  public function index(User $user, Request $request)
-  {
-
-    $this->authorize('viewAny', Recipient::class);
-
-    // get authenticated user
-    $authUser = auth()->user();
-
-    // refresh status
-    $attendeeHelper = new AttendeesHelper();
-    $attendeeHelper->refresh();
-
-    // get pagination
-    $resultsPerPage = $request->query('results_per_page', 25);
-
-    // get recipients
-    return Recipient::with([
-      'personalAddress',
-      'supervisorAddress',
-      'officeAddress',
-      'attendee',
-      'awards'])
-      ->declared($authUser)
-      ->userOrgs($authUser)
-      ->historical()
-      ->filter($request)
-      ->paginate($resultsPerPage);
-    }
-
-    /**
-    * Retrieve the full record for a recipient.
-    *
-    * @param  \App\Models\Recipient  $recipient
-    * @return \Illuminate\Http\Response
-    */
-    public function show(Recipient $recipient)
-    {
-      // authorize view
-      $this->authorize('view', $recipient);
-      return $this->getFullRecipient($recipient);
-    }
-
-    /**
-    * Delete recipient.
-    *
-    * @param  \App\Models\Recipient  $recipient
-    * @return \Illuminate\Http\Response
-    */
-    public function destroy(Recipient $recipient)
-    {
-      // authorize view
-      $this->authorize('delete', $recipient);
-      $recipient->awards()->detach();
-      $recipient->delete();
-      return $recipient;
-    }
 
 
     /**
@@ -129,87 +68,6 @@ class RecipientController extends Controller
       ->select('recipients.*', 'historical_recipients.id AS historical')
       ->firstOrFail();
     }
-
-    /**
-    * Store a new recipient (delegated registration).
-    * Self-registration uses different methods (see below).
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\Response
-    */
-    public function store(Request $request)
-    {
-
-      $this->authorize('create', Recipient::class);
-
-      // create new recipient record
-      $recipient = self::createRecipient($request);
-
-      // update recipient data sections
-      $recipient = self::storeMilestone($request, $recipient);
-      $recipient = self::storeAward($request, $recipient);
-      $recipient = self::storePersonalContact($request, $recipient);
-      $recipient = self::storeServicePins($request, $recipient);
-      $recipient = self::storeDeclarations($request, $recipient);
-      $recipient = self::storeAdmin($request, $recipient);
-
-      $recipient->save();
-      return $this->getFullRecipient($recipient);
-    }
-
-    /**
-    * Update the recipient - requires the full resource.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @param  \App\Models\Recipient  $recipient
-    * @return \Illuminate\Http\Response
-    */
-    public function update(Request $request, Recipient $recipient)
-    {
-      $this->authorize('update', $recipient);
-
-      $recipient = self::updateRecipient($request, $recipient);
-
-      // update recipient data sections
-      $recipient = self::storeMilestone($request, $recipient);
-      $recipient = self::storeAward($request, $recipient);
-      $recipient = self::storePersonalContact($request, $recipient);
-      $recipient = self::storeServicePins($request, $recipient);
-      $recipient = self::storeDeclarations($request, $recipient, false);
-      $recipient = self::storeAdmin($request, $recipient);
-
-      $recipient->save();
-      return $this->getFullRecipient($recipient);
-
-    }
-
-    /**
-    * Check if recipient is already registered (by employee number)
-    * - search using Employee Number
-    *
-    * @param String $employee_number
-    * @return \Illuminate\Http\Response
-    */
-    public function checkRecipientByEmployeeId (string $employee_number)
-    {
-      return Recipient::where('employee_number', $employee_number)
-      ->select('id')
-      ->whereNotNull('employee_number')
-      ->firstOrFail();
-    }
-
-    /**
-    * Retrieve historical recipient from the archived data
-    * - search using Employee Number
-    *
-    * @param String $employee_number
-    * @return \Illuminate\Http\Response
-    */
-    public function showArchivedRecipientByEmployeeId (string $employee_number)
-    {
-      return HistoricalRecipient::where('employee_number', $employee_number)->firstOrFail();
-    }
-
 
     /**
     * Store recipient employee identification
@@ -397,19 +255,6 @@ class RecipientController extends Controller
 
       }
 
-      /**
-      * Store Administrative Notes
-      *
-      * @param \Illuminate\Http\Request $request
-      * @param \App\Model\Recipient $recipient
-      * @return \Illuminate\Http\Response
-      */
-      public function storeAdmin(Request $request, Recipient $recipient) {
-        $recipient->admin_notes = $request->admin_notes;
-        $recipient->save();
-        return $this->getFullRecipient($recipient);
-      }
-
 
       /**
       * Create recipient record
@@ -429,7 +274,6 @@ class RecipientController extends Controller
           'government_email' => $request->input('government_email'),
           'government_phone_number' => $request->input('government_phone_number'),
           'personal_email' => $request->input('personal_email'),
-          'preferred_email' => $request->input('preferred_email'),
           'organization_id' => $request->input('organization_id'),
           'branch_name' => $request->input('branch_name')
         ]);
@@ -458,7 +302,6 @@ class RecipientController extends Controller
         $recipient->government_phone_number = $request->input('government_phone_number');
         $recipient->personal_email = $request->input('personal_email');
         $recipient->organization_id = $request->input('organization_id');
-        $recipient->preferred_email = $request->input('preferred_email');
         $recipient->branch_name = $request->input('branch_name');
 
         // update office contact information record
@@ -515,68 +358,6 @@ class RecipientController extends Controller
         }
 
         return $address;
-      }
-
-      /**
-      * Assign ceremony status to recipient
-      *
-      * If the recipient has a status other than "assigned" or "waitlisted"
-      * (e.g. RSVP-yes, invited) for any other ceremony night, the system
-      * will not change their record. If they have a status of “assigned”
-      * for another ceremony, it will be overwritten. They will then have
-      * an association with a ceremony night marked with a status of “assigned”
-
-      *
-      * @param \Illuminate\Http\Request $request
-      * @param \App\Model\Recipient $recipient
-      * @return \Illuminate\Http\Response
-      */
-      public function assign(Request $request) {
-
-        $this->authorize('assign', Recipient::class);
-
-        // get requested status, ceremony update
-        $status = $request->input('status');
-        $ceremony = $request->input('ceremony');
-        $attendees = $request->input('attendees');
-
-        // create attendees utitlity helper
-        $attendeeHelper = new AttendeesHelper();
-
-        foreach ($attendees as $attendee) {
-          $recipient = Recipient::find($attendee['id']);
-
-          // check for ceremony opt-out and registration declaration
-          if ($recipient->ceremony_opt_out || !$recipient->is_declared) {
-            return response()->json([
-                  'errors' => "Recipient cannot be assigned a ceremony",
-              ], 500);
-          }
-
-          $attendees = $attendeeHelper->assignStatus($recipient, $status, (int)$ceremony);
-        }
-
-        return $attendees;
-      }
-
-      /**
-      * Send reminder notification for registrations (authorized)
-      *
-      * @param \Illuminate\Http\Request $request
-      * @param \App\Model\Recipient $recipient
-      * @return \Illuminate\Http\Response
-      */
-      public function remind(Request $request) {
-        $this->authorize('assign', Recipient::class);
-        // create mail helper utility instance
-        $mailer = new MailHelper();
-
-        $attendees = $request->input('attendees');
-        foreach ($attendees as $attendee) {
-          $recipient = Recipient::find($attendee['id']);
-          $mailer->sendRegistrationReminder($recipient);
-        }
-        return $attendees;
       }
 
 

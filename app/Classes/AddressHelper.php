@@ -1,0 +1,88 @@
+<?php
+namespace App\Classes;
+use App\Models\Recipient;
+use App\Models\Address;
+use Illuminate\Support\Facades\Log;
+
+class AddressHelper
+{
+
+  /**
+  * Create address record
+  *
+  * @param  \App\Models\Recipient  $recipient
+  * @return \Illuminate\Http\Response
+  */
+  public function create($data)
+  {
+    $address = new Address($data);
+    $address->save();
+    return $address;
+  }
+
+  /**
+  * Update address record
+  *
+  * @param  $id
+  * @param  $data
+  * @return \Illuminate\Http\Response
+  */
+  public function update($id, $data)
+  {
+    $address = Address::find($id);
+
+    // update existing address record
+    if (!empty($address)){
+      $address->prefix = $data['prefix'];
+      $address->pobox = array_key_exists("pobox", $data) ? $data['pobox'] : '';
+      $address->street_address = $data['street_address'];
+      $address->postal_code = $data['postal_code'];
+      $address->community = $data['community'];
+      $address->save();
+    }
+
+    return $address;
+  }
+
+  /**
+  * Associate Address record for recipient
+  *
+  * @return Array
+  */
+
+  public function attach(Recipient $recipient, Array $data) {
+
+    // check if input address data is empty
+    $remove = isset($data['street_address']) && empty($data['street_address'])
+    && isset($data['postal_code']) && empty($data['postal_code'])
+    && isset($data['community']) && empty($data['community']);
+
+    // create/update and associate new address record
+    switch ($data['type']) {
+
+      case 'personal':
+      $address = Address::find($recipient->personal_address_id);
+      if ($remove) $recipient->personalAddress()->dissociate();
+      else empty($address)
+        ? $recipient->personalAddress()->associate(self::create($data))
+        : self::update($recipient->personal_address_id, $data);
+      break;
+      
+      case 'office':
+      $address = Address::find($recipient->office_address_id);
+      if ($remove) $recipient->officeAddress()->dissociate();
+      else empty($address)
+        ? $recipient->officeAddress()->associate(self::create($data))
+        : self::update($recipient->office_address_id, $data);
+      break;
+
+      case 'supervisor':
+      $address = Address::find($recipient->supervisor_address_id);
+      if ($remove) $recipient->supervisorAddress()->dissociate();
+      else empty($address)
+        ? $recipient->supervisorAddress()->associate(self::create($data))
+        : self::update($recipient->supervisor_address_id, $data);
+      break;
+    }
+  }
+}

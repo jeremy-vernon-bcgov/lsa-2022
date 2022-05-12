@@ -16,4 +16,8 @@ class Address extends Model
     public function recipients () {
         return $this->hasMany(Recipient::class);
     }
+
+    public function ceremonies () {
+        return $this->hasMany(Ceremony::class);
+    }
 }

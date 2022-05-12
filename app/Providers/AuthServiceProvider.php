@@ -8,6 +8,7 @@ use App\Policies\AwardPolicy;
 use App\Policies\RecipientPolicy;
 use App\Policies\CeremonyPolicy;
 use App\Policies\AttendeePolicy;
+use App\Policies\AccommodationPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\PermissionPolicy;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -27,6 +28,7 @@ class AuthServiceProvider extends ServiceProvider
         Recipient::class => RecipientPolicy::class,
         Ceremony::class => CeremonyPolicy::class,
         Attendee::class => AttendeePolicy::class,
+        Accommodation::class => AccommodationPolicy::class,
         User::class => UserPolicy::class,
         Permission::class => PermissionPolicy::class,
         Option::class => OptionPolicy::class,

@@ -1,23 +1,51 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-</head>
-<body>
+@extends('emails.formatted')
+@section('title', 'Ceremony Invitation')
+@section('content')
 
-<p>Good afternoon (or morning) {{ $first_name }} {{ $last_name }},</p>
+      <h2>Invitation</h2>
 
-<p>Please RSVP for the following Long Service Award ceremony date:</p>
+      <p>{{ $first_name }} {{ $last_name }},</p>
 
-<p><strong>{{ $scheduled_datetime }}</strong></p>
+      You are hereby cordially invited to celebrate the Long Service Awards with us at:
 
-<p><strong><a href="{{ $attendingURL }}">YES, I wish to attend</a></strong></p>
+      <table cellpadding="5" cellspacing="5" width="100%" bgcolor="#eeeeee">
+        <tbody>
+          <tr>
+            <th>Location<th>
+            <td>TBD</td>
+          </tr>
+          <tr>
+            <th>Date and Time<th>
+            <td>{{ $scheduled_datetime }}</td>
+          </tr>
+        </tbody>
+      </table>
 
-<p><strong><a href="{{ $declinedURL }}">NO, I do not want to attend the ceremony</a></strong></p>
+      <p>Please click one of the RSVP links below to respond to this ceremony invitation.</p>
 
-<p></p>
+      <p>
+        Please note that this RSVP link will expire at <strong>{{ $expiry }}</strong>.
+        Once a link has been clicked, you will have <strong>one hour</strong> to complete and submit the RSVP form.
+      </p>
 
-</body>
-</html>
+      <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#ffffff">
+        <tr>
+          <td style="background:#D84A38;text-align:center;">
+            <div>
+              <a
+              href="{{ $attendingURL }}"
+              style="background-color:#D84A38;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:13px;font-weight:bold;line-height:26px;text-align:center;text-decoration:none;-webkit-text-size-adjust:none;">YES, I wish to attend</a>
+            </div>
+          </td>
+          <td width="25">&nbsp;</td>
+          <td style="background:#D84A38;text-align:center">
+            <div>
+              <a
+              href="{{ $declinedURL }}"
+              style="background-color:#D84A38;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:13px;font-weight:bold;line-height:26px;text-align:center;text-decoration:none;-webkit-text-size-adjust:none;">NO, I will not be attending</a>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+@endsection

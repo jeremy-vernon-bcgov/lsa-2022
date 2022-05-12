@@ -45,6 +45,7 @@ class ReportsHelper
 
     $result = array(
       'name' => '',
+      'type' => '',
       'options' => ''
     );
 
@@ -55,6 +56,7 @@ class ReportsHelper
     // extract awards data (if exists)
     if (is_array($recipient['awards'])) {
       foreach ($recipient['awards'] as $award) {
+        $result['type'] = $award['type'];
         $result['name'] .= $award['name'].' ';
         // check for award options in pivot
         if (isset($award['pivot']) && !empty($award['pivot']['options'])) {
@@ -138,6 +140,8 @@ class ReportsHelper
             $selections = $this->getAwardSelections($option, $selections, $award);
           }
           elseif (!in_array($optionType, $ignoreOptions)) {
+            // ignore first PECSF with 25-Year Certificate (avoids duplicating option selection)
+            if ($optionType === 'pecsf' && isset($options->certificate)) continue;
             // award option has single selection
             $singleOptions = array(
               'certificate' => 'Framed Certificate and ',
@@ -192,6 +196,7 @@ class ReportsHelper
       '40' => 0,
       '45' => 0,
       '50' => 0,
+      'totals' => 0
     );
 
     // iterate over award options
@@ -205,7 +210,7 @@ class ReportsHelper
         '40' => 0,
         '45' => 0,
         '50' => 0,
-        'extras' => 0,
+        'totals' => 0,
       );
 
       // iterate over recipient award selections
@@ -227,8 +232,9 @@ class ReportsHelper
           }
           if ($isMatch) {
             $milestoneTotals[$milestone] += 1;
+            $milestoneTotals['totals'] += 1;
             $totals[$milestone] += 1;
-            $milestoneTotals['extras'] += 1;
+            $totals['totals'] += 1;
           }
         }
       }
@@ -262,7 +268,8 @@ class ReportsHelper
       'organization_short_name' => $recipient['organization_short_name'],
       'branch_name' => $recipient['branch_name'],
 
-      // 'historical' => strval($recipient['historical']),
+      'historical' =>  $recipient['historical'] ? 'Yes' : 'No',
+      'historical_milestone' => strval($recipient['historical_milestone']),
       'milestone' => strval($recipient['milestones']),
       'qualifying_year' => strval($recipient['qualifying_year']),
       'retirement_date' => $recipient['retirement_date'],
@@ -306,7 +313,9 @@ class ReportsHelper
       'survey_participation' => $recipient['survey_participation'] ? 'Yes' : 'No',
 
       'award' => $award['name'],
-      'award_options' => $award['options'],
+      'watch_options' => $award['type'] === 'watch' ? $award['options'] : '',
+      'bracelet_options' => $award['type'] === 'bracelet' ? $award['options'] : '',
+      'other_options' => $award['type'] === '' ? $award['options'] : '',
 
       'admin_notes' => $recipient['admin_notes'],
 

@@ -36,7 +36,7 @@ class ReportsController extends Controller
       'awards'])
       ->declared($authUser)
       ->userOrgs($authUser)
-      ->orgs()
+      ->metadata()
       ->get()
       ->toArray();
 
@@ -114,7 +114,7 @@ class ReportsController extends Controller
 
       if ($format === 'pdf') {
         $pdf = PDF::loadView('documents.pecsfSummaryList', compact('selections'));
-        $pdf->setPaper('Legal', 'landscape');
+        $pdf->setPaper('tabloid', 'landscape');
         return $pdf->download('pecsf-summary-list.pdf');
       }
       elseif ($format === 'csv') {

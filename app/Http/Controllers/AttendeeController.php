@@ -8,8 +8,9 @@ use App\Models\Recipient;
 use App\Models\Award;
 use App\Models\Organization;
 use App\Models\Ceremony;
-use Illuminate\Support\Facades\Mail;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Classes\AttendeesHelper;
+use App\Classes\AddressHelper;
+use App\Classes\MailHelper;
 use Illuminate\Support\Facades\Log;
 
 class AttendeeController extends Controller
@@ -49,11 +50,69 @@ class AttendeeController extends Controller
     $this->authorize('view', Ceremony::class);
 
     return Attendee::where('ceremonies_id', $ceremony->id)
-    ->with([
-      'ceremonies',
-    ])
+    ->with(['ceremonies'])
     ->get();
 
+  }
+
+  /**
+  * get RSVP attendee info for requested ceremony.
+  *
+  * @param string $key
+  * @param string $token
+  */
+
+  public function getRSVP (Attendee $attendee, string $token) {
+
+    // check if RSVP token is active/valid
+    $attendeeHelper = new AttendeesHelper();
+    $isActive = $attendeeHelper->checkRSVP($attendee, $token);
+
+    if ($isActive) {
+      return $attendeeHelper->activateRSVP($attendee);
+    }
+    else {
+      // token has expired or is invalid
+      return response()->json(['error' => 'Expired'], 422);
+    }
+
+  }
+
+  /**
+  * set RSVP attendee and accommodations for requested ceremony.
+  *
+  * @param string $key
+  * @param string $token
+  */
+
+  public function setRSVP (Request $request, Attendee $attendee, string $token) {
+
+    $attending = $request->input('attending');
+    $attendeeHelper = new AttendeesHelper();
+    $addressHelper = new AddressHelper();
+    $recipient = Recipient::where('id', '=', $attendee->attendable_id)->firstOrFail();
+
+    if ($attending) {
+      // recipient accepted the invitation
+      $attendeeHelper->setAccommodations($attendee, $request->input('data'));
+      $attendee->status = 'attending';
+      $attendee->save();
+    }
+    else {
+      // recipient declined the invitation
+      // - save forwarding address info
+      $addressHelper->attach($recipient, $request->input('data'));
+      $attendee->status = 'declined';
+      $attendee->save();
+    }
+
+    // send confirmation email
+    $mailer = new MailHelper();
+    $mailer->sendRSVPConfirmation($recipient, $attendee);
+
+    // invalidate RSVP token
+    $attendeeHelper->clearRSVP($attendee);
+    return $attendee;
   }
 
   /**

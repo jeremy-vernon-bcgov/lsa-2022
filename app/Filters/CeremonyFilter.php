@@ -10,7 +10,7 @@ class CeremonyFilter
 
     public function filter($builder, $value)
     {
-      $statuses = ['assigned', 'waitlisted', 'invited', 'attending', 'declined'];
+      $statuses = ['assigned', 'waitlisted', 'invited', 'attending', 'declined', 'expired'];
 
       // apply ceremony opt-out filter
       if ($value === 'true' || $value === 'false') {

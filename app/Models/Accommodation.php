@@ -9,6 +9,12 @@ class Accommodation extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'full_name',
+        'short_name',
+        'type',
+        'description'
+    ];
 
     public function attendees() {
         return $this->belongsToMany(Attendee::class);

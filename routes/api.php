@@ -10,6 +10,7 @@ use App\Http\Controllers\AwardController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\PecsfController;
 use App\Http\Controllers\CeremonyController;
+use App\Http\Controllers\AccommodationController;
 use App\Http\Controllers\AttendeeController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\StatusController;
@@ -108,7 +109,17 @@ Route::controller(AttendeeController::class)->group(function() {
   Route::get('/attendees/list', 'index');
   Route::get('/attendees/list/{ceremony}', 'getByCeremony');
   Route::get('/attendees/show/{attendee}', 'show');
-  Route::post('/attendees/rsvp/', 'rsvp');
+  Route::get('/attendees/rsvp/{attendee}/{token}', 'getRSVP');
+  Route::post('/attendees/rsvp/{attendee}/{token}', 'setRSVP');
+});
+
+/** Accommodations routes */
+Route::controller(AccommodationController::class)->group(function() {
+  Route::get('/accommodations/list', 'index');
+  Route::get('/accommodations/show/{accommodation}', 'show');
+  Route::post('/accommodations/create', 'store');
+  Route::put('/accommodations/update/{accommodation}', 'update');
+  Route::get('/accommodations/delete/{accommodation}', 'destroy');
 });
 
 /** Reports routes */
