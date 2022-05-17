@@ -19,9 +19,6 @@ class CeremonyFilter
       }
       // apply ceremony status filter
       elseif (in_array($value, $statuses)) {
-        Log::info('Ceremony Status', array(
-          'Filter By' => $value,
-        ));
         return $builder->whereHas('attendee', function($q) use($value) {
           $q->where('status', '=', $value);
         });

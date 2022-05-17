@@ -8,6 +8,19 @@ class AddressHelper
 {
 
   /**
+  * Check if address data is empty
+  *
+  * @param  array  $data
+  * @return Boolean
+  */
+  private function isEmpty($data)
+  {
+    return isset($data['street_address']) && empty($data['street_address'])
+    && isset($data['postal_code']) && empty($data['postal_code'])
+    && isset($data['community']) && empty($data['community']);
+  }
+
+  /**
   * Create address record
   *
   * @param  \App\Models\Recipient  $recipient
@@ -45,17 +58,16 @@ class AddressHelper
   }
 
   /**
-  * Associate Address record for recipient
+  * Associate Address record with recipient
   *
-  * @return Array
+  * @param Recipient $recipient
+  * @param array $data
   */
 
-  public function attach(Recipient $recipient, Array $data) {
+  public function attachRecipient(Recipient $recipient, Array $data) {
 
     // check if input address data is empty
-    $remove = isset($data['street_address']) && empty($data['street_address'])
-    && isset($data['postal_code']) && empty($data['postal_code'])
-    && isset($data['community']) && empty($data['community']);
+    $remove = self::isEmpty($data);
 
     // create/update and associate new address record
     switch ($data['type']) {
@@ -67,7 +79,7 @@ class AddressHelper
         ? $recipient->personalAddress()->associate(self::create($data))
         : self::update($recipient->personal_address_id, $data);
       break;
-      
+
       case 'office':
       $address = Address::find($recipient->office_address_id);
       if ($remove) $recipient->officeAddress()->dissociate();
@@ -84,5 +96,25 @@ class AddressHelper
         : self::update($recipient->supervisor_address_id, $data);
       break;
     }
+  }
+
+  /**
+  * Associate Address record with ceremony
+  *
+  * @param Ceremony $ceremony
+  * @param array $data
+  */
+
+  public function attachCeremony(Ceremony $ceremony, Array $data) {
+
+    // check if input address data is empty
+    $remove = self::isEmpty($data);
+
+    $address = Address::find($ceremony->location_address_id);
+    if ($remove) $ceremony->locationAddress()->dissociate();
+    else empty($address)
+      ? $ceremony->locationAddress()->associate(self::create($data))
+      : self::update($ceremony->location_address_id, $data);
+
   }
 }

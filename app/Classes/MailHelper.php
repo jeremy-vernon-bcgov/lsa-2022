@@ -17,6 +17,22 @@ class MailHelper
 {
 
   /**
+  * Select preferred email for recipient
+  *
+  * @param \Illuminate\Http\Request $request
+  * @param \App\Model\Recipient $recipient
+  * @return \Illuminate\Http\Response
+  */
+  private function getPreferredEmail(Recipient $recipient) {
+    if (!empty($recipient->personal_email) && $recipient->preferred_email === 'personal') {
+      return $recipient->personal_email;
+    }
+    else {
+      return $recipient->government_email;
+    }
+  }
+
+  /**
   * Send confirmation emails for ceremony sign-up
   *
   * @param \Illuminate\Http\Request $request
@@ -24,12 +40,13 @@ class MailHelper
   * @return \Illuminate\Http\Response
   */
   public function sendConfirmation(Recipient $recipient) {
+    $email = self::getPreferredEmail($recipient);
     if ($recipient->ceremony_opt_out == true) {
-      Mail::to($recipient->government_email)->send(new RecipientNoCeremonyRegistrationConfirm($recipient));
+      Mail::to($email)->send(new RecipientNoCeremonyRegistrationConfirm($recipient));
     } else {
-      Mail::to($recipient->government_email)->send(new RecipientRegistrationConfirm($recipient));
+      Mail::to($email)->send(new RecipientRegistrationConfirm($recipient));
     }
-    Mail::to($recipient->supervisor_email)->send(new SupervisorRegistrationConfirm($recipient));
+    Mail::to($email)->send(new SupervisorRegistrationConfirm($recipient));
   }
 
   /**
@@ -40,7 +57,8 @@ class MailHelper
   * @return \Illuminate\Http\Response
   */
   public function sendRegistrationReminder(Recipient $recipient) {
-    Mail::to($recipient->government_email)->queue(new RecipientRegistrationReminder($recipient));
+    $email = self::getPreferredEmail($recipient);
+    Mail::to($email)->queue(new RecipientRegistrationReminder($recipient));
   }
 
   /**
@@ -54,8 +72,8 @@ class MailHelper
   * @return \Illuminate\Http\Response
   */
   public function sendInvitation(Recipient $recipient, Ceremony $ceremony, Attendee $attendee, string $token, DateTime $expiry) {
-    // TODO: select preferred email
-    Mail::to($recipient->government_email)->queue(
+    $email = self::getPreferredEmail($recipient);
+    Mail::to($email)->queue(
       new RecipientCeremonyInvitation($recipient, $ceremony, $attendee, $token, $expiry)
     );
   }
@@ -69,8 +87,8 @@ class MailHelper
   * @return \Illuminate\Http\Response
   */
   public function sendRSVPConfirmation(Recipient $recipient, Attendee $attendee) {
-    // TODO: select preferred email
-    Mail::to($recipient->government_email)->queue(
+    $email = self::getPreferredEmail($recipient);
+    Mail::to($email)->queue(
       new RecipientCeremonyInvitationConfirm($recipient, $attendee)
     );
   }

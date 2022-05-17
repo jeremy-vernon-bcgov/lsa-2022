@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Ceremony extends Model
 {
@@ -19,7 +20,11 @@ class Ceremony extends Model
 
     public function recipients()
     {
-        return $this->hasManyThrough(Recipient::class, Attendee::class);
+        return $this->hasManyThrough('App\Models\Recipient', 'App\Models\Attendee', 'attendable_id', 'ceremonies_id')
+        ->where(
+            'attendable_type',
+            'App\Models\Recipient'
+        );
     }
 
     public function guests()
@@ -29,6 +34,17 @@ class Ceremony extends Model
 
     public function locationAddress() {
         return $this->belongsTo(Address::class);
+    }
+
+    // include attendees
+    public function scopeAttendance($query)
+    {
+      return $query
+      ->select('ceremonies.*',
+          DB::raw("(
+            SELECT count(*) FROM attendees
+            WHERE attendees.ceremonies_id = ceremonies.id
+          ) as total_attendees"));
     }
 
 }

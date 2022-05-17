@@ -7,6 +7,7 @@ use App\Models\Ceremony;
 use App\Models\Recipient;
 use App\Models\Award;
 use App\Models\Organization;
+use App\Classes\AddressHelper;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
@@ -22,7 +23,7 @@ class CeremonyController extends Controller
 
   public function index () {
     $this->authorize('viewAny', Ceremony::class);
-    return Ceremony::all();
+    return Ceremony::attendance()->get();
   }
 
   /**
@@ -33,8 +34,6 @@ class CeremonyController extends Controller
 
   public function show (Ceremony $ceremony) {
     $this->authorize('view', Ceremony::class);
-    Log::info('Ceremony', array('context' => $ceremony));
-
     return $ceremony;
   }
 
@@ -50,7 +49,13 @@ class CeremonyController extends Controller
     // create new ceremony
     $ceremony = Ceremony::create([
       'scheduled_datetime' => $request->input('scheduled_datetime'),
+      'location_name' => $request->input('location_name'),
     ]);
+
+    // update ceremony location address info
+    $addressHelper = new AddressHelper();
+    $addressHelper->attachCeremony($ceremony, $request->input('location_address'));
+
     $ceremony->save();
     return $ceremony;
   }
@@ -64,8 +69,14 @@ class CeremonyController extends Controller
   public function update (Request $request, Ceremony $ceremony) {
     $this->authorize('update', Ceremony::class);
 
-    // update ceremony date time
+    // update ceremony data
     $ceremony->scheduled_datetime = $request->input('scheduled_datetime');
+    $ceremony->location_name = $request->input('location_name');
+
+    // update ceremony location address info
+    $addressHelper = new AddressHelper();
+    $addressHelper->attachCeremony($ceremony, $request->input('location_address'));
+
     $ceremony->save();
     return $ceremony;
   }

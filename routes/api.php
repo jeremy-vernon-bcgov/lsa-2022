@@ -109,6 +109,7 @@ Route::controller(AttendeeController::class)->group(function() {
   Route::get('/attendees/list', 'index');
   Route::get('/attendees/list/{ceremony}', 'getByCeremony');
   Route::get('/attendees/show/{attendee}', 'show');
+  Route::put('/attendees/update/{attendee}', 'update');
   Route::get('/attendees/rsvp/{attendee}/{token}', 'getRSVP');
   Route::post('/attendees/rsvp/{attendee}/{token}', 'setRSVP');
 });

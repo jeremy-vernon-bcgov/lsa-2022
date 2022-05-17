@@ -2,6 +2,8 @@
 namespace App\Classes;
 use App\Models\Attendee;
 use App\Models\Ceremony;
+use App\Models\Recipient;
+use App\Models\Guest;
 use App\Classes\MailHelper;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
@@ -153,13 +155,83 @@ class AttendeesHelper
     // iterate over accommodation types
     foreach ($accommodations as $type => $selections) {
       Log::info('Set Accommodations',
-      array('type' => $type, 'accommodations' => $selections));
+      array('type' => $type, 'data' => $selections));
 
       // detach existing accommodations and update new ones
       $attendee->accommodations()->syncWithoutDetaching($selections);
 
     }
     return $attendee;
+  }
+
+  /**
+  * Attach guest attendee to recipient
+  *
+  * @return Array
+  */
+
+  public function addGuest(Recipient $recipient, Attendee $recipientAttendee, Array $options) {
+
+    // remove any existing guests
+    self::removeGuests($recipient);
+
+    // create new guest
+    $guest = new Guest([
+      'first_name' => 'Guest',
+      'last_name' => '',
+      'recipient_id' => $recipient->id
+    ]);
+    $guest->save();
+
+    // assign guest as attendee to ceremony
+    $guestAttendee = $this->create('attending', $recipientAttendee->ceremonies_id);
+
+    // ==========================
+    Log::info('Guest Attendee',
+    array(
+      'guestAttendee' => $guestAttendee,
+      'guest' => $guest,
+      'recipient' => $recipientAttendee->attendable_id,
+      'recipientAttendee' => $recipientAttendee
+    ));
+
+    $guest->attendee()->save($guestAttendee);
+
+    // send guest confirmation email
+    // $mailer = new MailHelper();
+    // $mailer->sendConfirmation($attendable, $ceremony, $attendee, $token, $expiry);
+
+    // iterate over accommodation types
+    foreach ($options as $type => $selections) {
+      // detach existing accommodations and update new ones
+      $guestAttendee->accommodations()->syncWithoutDetaching($selections);
+
+    }
+    return $guestAttendee;
+  }
+
+  /**
+  * Clear guest attendees and records attached to recipient
+  *
+  * @return Array
+  */
+
+  public function removeGuests(Recipient $recipient) {
+    // lookup guest by recipient
+    $guests = Guest::where('recipient_id', '=', $recipient->id)->get();
+
+    foreach ($guests as $guest) {
+      // get all attendee records for guest record
+      $attendees = Attendee::where('attendable_id', '=', $guest->id)->get();
+      // clear all accommodations attached to guest
+      foreach ($attendees as $attendee) {
+        $attendee->accommodations()->detach();
+      }
+      // delete guest attendee
+      $guest->attendee()->delete();
+      // delete guest
+      $guest->delete();
+    }
   }
 
   /**
@@ -260,6 +332,10 @@ class AttendeesHelper
         }
         // clear all attendee records
         $attendable->attendee()->delete();
+
+        // remove any guests
+        self::removeGuests($attendable);
+
       break;
 
       default:

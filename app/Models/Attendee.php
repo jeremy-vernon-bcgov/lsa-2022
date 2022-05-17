@@ -35,23 +35,35 @@ class Attendee extends Model
       return $this->belongsToMany(Accommodation::class);
     }
 
-     /**** RSVP form functions *****/
-
-    /**
-     * Get recipient record with additional fields.
-     *  Get recipient, ceremony and attendee status based on id from query string.
-     * @param int $id: ID from the query string.
-     * @return Model|\Illuminate\Database\Query\Builder|object|null
-     */
-    public function getByRecipientId(int $id)
+    // include recipients
+    public function scopeRecipients($query)
     {
-        $result = DB::table('recipients')
-            ->leftjoin('attendees', 'recipients.id', '=', 'attendees.recipient_id')
-            ->leftjoin('ceremonies', 'recipients.ceremony_id', '=', 'ceremonies.id')
-            ->select('recipients.first_name', 'recipients.last_name', 'attendees.*', 'ceremonies.scheduled_datetime')
-            ->where('attendees.id', '=', $id)
-            ->first();
-        return ($result);
+      return $query
+      ->leftJoin('recipients', 'recipients.id', '=', 'attendees.attendable_id')
+      ->leftJoin('guests', 'guests.recipient_id', '=', 'recipients.id')
+      ->select(
+        'attendees.*',
+        'recipients.id AS recipient_id',
+        'recipients.employee_number AS employee_number',
+        'recipients.first_name AS first_name',
+        'recipients.last_name AS last_name',
+        'guests.id AS guest',
+        )
+      ->groupBy('recipients.id')
+      ->where('attendees.attendable_type', 'App\Models\Recipient');
+    }
+
+    // include guests
+    public function scopeGuests($query)
+    {
+      return $query
+      ->leftJoin('guests', 'guests.id', '=', 'attendees.attendable_id')
+      ->select(
+        'attendees.*',
+        'guests.first_name AS first_name',
+        'guests.last_name AS last_name',
+        )
+      ->where('attendees.attendable_type', 'App\Models\Guest');
     }
 
 }

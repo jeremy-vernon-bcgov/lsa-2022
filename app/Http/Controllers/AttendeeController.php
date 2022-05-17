@@ -35,9 +35,11 @@ class AttendeeController extends Controller
 
   public function show (Attendee $attendee) {
     $this->authorize('view', Attendee::class);
-    Log::info('Attendee', array('context' => $attendee));
-
-    return $attendee;
+    return Attendee::where('attendees.id', $attendee->id)->with([
+      'ceremonies',
+      'accommodations'
+    ])
+    ->firstOrFail();
   }
 
   /**
@@ -49,9 +51,52 @@ class AttendeeController extends Controller
   public function getByCeremony (Ceremony $ceremony) {
     $this->authorize('view', Ceremony::class);
 
-    return Attendee::where('ceremonies_id', $ceremony->id)
-    ->with(['ceremonies'])
-    ->get();
+    $attendees = Attendee::where('ceremonies_id', $ceremony->id)
+    ->with(['ceremonies', 'accommodations']);
+
+    $recipients = clone $attendees;
+    $guests = clone $attendees;
+    $guest_count = clone $attendees;
+    $recipient_count = $attendees->where('attendable_type', '=', 'App\Models\Recipient')->count();
+    $guest_count = $guest_count->where('attendable_type', '=', 'App\Models\Guest')->count();
+
+    return array(
+      'recipients' => $recipients->recipients()->get(),
+      'guests' => $guests->guests()->get(),
+      'total_guests' => $guest_count,
+      'total_recipients' => $recipient_count,
+      'total_attendees' => $recipient_count + $guest_count
+    );
+
+  }
+
+  /**
+  * Update attendee record (admin-only)
+  *
+  * @param Request $request
+  * @param Attendee $attendee
+  */
+
+  public function update (Request $request, Attendee $attendee) {
+    $this->authorize('update', Attendee::class);
+
+    // attendee must be attending ceremony to edit attendee details
+    if (!$attendee->status === 'attending') {
+      return response()->json(['error' => 'Invalid'], 422);
+    }
+
+    $attendeeHelper = new AttendeesHelper();
+
+    // recipient accepted the invitation
+    $attendeeHelper->setAccommodations($attendee, $request->input('recipient_options'));
+    $attendee->save();
+
+    // add guest data (if exists)
+    if ($request->input('guest')) {
+      $attendeeHelper->addGuest($attendee, $request->input('guest_options'), $attendee->ceremonies_id);
+    }
+
+    return $attendee;
 
   }
 
@@ -80,28 +125,73 @@ class AttendeeController extends Controller
 
   /**
   * set RSVP attendee and accommodations for requested ceremony.
+  * Request Data:
+  * - recipient_options:
+  *   -- accessibility: Array of IDs
+  *   -- dietary: Array of IDs
+  * - guest: Boolean
+  * - guest_options:
+  *   -- accessibility: Array of IDs
+  *   -- dietary: Array of IDs
+  * - retirement: Boolean
+  * - contact:
+  *   -- prefix
+  *   -- street_address
+  *   -- community
+  *   -- postal_code
   *
-  * @param string $key
+  * @param Request $request
+  * @param Attendee $attendee
   * @param string $token
   */
 
   public function setRSVP (Request $request, Attendee $attendee, string $token) {
 
-    $attending = $request->input('attending');
     $attendeeHelper = new AttendeesHelper();
+
+    // ensure RSVP token is valid
+    $isActive = $attendeeHelper->checkRSVP($attendee, $token);
+
+    if (!$isActive) {
+      // token has expired or is invalid
+      return response()->json(['error' => 'Expired'], 422);
+    }
+
+    $attending = $request->input('attending');
     $addressHelper = new AddressHelper();
     $recipient = Recipient::where('id', '=', $attendee->attendable_id)->firstOrFail();
+    $hasGuest = $request->input('data.guest');
+    $isRetiring = $request->input('data.retirement');
 
     if ($attending) {
       // recipient accepted the invitation
-      $attendeeHelper->setAccommodations($attendee, $request->input('data'));
+      $attendeeHelper->setAccommodations($attendee, $request->input('data.recipient_options'));
       $attendee->status = 'attending';
       $attendee->save();
+
+      if ($hasGuest) {
+        // handle added guest and options
+        $attendeeHelper->addGuest($recipient, $attendee, $request->input('data.guest_options'));
+      }
+      else {
+        // remove guest
+        $attendeeHelper->removeGuest($recipient);
+        $recipient->guest()->dissociate();
+      }
+
+      // handle retirement
+      if ($isRetiring) {
+        // update forwarding address
+        $addressHelper->attachRecipient($recipient, $request->input('data.contact'));
+        // set the retirement date
+        $recipient->retirement_date = $request->input('data.retirement_date');
+        $recipient->save();
+      }
     }
     else {
       // recipient declined the invitation
       // - save forwarding address info
-      $addressHelper->attach($recipient, $request->input('data'));
+      $addressHelper->attachRecipient($recipient, $request->input('data.contact'));
       $attendee->status = 'declined';
       $attendee->save();
     }
