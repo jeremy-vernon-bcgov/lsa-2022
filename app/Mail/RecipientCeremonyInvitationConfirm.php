@@ -91,7 +91,7 @@ class   RecipientCeremonyInvitationConfirm extends Mailable
       $this
       ->subject('Confirmation to Attend Long Service Awards Ceremony')
       ->attachData($pdf->output(), 'lsa-confirmation.pdf')
-      ->view('emails.RecipientCeremonyRsvpAccept', [
+      ->view('emails.recipientCeremonyRsvpAccept', [
         'first_name' => $this->recipient->first_name,
         'last_name' => $this->recipient->last_name,
         'scheduled_datetime' => $scheduled_datetime->format('g:ia T \o\n l jS F Y'),
@@ -101,7 +101,7 @@ class   RecipientCeremonyInvitationConfirm extends Mailable
       // generate confirmation email
       $this
       ->subject('Confirmation to Not Attend Long Service Awards Ceremony')
-      ->view('emails.RecipientCeremonyRsvpDecline', [
+      ->view('emails.recipientCeremonyRsvpDecline', [
         'first_name' => $this->recipient->first_name,
         'last_name' => $this->recipient->last_name,
       ]);

@@ -83,7 +83,7 @@ class   RecipientCeremonyInvitation extends Mailable
 
     return $this
     ->subject('Invitation to Long Service Awards Ceremony')
-    ->view('emails.RecipientCeremonyInvitation', [
+    ->view('emails.recipientCeremonyInvitation', [
       'first_name' => $this->recipient->first_name,
       'last_name' => $this->recipient->last_name,
       'scheduled_datetime' => $scheduled_datetime->format('g:ia T \o\n l jS F Y'),
