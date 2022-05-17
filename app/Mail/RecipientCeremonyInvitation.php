@@ -69,7 +69,7 @@ class   RecipientCeremonyInvitation extends Mailable
   public function build()
   {
     // build attendee RSVP URL
-    $baseURL = env('FRONTEND_URL') . '/registration/rsvp';
+    $baseURL = env('FRONTEND_URL') . 'registration/rsvp';
 
     // send attendee ID as RSVP key
     $id = $this->attendee->id;
