@@ -2,11 +2,11 @@
 @section('title', 'Ceremony Invitation')
 @section('content')
 
-      <h2>Invitation</h2>
+      <h2>The Government of British Columbia is pleased to invite</h2>
 
-      <p>{{ $first_name }} {{ $last_name }},</p>
+      <h3>{{ $first_name }} {{ $last_name }}</h3>
 
-      You are hereby cordially invited to celebrate the Long Service Awards with us at:
+      <h4>to the Long Service Awards Ceremony</h4>
 
       <table cellpadding="5" cellspacing="5" width="100%" bgcolor="#eeeeee">
         <tbody>
@@ -20,6 +20,10 @@
           </tr>
         </tbody>
       </table>
+
+      <p>This invitation is for the intended recipient and one guest.</p>
+
+      <p>Dress: Business attire</p>
 
       <p>Please click one of the RSVP links below to respond to this ceremony invitation.</p>
 

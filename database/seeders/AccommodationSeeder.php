@@ -33,8 +33,6 @@ class AccommodationSeeder extends Seeder
         DB::table('accommodations')->insert(['short_name' => 'Gluten-free', 'full_name' => 'Gluten-free', 'description' => '', 'type' => 'dietary', 'created_at' => date("Y-m-d H:i:s")]);
         DB::table('accommodations')->insert(['short_name' => 'Sugar-free', 'full_name' => 'Sugar-free', 'description' => '', 'type' => 'dietary', 'created_at' => date("Y-m-d H:i:s")]);
         DB::table('accommodations')->insert(['short_name' => 'Shellfish-free', 'full_name' => 'Shellfish-free', 'description' => '', 'type' => 'dietary', 'created_at' => date("Y-m-d H:i:s")]);
-        DB::table('accommodations')->insert(['short_name' => 'Vegetarian', 'full_name' => 'Vegetarian', 'description' => '', 'type' => 'dietary', 'created_at' => date("Y-m-d H:i:s")]);
-        DB::table('accommodations')->insert(['short_name' => 'Vegan', 'full_name' => 'Vegan', 'description' => '', 'type' => 'dietary', 'created_at' => date("Y-m-d H:i:s")]);
         DB::table('accommodations')->insert(['short_name' => 'Peanut-free', 'full_name' => 'Peanut-free', 'description' => '', 'type' => 'dietary', 'created_at' => date("Y-m-d H:i:s")]);
         DB::table('accommodations')->insert(['short_name' => 'Nut-free', 'full_name' => 'Nut-free', 'description' => '', 'type' => 'dietary', 'created_at' => date("Y-m-d H:i:s")]);
         DB::table('accommodations')->insert(['short_name' => 'Other-Dietary', 'full_name' => 'Other, LSA team will contact you.', 'description' => '', 'type' => 'dietary', 'created_at' => date("Y-m-d H:i:s")]);

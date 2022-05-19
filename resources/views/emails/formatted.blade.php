@@ -25,12 +25,17 @@
     border: none;
   }
 
+  p {
+    text-align: center;
+  }
+
   /* General styling */
 
   table, td, h1, h2, h3  {
     font-family: Helvetica, Arial, sans-serif;
     font-weight: 400;
     border-radius: 8px;
+    text-align: center;
   }
 
   td {
@@ -46,6 +51,7 @@
     height: 100%;
     color: #37302d;
     background: #ffffff;
+    text-align: center;
   }
 
   table {
@@ -54,11 +60,12 @@
 
 
   h1, h2, h3, h4 {
-    padding: 0;
+    padding: 10px 0;
     margin: 0;
     color: #444444;
     font-weight: 400;
     line-height: 110%;
+    text-align: center;
   }
 
   h1 {
