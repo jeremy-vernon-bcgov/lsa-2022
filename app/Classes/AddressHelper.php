@@ -2,6 +2,7 @@
 namespace App\Classes;
 use App\Models\Recipient;
 use App\Models\Address;
+use App\Models\Ceremony;
 use Illuminate\Support\Facades\Log;
 
 class AddressHelper

@@ -71,11 +71,11 @@ class CeremonyController extends Controller
 
     // update ceremony data
     $ceremony->scheduled_datetime = $request->input('scheduled_datetime');
-    $ceremony->location_name = $request->input('location_name');
+    // $ceremony->location_name = $request->input('location_name');
 
     // update ceremony location address info
-    $addressHelper = new AddressHelper();
-    $addressHelper->attachCeremony($ceremony, $request->input('location_address'));
+    // $addressHelper = new AddressHelper();
+    // $addressHelper->attachCeremony($ceremony, $request->input('location_address'));
 
     $ceremony->save();
     return $ceremony;
