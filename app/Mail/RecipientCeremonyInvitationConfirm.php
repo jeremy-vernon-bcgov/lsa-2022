@@ -34,18 +34,15 @@ class   RecipientCeremonyInvitationConfirm extends Mailable
 
   /**
   * Attendee
+  * @var \App\Models\Attendee;
   */
   public $attendee;
 
   /**
-  * RSVP token
+  * Status
+  * @var string;
   */
-  public $token;
-
-  /**
-  * RSVP token
-  */
-  public $expiry;
+  public $status;
 
   /**
   * Create a new message instance.
@@ -55,8 +52,9 @@ class   RecipientCeremonyInvitationConfirm extends Mailable
   public function __construct(Recipient $recipient, Attendee $attendee)
   {
     $this->recipient = $recipient;
-    $this->ceremony = Ceremony::where('id', '=', $attendee->ceremonies_id)->firstOrFail();
-    $this->attendee = $attendee;
+    $this->ceremony = Ceremony::with('locationAddress')
+    ->where('id', '=', $attendee->ceremonies_id)->firstOrFail();
+    $this->status = $attendee->status;
   }
 
   /**
@@ -66,26 +64,33 @@ class   RecipientCeremonyInvitationConfirm extends Mailable
   */
   public function build()
   {
-    // get attendee data
-    $id = $this->attendee->id;
-    $status = $this->attendee->status;
 
     // format scheduled ceremony date/time
-    $scheduled_datetime = new DateTime($this->ceremony->scheduled_datetime);
-    $scheduled_datetime->setTimezone(new DateTimeZone('America/Vancouver'));
+    $scheduled_datetime = new DateTime($this->ceremony->scheduled_datetime, new DateTimeZone('America/Vancouver'));
 
-    if ($status === 'attending') {
+    // explode the ceremony location
+    $ceremony = $this->ceremony->toArray();
+    $location_address = $ceremony['location_address'];
+    $location_name = !empty($location_address) ? $this->ceremony->location_name : 'TBD';
+    $street_address = !empty($location_address) ? $location_address['street_address'] : '';
+    $community = !empty($location_address) ? $location_address['community'] : '';
+    $province = !empty($location_address) ? 'British Columbia' : '';
 
+    if ($this->status === 'attending') {
       // gather confirmation data
-      $confirmation = [
+      $certificate = [
         'first_name' => $this->recipient->first_name,
         'last_name' => $this->recipient->last_name,
-        'location' => '',
-        'scheduled_datetime' => $scheduled_datetime->format('g:ia T \o\n l jS F Y'),
+        'location_name' => $location_name,
+        'street_address' => $street_address,
+        'community' => $community,
+        'province' => $province,
+        'scheduled_date' => $scheduled_datetime->format('l jS F Y'),
+        'scheduled_time' => $scheduled_datetime->format('g:ia'),
       ];
 
       // generate PDF confirmation to attach to email
-      $pdf = PDF::loadView('documents.rsvpConfirmation', $confirmation);
+      $pdf = PDF::loadView('documents.rsvpCertificate', $certificate);
 
       // generate confirmation email with confirmation attachment
       $this
@@ -94,10 +99,11 @@ class   RecipientCeremonyInvitationConfirm extends Mailable
       ->view('emails.recipientCeremonyRsvpAccept', [
         'first_name' => $this->recipient->first_name,
         'last_name' => $this->recipient->last_name,
-        'scheduled_datetime' => $scheduled_datetime->format('g:ia T \o\n l jS F Y'),
+        'scheduled_date' => $scheduled_datetime->format('l jS F Y'),
+        'scheduled_time' => $scheduled_datetime->format('g:ia'),
       ]);
     }
-    if ($status === 'declined') {
+    if ($this->status === 'declined') {
       // generate confirmation email
       $this
       ->subject('Confirmation to Not Attend Long Service Awards Ceremony')

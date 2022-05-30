@@ -38,11 +38,10 @@
     text-align: center;
   }
 
-  td, th {
+  td {
     font-size: 13px;
     line-height: 19px;
     text-align: left;
-    vertical-align: top;
   }
 
   body {
@@ -75,6 +74,7 @@
 
   h2 {
     font-size: 30px;
+    font-weight: bold;
   }
 
   h3 {
@@ -99,10 +99,11 @@
     width: 100% !important;
   }
 
-  div.logo, img.logo {
-    width: 150px;
-    height: 150px;
-    margin: auto;
+  div.coat-of-arms {
+      width: 131pt;
+      height: 149pt;
+      margin: auto;
+
   }
 
   </style>
@@ -199,14 +200,27 @@
 <body class="body" style="padding:0; margin:0; display:block; background:#ffffff; -webkit-text-size-adjust:none" bgcolor="#ffffff">
 <table align="center" cellpadding="0" cellspacing="0" width="100%" height="100%">
   <tr>
-    <td align="center" valign="middle" bgcolor="#ffffff"  width="100%">
+    <td align="center" valign="top" bgcolor="#ffffff"  width="100%">
 
     <table cellspacing="0" cellpadding="0" width="100%">
       <tr>
-        <td width="100%">
-          <div class="logo">
-            <img class="logo" src="https://longserviceawards.gww.gov.bc.ca/wp-content/uploads/2022/05/lsa-logo.png">
-          </div>
+        <td style="background:#1f1f1f" width="100%">
+
+          <center>
+            <table cellspacing="0" cellpadding="0" width="100%" class="w320">
+              <tr>
+                <td valign="bottom" class="mobile-block mobile-no-padding-bottom mobile-center" style="background:#1f1f1f;padding:10px 20px 28px 30px;">
+                  <h3 style="color:#e7e7e7;font-weight:bold">Long Service Awards</h3>
+                </td>
+                <td valign="bottom" class="mobile-block mobile-no-padding-bottom mobile-center" style="background:#1f1f1f;padding:10px;text-align:right;">
+                  <a href="https://longserviceawards.gww.gov.bc.ca" style="text-decoration:none;">
+                    <img src="https://longserviceawards.gww.gov.bc.ca/wp-content/uploads/elementor/thumbs/WIW-logo-rev-pg5pgffswdt2msz7tc1ztylqnrwaipjp84p3izag20.png" width="300" alt="Your Logo"/>
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </center>
+
         </td>
       </tr>
       <tr>
@@ -220,6 +234,21 @@
                   <br class="mobile-hide" />
                     @yield('content')
                   <br><br>
+                </td>
+              </tr>
+            </table>
+          </center>
+        </td>
+      </tr>
+      <tr>
+        <td style="background-color:#1f1f1f;">
+          <center>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" class="w320" style="height:100%;color:#ffffff" bgcolor="#1f1f1f" >
+              <tr>
+                <td align="right" valign="middle" class="mobile-padding" style="font-size:12px;padding:20px; background-color:#1f1f1f; color:#ffffff; text-align:left; ">
+                  <a style="color:#ffffff;"  href="https://longserviceawards.gww.gov.bc.ca">About the Awards</a>
+                  &nbsp;&nbsp;|&nbsp;&nbsp;
+                  <a style="color:#ffffff;"  href="mailto:longserviceawards@gov.bc.ca">Contact Us</a>
                 </td>
               </tr>
             </table>

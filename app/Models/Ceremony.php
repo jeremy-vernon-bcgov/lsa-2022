@@ -11,7 +11,7 @@ class Ceremony extends Model
     use HasFactory;
 
     public $identifiableAttribute = 'scheduled_datetime';
-    public $fillable = ['scheduled_datetime'];
+    public $fillable = ['scheduled_datetime', 'location_name'];
 
     public function attendees ()
     {

@@ -2,9 +2,9 @@
 @section('title', 'Ceremony Invitation')
 @section('content')
 
-      <h2>The Government of British Columbia is pleased to invite</h2>
+      <h3>The Government of British Columbia<br>is pleased to invite</h3>
 
-      <h3>{{ $first_name }} {{ $last_name }}</h3>
+      <h2>{{ $first_name }} {{ $last_name }}</h2>
 
       <h4>to the Long Service Awards Ceremony</h4>
 
@@ -12,11 +12,17 @@
         <tbody>
           <tr>
             <th>Location<th>
-            <td>TBD</td>
+            <td>
+              @if (!empty($location_name) && !empty($street_address) && !empty($community) && !empty($province))
+                  {{ $location_name }}<br>{{ $street_address }}<br>{{ $community }}, {{ $province }}
+              @else
+                  TBD
+              @endif
+            </td>
           </tr>
           <tr>
-            <th>Date and Time<th>
-            <td>{{ $scheduled_datetime }}</td>
+            <th>Date<th>
+            <td>{{ $scheduled_date }}</td>
           </tr>
         </tbody>
       </table>
@@ -24,6 +30,8 @@
       <p>This invitation is for the intended recipient and one guest.</p>
 
       <p>Dress: Business attire</p>
+
+      <p>Doors open at <strong>{{ $scheduled_time }}</strong></p>
 
       <p>Please click one of the RSVP links below to respond to this ceremony invitation.</p>
 

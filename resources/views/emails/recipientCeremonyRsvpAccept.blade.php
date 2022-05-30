@@ -2,28 +2,40 @@
 @section('title', 'RSVP Confirmation')
 @section('content')
 
-      <h2>RSVP Confirmation</h2>
+      <p>This is an automated email. No response is required.</p>
 
       <p>{{ $first_name }} {{ $last_name }},</p>
 
-      <p>This email confirms your attendance at the Long Service Awards
-        ceremony with us at:</p>
+      <p>Thank you for confirming your attendance for your Long Service Awards ceremony.
+        If you need to make changes to your RSVP information or cancel your attendance,
+        please email the
+        <a href="mailto:LongServiceAwards@gov.bc.ca?subject=RSVP%20to%20ceremony">Long Service Awards</a>
+        team as soon as possible.</p>
 
-      <table cellpadding="0" cellspacing="5" width="100%" bgcolor="#eeeeee">
-        <tbody>
-          <tr>
-            <th>Location<th>
-            <td>TBD</td>
-          </tr>
-          <tr>
-            <th>Date and Time<th>
-            <td>{{ $scheduled_datetime }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <p>The ceremony will take place on <strong>{{ $scheduled_date }}</strong> at
+        <strong>
+          @if (!empty($location_name) && !empty($street_address) && !empty($community) && !empty($province))
+            {{ $location_name }}, {{ $street_address }}, {{ $community }}, {{ $province }}
+          @else
+            (TBD)
+          @endif
+        </strong>
+        and business attire is recommended.
+        <b>Doors open at {{ $scheduled_time }}</b>. Your invitation is not required for entry to the ceremony.</p>
 
-      <p>Please find attached a PDF confirmation of this Award.</p>
+      <p>For information about travel reimbursement and taking time off, visit the
+        <a href="https://longserviceawards.gww.gov.bc.ca/travel/">Long Service Awards website</a>
+        or contact your workplace
+        <a href="https://longserviceawards.gww.gov.bc.ca/contacts/">Long Service Awards contact</a>.
+        If you have questions about the ceremony, email the
+        <a href="mailto:longserviceawards@gov.bc.ca?subject=Question%20about%20LSA%20ceremony">
+          Long Service Awards team</a>.</p>
 
-      <p>We're looking forward to seeing you there!</p>
+      <p>Please find attached a confirmation of this award.</p>
+
+      <p>We look forward to welcoming you to (chosen location) in the fall!
+
+      <p>Thank you,<br />Long Service Awards Team</p>
+
 
 @endsection

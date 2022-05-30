@@ -54,11 +54,13 @@ class   RecipientCeremonyInvitation extends Mailable
   public function __construct(
     Recipient $recipient, Ceremony $ceremony, Attendee $attendee, string $token, DateTime $expiry)
   {
+
     $this->recipient = $recipient;
-    $this->ceremony = $ceremony;
     $this->attendee = $attendee;
+    $this->ceremony = $ceremony;
     $this->token = $token;
     $this->expiry = $expiry->format('g:ia T \o\n l jS F Y');
+
   }
 
   /**
@@ -71,22 +73,34 @@ class   RecipientCeremonyInvitation extends Mailable
     // build attendee RSVP URL
     $baseURL = env('FRONTEND_URL') . 'registration/rsvp';
 
+    // format scheduled ceremony date/time
+    $scheduled_datetime = new DateTime($this->ceremony->scheduled_datetime, new DateTimeZone('America/Vancouver'));
+
+    // explode the ceremony location
+    $ceremony = $this->ceremony->toArray();
+    $location_address = $ceremony['location_address'];
+    $location_name = !empty($location_address) ? $this->ceremony->location_name : 'TBD';
+    $street_address = !empty($location_address) ? $location_address['street_address'] : '';
+    $community = !empty($location_address) ? $location_address['community'] : '';
+    $province = !empty($location_address) ? 'British Columbia' : '';
+
     // send attendee ID as RSVP key
     $id = $this->attendee->id;
     $token = $this->token;
     $declinedURL = "$baseURL/declined/$id/$token";
     $attendingURL = "$baseURL/attending/$id/$token";
 
-    // format scheduled ceremony date/time
-    $scheduled_datetime = new DateTime($this->ceremony->scheduled_datetime);
-    $scheduled_datetime->setTimezone(new DateTimeZone('America/Vancouver'));
-
     return $this
     ->subject('Invitation to Long Service Awards Ceremony')
     ->view('emails.recipientCeremonyInvitation', [
       'first_name' => $this->recipient->first_name,
       'last_name' => $this->recipient->last_name,
-      'scheduled_datetime' => $scheduled_datetime->format('g:ia T \o\n l jS F Y'),
+      'scheduled_date' => $scheduled_datetime->format('l jS F Y'),
+      'scheduled_time' => $scheduled_datetime->format('g:ia'),
+      'location_name' => $location_name,
+      'street_address' => $street_address,
+      'community' => $community,
+      'province' => $province,
       'expiry' => $this->expiry,
       'declinedURL' =>  $declinedURL,
       'attendingURL' => $attendingURL

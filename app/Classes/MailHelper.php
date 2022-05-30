@@ -24,6 +24,8 @@ class MailHelper
   * @return \Illuminate\Http\Response
   */
   private function getPreferredEmail(Recipient $recipient) {
+
+    // check email address preference
     if (!empty($recipient->personal_email) && $recipient->preferred_email === 'personal') {
       return $recipient->personal_email;
     }
@@ -37,10 +39,11 @@ class MailHelper
   *
   * @param \Illuminate\Http\Request $request
   * @param \App\Model\Recipient $recipient
+  * @param string $email
   * @return \Illuminate\Http\Response
   */
-  public function sendConfirmation(Recipient $recipient) {
-    $email = self::getPreferredEmail($recipient);
+  public function sendConfirmation(Recipient $recipient, string $email=null) {
+    $email = empty($email) ? self::getPreferredEmail($recipient) : $email;
     if ($recipient->ceremony_opt_out == true) {
       Mail::to($email)->send(new RecipientNoCeremonyRegistrationConfirm($recipient));
     } else {
@@ -54,10 +57,11 @@ class MailHelper
   *
   * @param \Illuminate\Http\Request $request
   * @param \App\Model\Recipient $recipient
+  * @param string $email
   * @return \Illuminate\Http\Response
   */
-  public function sendRegistrationReminder(Recipient $recipient) {
-    $email = self::getPreferredEmail($recipient);
+  public function sendRegistrationReminder(Recipient $recipient, string $email=null) {
+    $email = empty($email) ? self::getPreferredEmail($recipient) : $email;
     Mail::to($email)->queue(new RecipientRegistrationReminder($recipient));
   }
 
@@ -69,10 +73,18 @@ class MailHelper
   * @param \App\Model\Attendee $attendee
   * @param string $token
   * @param DateTime $expiry
+  * @param string $email
   * @return \Illuminate\Http\Response
   */
-  public function sendInvitation(Recipient $recipient, Ceremony $ceremony, Attendee $attendee, string $token, DateTime $expiry) {
-    $email = self::getPreferredEmail($recipient);
+  public function sendInvitation(
+    Recipient $recipient,
+    Ceremony $ceremony,
+    Attendee $attendee,
+    string $token,
+    DateTime $expiry,
+    string $email=null
+  ) {
+    $email = empty($email) ? self::getPreferredEmail($recipient) : $email;
     Mail::to($email)->queue(
       new RecipientCeremonyInvitation($recipient, $ceremony, $attendee, $token, $expiry)
     );
@@ -84,10 +96,11 @@ class MailHelper
   * @param \Illuminate\Http\Request $request
   * @param \App\Model\Recipient $recipient
   * @param \App\Model\Attendee $attendee
+  * @param string $email
   * @return \Illuminate\Http\Response
   */
-  public function sendRSVPConfirmation(Recipient $recipient, Attendee $attendee) {
-    $email = self::getPreferredEmail($recipient);
+  public function sendRSVPConfirmation(Recipient $recipient, Attendee $attendee, string $email=null) {
+    $email = empty($email) ? self::getPreferredEmail($recipient) : $email;
     Mail::to($email)->queue(
       new RecipientCeremonyInvitationConfirm($recipient, $attendee)
     );

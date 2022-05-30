@@ -116,6 +116,5 @@ class AddressHelper
     else empty($address)
       ? $ceremony->locationAddress()->associate(self::create($data))
       : self::update($ceremony->location_address_id, $data);
-
   }
 }

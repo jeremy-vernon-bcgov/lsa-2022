@@ -5,6 +5,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\RecipientController;
+use App\Http\Controllers\SelfRegistrationController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\AwardController;
 use App\Http\Controllers\CommunityController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\AccommodationController;
 use App\Http\Controllers\AttendeeController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\TestController;
 
 use App\Models\Recipient;
 use App\Models\Organization;
@@ -69,7 +71,7 @@ Route::middleware('auth:sanctum')->group(function() {
 });
 
 /** Recipients self-registration routes */
-Route::controller(RecipientController::class)->group(function() {
+Route::controller(SelfRegistrationController::class)->group(function() {
 
     /** Recipient self-registration workflow routes */
     Route::get('/recipients/{guid}', 'showByGUID');
@@ -128,4 +130,11 @@ Route::controller(ReportsController::class)->group(function() {
     Route::get('/reports/awards/summary/{format}', 'awardsSummary');
     Route::get('/reports/awards/pecsf/{format}', 'pecsfSummary');
     Route::get('/reports/recipients/summary/{format}', 'recipientsSummary');
+});
+
+/** Testing routes */
+Route::controller(TestController::class)->group(function() {
+    Route::put('/test/email/reminder', 'sendTestReminder');
+    Route::put('/test/email/invitation', 'sendTestInvitation');
+    Route::put('/test/email/rsvp-confirmation', 'sendTestRSVPConfirmation');
 });

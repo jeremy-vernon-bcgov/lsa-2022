@@ -293,7 +293,7 @@ class AttendeesHelper
       case 'invited':
         // get assigned ceremony (must be unique)
         $assignedAttendee = $this->getAssignedAttendee($attendable);
-        $ceremony = Ceremony::find($assignedAttendee['ceremonies_id']);
+        $ceremony = Ceremony::with('locationAddress')->find($assignedAttendee['ceremonies_id']);
 
         // clear all existing attendees
         $attendable->attendee()->delete();

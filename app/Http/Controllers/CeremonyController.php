@@ -11,6 +11,9 @@ use App\Classes\AddressHelper;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
+use DateTime;
+use DateInterval;
+use DateTimeZone;
 
 class CeremonyController extends Controller
 {
@@ -23,7 +26,7 @@ class CeremonyController extends Controller
 
   public function index () {
     $this->authorize('viewAny', Ceremony::class);
-    return Ceremony::attendance()->get();
+    return Ceremony::with('locationAddress')->attendance()->get();
   }
 
   /**
@@ -34,7 +37,7 @@ class CeremonyController extends Controller
 
   public function show (Ceremony $ceremony) {
     $this->authorize('view', Ceremony::class);
-    return $ceremony;
+    return Ceremony::with('locationAddress')->find($ceremony->id);
   }
 
   /**
@@ -46,10 +49,14 @@ class CeremonyController extends Controller
   public function store (Request $request) {
     $this->authorize('create', Ceremony::class);
 
+    // set date to PST timezone
+    $scheduled_datetime = new DateTime($request->input('scheduled_datetime'), new DateTimeZone('America/Vancouver'));
+    $location_name = $request->input('location_name');
+
     // create new ceremony
     $ceremony = Ceremony::create([
-      'scheduled_datetime' => $request->input('scheduled_datetime'),
-      'location_name' => $request->input('location_name'),
+      'scheduled_datetime' => $scheduled_datetime,
+      'location_name' => $location_name,
     ]);
 
     // update ceremony location address info
@@ -69,13 +76,16 @@ class CeremonyController extends Controller
   public function update (Request $request, Ceremony $ceremony) {
     $this->authorize('update', Ceremony::class);
 
+    // set date to PST timezone
+    $scheduled_datetime = new DateTime($request->input('scheduled_datetime'), new DateTimeZone('America/Vancouver'));
+
     // update ceremony data
-    $ceremony->scheduled_datetime = $request->input('scheduled_datetime');
-    // $ceremony->location_name = $request->input('location_name');
+    $ceremony->scheduled_datetime = $scheduled_datetime;
+    $ceremony->location_name = $request->input('location_name');
 
     // update ceremony location address info
-    // $addressHelper = new AddressHelper();
-    // $addressHelper->attachCeremony($ceremony, $request->input('location_address'));
+    $addressHelper = new AddressHelper();
+    $addressHelper->attachCeremony($ceremony, $request->input('location_address'));
 
     $ceremony->save();
     return $ceremony;
