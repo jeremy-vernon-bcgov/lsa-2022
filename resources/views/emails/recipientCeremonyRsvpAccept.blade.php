@@ -33,7 +33,7 @@
 
       <p>Please find attached a confirmation of this award.</p>
 
-      <p>We look forward to welcoming you to (chosen location) in the fall!
+      <p>We look forward to welcoming you to {{ $location_name }} in the fall!
 
       <p>Thank you,<br />Long Service Awards Team</p>
 
