@@ -70,6 +70,8 @@ class AddressHelper
     // check if input address data is empty
     $remove = self::isEmpty($data);
 
+    Log::info('Address Update', array('data' => $data));
+
     // create/update and associate new address record
     switch ($data['type']) {
 
