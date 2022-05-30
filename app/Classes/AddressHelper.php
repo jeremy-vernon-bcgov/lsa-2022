@@ -16,9 +16,7 @@ class AddressHelper
   */
   private function isEmpty($data)
   {
-    return isset($data['street_address']) && empty($data['street_address'])
-    && isset($data['postal_code']) && empty($data['postal_code'])
-    && isset($data['community']) && empty($data['community']);
+    return empty($data['street_address']) && empty($data['postal_code']) && empty($data['community']);
   }
 
   /**
