@@ -70,14 +70,15 @@ class AddressHelper
     // check if input address data is empty
     $remove = self::isEmpty($data);
 
-    Log::info('Address Update', array('data' => $data));
-
     // create/update and associate new address record
     switch ($data['type']) {
 
       case 'personal':
       $address = Address::find($recipient->personal_address_id);
       if ($remove) $recipient->personalAddress()->dissociate();
+
+      Log::info('Address Update', array('remove' => $remove, 'existing' => $address, 'data' => $data));
+
       else empty($address)
         ? $recipient->personalAddress()->associate(self::create($data))
         : self::update($recipient->personal_address_id, $data);
