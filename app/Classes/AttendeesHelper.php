@@ -88,11 +88,8 @@ class AttendeesHelper
   */
 
   public function checkRSVP(Attendee $attendee, string $token) {
-
     // lookup RSVP for given key and token
     $storedToken = Cache::get($attendee->id);
-
-    Log::info('RSVP', array('id' => $attendee->id, 'stored token' => $storedToken, 'token' => $token));
     return $storedToken === $token;
   }
 
