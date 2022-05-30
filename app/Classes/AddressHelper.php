@@ -75,10 +75,8 @@ class AddressHelper
 
       case 'personal':
       $address = Address::find($recipient->personal_address_id);
-      if ($remove) $recipient->personalAddress()->dissociate();
-
       Log::info('Address Update', array('remove' => $remove, 'existing' => $address, 'data' => $data));
-
+      if ($remove) $recipient->personalAddress()->dissociate();
       else empty($address)
         ? $recipient->personalAddress()->associate(self::create($data))
         : self::update($recipient->personal_address_id, $data);
