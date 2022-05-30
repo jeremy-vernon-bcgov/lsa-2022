@@ -175,7 +175,7 @@ class AttendeeController extends Controller
       }
       else {
         // remove guest
-        $attendeeHelper->removeGuest($recipient);
+        $attendeeHelper->removeGuests($recipient);
         $recipient->guest()->dissociate();
       }
 
