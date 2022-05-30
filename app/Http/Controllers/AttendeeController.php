@@ -180,7 +180,12 @@ class AttendeeController extends Controller
       }
 
       // handle retirement
-      Log::info('Retirement', array('is_retiring' => $isRetiring, 'date' => $request->input('data.retirement_date'), 'recipient' => $recipient));
+      Log::info(
+        'Retirement', array(
+          'is_retiring' => $isRetiring,
+          'date' => $request->input('data.retirement_date'),
+          'recipient' => $recipient)
+        );
 
       if ($isRetiring) {
         // update forwarding address
