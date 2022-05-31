@@ -54,13 +54,11 @@ class   RecipientCeremonyInvitation extends Mailable
   public function __construct(
     Recipient $recipient, Ceremony $ceremony, Attendee $attendee, string $token, DateTime $expiry)
   {
-
     $this->recipient = $recipient;
     $this->attendee = $attendee;
     $this->ceremony = $ceremony;
     $this->token = $token;
     $this->expiry = $expiry->format('g:ia T \o\n l jS F Y');
-
   }
 
   /**

@@ -42,7 +42,7 @@ class Recipient extends Model
     }
     public function guest()
     {
-        return $this->belongsTo(Guest::class);
+        return $this->hasOne(Guest::class);
     }
 
 

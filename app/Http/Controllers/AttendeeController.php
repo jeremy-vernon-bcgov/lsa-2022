@@ -174,25 +174,23 @@ class AttendeeController extends Controller
         $attendeeHelper->addGuest($recipient, $attendee, $request->input('data.guest_options'));
       }
       else {
-        // remove guest
         $attendeeHelper->removeGuests($recipient);
-        $recipient->guest()->dissociate();
       }
-
-      // handle retirement
-      Log::info(
-        'Retirement', array(
-          'is_retiring' => $isRetiring,
-          'date' => $request->input('data.retirement_date'),
-          'recipient' => $recipient)
-        );
 
       if ($isRetiring) {
         // update forwarding address
         $addressHelper->attachRecipient($recipient, $request->input('data.contact'));
         // set the retirement date
         $recipient->retirement_date = $request->input('data.retirement_date');
+
         $recipient->save();
+        // handle retirement
+        Log::info(
+          'Retirement', array(
+            'is_retiring' => $isRetiring,
+            'date' => $request->input('data.retirement_date'),
+            'recipient' => $recipient)
+          );
       }
     }
     else {
