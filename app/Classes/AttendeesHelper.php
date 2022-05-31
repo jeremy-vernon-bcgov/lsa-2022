@@ -91,8 +91,6 @@ class AttendeesHelper
 
     // lookup RSVP for given key and token
     $storedToken = Cache::get($attendee->id);
-
-    Log::info('RSVP', array('id' => $attendee->id, 'stored token' => $storedToken, 'token' => $token));
     return $storedToken === $token;
   }
 
@@ -219,6 +217,8 @@ class AttendeesHelper
   public function removeGuests(Recipient $recipient) {
     // lookup guest by recipient
     $guests = Guest::where('recipient_id', '=', $recipient->id)->get();
+
+    Log::info('RSVP', array('guests' => $guests));
 
     foreach ($guests as $guest) {
       // get all attendee records for guest record
