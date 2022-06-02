@@ -69,7 +69,7 @@ class   RecipientCeremonyInvitation extends Mailable
   public function build()
   {
     // build attendee RSVP URL
-    $baseURL = env('FRONTEND_URL') . '/registration/rsvp';
+    $baseURL = env('FRONTEND_URL') . 'registration/rsvp';
 
     // format scheduled ceremony date/time
     $scheduled_datetime = new DateTime($this->ceremony->scheduled_datetime, new DateTimeZone('America/Vancouver'));
