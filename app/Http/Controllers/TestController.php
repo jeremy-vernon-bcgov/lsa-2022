@@ -64,6 +64,7 @@ class TestController extends Controller
     $attendeeHelper = new AttendeesHelper();
 
     foreach ($attendees as $attendeeData) {
+
       $recipient = Recipient::find($attendeeData['id']);
 
       // check for ceremony opt-out and registration declaration
@@ -73,9 +74,12 @@ class TestController extends Controller
         ], 500);
       }
 
+Log::info('Recipient', array('recipient' => $recipient));
       // get assigned ceremony (must be unique)
-      $attendeesData = $recipient->attendee()->get()->toArray();
       $assignedAttendee = $attendeeHelper->getAssignedAttendee($recipient);
+      Log::info('Assigned Attendee', array('attendee' => $assignedAttendee));
+      $attendee = Attendee::find($assignedAttendee['id']);
+      $attendee->status = 'invited';
       $ceremony = Ceremony::with('locationAddress')->find($assignedAttendee['ceremonies_id']);
 
       // generate and store RSVP access token
@@ -86,9 +90,6 @@ class TestController extends Controller
       $expiry->setTimezone(new DateTimeZone('America/Vancouver'));
       $expiry->add(new DateInterval('P14D'));
       // Cache::put($attendee->id, $token, $expiry);
-
-      $attendee = Attendee::find($assignedAttendee['id']);
-      $attendee->status = 'invited';
 
       // send test invitation email
       $mailer = new MailHelper();
@@ -127,7 +128,7 @@ class TestController extends Controller
       }
 
       // get assigned ceremony (must be unique)
-      $assignedAttendee = $attendeeHelper->getAssignedAttendee($recipient);
+      $assignedAttendee = $attendeeHelper->getAttendingAttendee($recipient);
       $attendee = Attendee::find($assignedAttendee['id']);
       $attendee->status = 'attending';
 

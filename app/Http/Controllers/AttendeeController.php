@@ -226,8 +226,8 @@ class AttendeeController extends Controller
         // update forwarding address
         $addressHelper->attachRecipient($recipient, $request->input('data.contact'));
         // set the retirement date
+        $recipient->retiring_this_year = 1;
         $recipient->retirement_date = $request->input('data.retirement_date');
-
         $recipient->save();
         // handle retirement
         Log::info(
