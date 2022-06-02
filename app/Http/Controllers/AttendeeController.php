@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Attendee;
+use App\Models\Accommodation;
 use App\Models\Recipient;
 use App\Models\Award;
 use App\Models\Organization;
@@ -17,7 +18,7 @@ class AttendeeController extends Controller
 {
 
   /**
-  * Displays a list of all ceremonies
+  * Displays a list of all attendies
   *
   * @param Attendee $attendee
   */
@@ -34,12 +35,35 @@ class AttendeeController extends Controller
   */
 
   public function show (Attendee $attendee) {
+
     $this->authorize('view', Attendee::class);
-    return Attendee::where('attendees.id', $attendee->id)->with([
-      'ceremonies',
-      'accommodations'
-    ])
-    ->firstOrFail();
+
+    // include ceremony and accommodation data
+    $accommodations = Attendee::where('id', $attendee->id)
+    ->with(['accommodations', 'ceremonies'])
+    ->first();
+
+    // get the recipient record
+    $recipient = Recipient::where('recipients.id', $attendee->attendable_id)->firstOrFail();
+
+    // include guest record (if exists)
+    $guest = isset($recipient->guest->id)
+      ? Attendee::where([
+          ['attendable_id', '=', $recipient->guest->id],
+          ['attendable_type', '=', 'App\Models\Guest']
+        ])
+        ->with(['accommodations'])
+        ->first()
+      : null;
+
+    $attendee->recipient = $recipient;
+    $attendee->guest = $guest;
+    $attendee->accommodations = isset($accommodations->accommodations)
+    ? $accommodations->accommodations
+    : [];
+    $attendee->ceremony = Ceremony::find($attendee->ceremonies_id);
+    return $attendee;
+
   }
 
   /**
@@ -52,17 +76,34 @@ class AttendeeController extends Controller
     $this->authorize('view', Ceremony::class);
 
     $attendees = Attendee::where('ceremonies_id', $ceremony->id)
-    ->with(['ceremonies', 'accommodations']);
+    ->with(['ceremonies', 'accommodations', 'attendable']);
 
-    $recipients = clone $attendees;
-    $guests = clone $attendees;
-    $guest_count = clone $attendees;
-    $recipient_count = $attendees->where('attendable_type', '=', 'App\Models\Recipient')->count();
-    $guest_count = $guest_count->where('attendable_type', '=', 'App\Models\Guest')->count();
+    // filter recipients + include other attendees to recipient records
+    $recipients = (clone $attendees)->recipients()->get();
+    foreach ($recipients as $recipient) {
+      $attachedAttendees = Attendee::where([
+        ['attendable_id', '=', $recipient->attendable_id],
+        ['attendable_type', '=', 'App\Models\Recipient']
+      ])
+      ->with(['ceremonies'])
+      ->get();
+      $recipient->attendee = $attachedAttendees;
+    }
+    // filter for guests
+    $guests = (clone $attendees)->guests()->get();
+
+    // get recipient/guest counts
+    $guest_count = (clone $attendees)
+    ->where('attendable_type', '=', 'App\Models\Guest')
+    ->count();
+    $recipient_count = (clone $attendees)
+    ->where('attendable_type', '=', 'App\Models\Recipient')
+    ->count();
 
     return array(
-      'recipients' => $recipients->recipients()->get(),
-      'guests' => $guests->guests()->get(),
+      'ceremony' => $ceremony,
+      'recipients' => $recipients,
+      'guests' => $guests,
       'total_guests' => $guest_count,
       'total_recipients' => $recipient_count,
       'total_attendees' => $recipient_count + $guest_count
@@ -80,6 +121,9 @@ class AttendeeController extends Controller
   public function update (Request $request, Attendee $attendee) {
     $this->authorize('update', Attendee::class);
 
+    // get recipient record
+    $recipient = Recipient::where('id', '=', $attendee->attendable_id)->firstOrFail();
+
     // attendee must be attending ceremony to edit attendee details
     if (!$attendee->status === 'attending') {
       return response()->json(['error' => 'Invalid'], 422);
@@ -88,16 +132,17 @@ class AttendeeController extends Controller
     $attendeeHelper = new AttendeesHelper();
 
     // recipient accepted the invitation
-    $attendeeHelper->setAccommodations($attendee, $request->input('recipient_options'));
+    $attendeeHelper->setAccommodations($attendee, $request->input('recipient'));
     $attendee->save();
 
-    // add guest data (if exists)
-    if ($request->input('guest')) {
-      $attendeeHelper->addGuest($attendee, $request->input('guest_options'), $attendee->ceremonies_id);
+    Log::info('update guest', array('has' => $request->input('has_guest'), 'guest' => $request->input('guest')));
+
+    // update guest data (if requested)
+    $attendeeHelper->removeGuests($recipient);
+    if ($request->input('has_guest')) {
+      $attendeeHelper->addGuest($recipient, $attendee, $request->input('guest'));
     }
-
     return $attendee;
-
   }
 
   /**
@@ -169,8 +214,8 @@ class AttendeeController extends Controller
       $attendee->status = 'attending';
       $attendee->save();
 
+      // handle added guest and options
       if ($hasGuest) {
-        // handle added guest and options
         $attendeeHelper->addGuest($recipient, $attendee, $request->input('data.guest_options'));
       }
       else {
@@ -222,48 +267,6 @@ class AttendeeController extends Controller
     return $attendee;
   }
 
-
-  /**
-  * Displays a list of all recipients for a attendee with accommodations
-  *
-  * @param Attendee $attendee
-  */
-
-  public function accommodations (Attendee $attendee) {
-
-  }
-
-  /**
-  * Displays a list of all recipients for a attendee
-  *
-  * @param Attendee $attendee
-  */
-
-  public function recipients (Attendee $attendee) {
-
-  }
-
-
-  /**
-  * Gets all the guest information for a attendee night.
-  *
-  * @param Attendee $attendee
-  */
-
-  public function guests (Attendee $attendee) {
-
-  }
-
-  /**
-  * Generates PDF for printed list of all recipients for a attendee
-  * for use in attendee-prep binder.
-  *
-  * @param Attendee $attendee
-  */
-  public function allRecipientsPrint (Attendee $attendee) {
-
-  }
-
   /**
   * Generates a PDF for printing the list of recipients by ID;
   *
@@ -281,45 +284,16 @@ class AttendeeController extends Controller
   }
 
   /**
-  * Generates PDF for printing name-tags.
+  * Return options for an attendee
   *
-  * @param Attendee $attendee
+  * @param Integer $milestone
+  * @return \Illuminate\Http\Response
   */
 
-  public function nameTagsPrint(Attendee $attendee) {
-
+  public function getAccommodations(Attendee $attendee)
+  {
+    return Accommodation::where('attendee_id', '=', $attendee->id);
   }
-
-  /**
-  * Generates the PDF for the printed program.
-  *
-  * @param Attendee $attendee
-  */
-
-  public function programPrint(Attendee $attendee) {
-
-  }
-
-  /**
-  * Generates PDF for printing place cards for a attendee.
-  *
-  * @param Attendee $attendee
-  */
-
-  public function placeCardsPrint(Attendee $attendee) {
-
-  }
-
-  /**
-  * Generates PDF for printing the executive badges for a attendee.
-  *
-  * @param Attendee $attendee
-  */
-
-  public function executiveBadgesPrint(Attendee $attendee) {
-
-  }
-
 
 
 }

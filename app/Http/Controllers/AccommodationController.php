@@ -71,7 +71,7 @@ class AccommodationController extends Controller
     $accommodation->short_name = $request->input('short_name');
     $accommodation->full_name = $request->input('full_name');
     $accommodation->description = $request->input('description');
-    
+
     $accommodation->save();
     return $accommodation;
   }
@@ -87,31 +87,5 @@ class AccommodationController extends Controller
     $accommodation->delete();
     return $accommodation;
   }
-
-  /**
-  * Display a list of accommodations associated with a milestone
-  *
-  * @param Integer $milestone
-  * @return \Illuminate\Http\Response
-  */
-
-  public function getByMilestone($milestone)
-  {
-    return Accommodation::where('milestone', $milestone)->get();
-  }
-
-  /**
-  * Return options for an accommodation
-  *
-  * @param Integer $milestone
-  * @return \Illuminate\Http\Response
-  */
-
-  public function getAccommodationOptions(Accommodation $accommodation)
-  {
-    return $accommodation->get();
-  }
-
-
 
 }

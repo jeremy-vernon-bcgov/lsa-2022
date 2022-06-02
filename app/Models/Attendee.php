@@ -35,21 +35,16 @@ class Attendee extends Model
       return $this->belongsToMany(Accommodation::class);
     }
 
-    // include recipients
+    // filter recipients
     public function scopeRecipients($query)
     {
       return $query
-      ->leftJoin('recipients', 'recipients.id', '=', 'attendees.attendable_id')
-      ->leftJoin('guests', 'guests.recipient_id', '=', 'recipients.id')
+      ->leftJoin('guests', 'guests.recipient_id', '=', 'attendees.attendable_id')
       ->select(
         'attendees.*',
-        'recipients.id AS recipient_id',
-        'recipients.employee_number AS employee_number',
-        'recipients.first_name AS first_name',
-        'recipients.last_name AS last_name',
-        'guests.id AS guest',
-        )
-      ->groupBy('recipients.id')
+        'guests.id AS guest'
+      )
+      ->groupBy('attendees.attendable_id')
       ->where('attendees.attendable_type', 'App\Models\Recipient');
     }
 

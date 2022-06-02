@@ -235,4 +235,43 @@ class RecipientController extends Controller
     }
 
 
+      /**
+       * (Re-)send RSVP confirmation
+       *
+       * @return \Illuminate\Http\Response
+       */
+      public function confirmRSVP(Request $request)
+      {
+
+        $this->authorize('assign', Recipient::class);
+
+        // get requested data
+        $status = $request->input('status');
+        $ceremony = $request->input('ceremony');
+        $attendees = $request->input('attendees');
+
+        // create attendees utitlity helper
+        $attendeeHelper = new AttendeesHelper();
+
+        foreach ($attendees as $attendeeData) {
+          $recipient = Recipient::find($attendeeData['id']);
+          // get assigned ceremony (must be unique)
+          $assignedAttendee = $attendeeHelper->getAttendingAttendee($recipient);
+          $attendee = Attendee::find($assignedAttendee['id']);
+
+          // check for ceremony opt-out and registration declaration
+          if (empty($attendee) || $recipient->ceremony_opt_out || !$recipient->is_declared) {
+            return response()->json([
+              'errors' => "Recipient cannot be assigned a ceremony",
+            ], 500);
+          }
+
+          // send test RSVP confirmation email
+          $mailer = new MailHelper();
+          $mailer->sendRSVPConfirmation($recipient, $attendee);
+        }
+
+      }
+
+
   }

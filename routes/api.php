@@ -68,6 +68,7 @@ Route::middleware('auth:sanctum')->group(function() {
   Route::get('/recipients/delete/{recipient}', [RecipientController::class, 'destroy']);
   Route::put('/recipients/assign/', [RecipientController::class, 'assign']);
   Route::put('/recipients/remind/', [RecipientController::class, 'remind']);
+  Route::put('/recipients/rsvp/confirm/', [RecipientController::class, 'confirmRSVP']);
 });
 
 /** Recipients self-registration routes */
@@ -111,6 +112,7 @@ Route::controller(AttendeeController::class)->group(function() {
   Route::get('/attendees/list', 'index');
   Route::get('/attendees/list/{ceremony}', 'getByCeremony');
   Route::get('/attendees/show/{attendee}', 'show');
+  Route::get('/attendees/accommodations/{attendee}', 'getAccommodations');
   Route::put('/attendees/update/{attendee}', 'update');
   Route::get('/attendees/rsvp/{attendee}/{token}', 'getRSVP');
   Route::post('/attendees/rsvp/{attendee}/{token}', 'setRSVP');

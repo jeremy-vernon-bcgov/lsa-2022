@@ -47,6 +47,22 @@ class AttendeesHelper
   }
 
   /**
+  * Get attending ceremony for attendee
+  *
+  * @return Array
+  */
+
+  public function getAttendingAttendee($attendable) {
+    $attendees = $attendable->attendee()->get()->toArray();
+    return current(array_filter($attendees, function($attendee) {
+      return isset($attendee['status'])
+      && (
+        'attending' == $attendee['status']
+      );
+    }));
+  }
+
+  /**
   * Get top level status for attendee
   *
   * @return Array
@@ -103,8 +119,7 @@ class AttendeesHelper
   public function activateRSVP(Attendee $attendee) {
 
     // set expiry date for +1 hour
-    $expiry = new DateTime();
-    $expiry->setTimezone(new DateTimeZone('America/Vancouver'));
+    $expiry = new DateTime("now", new DateTimeZone('America/Vancouver'));
     $expiry->add(new DateInterval('PT1H'));
 
     // pull RSVP token for given attendee
@@ -116,9 +131,7 @@ class AttendeesHelper
     array('id' => $attendee->id, 'stored token' => $token, 'token' => $token));
 
     // format scheduled date and time
-    $scheduled_datetime = new DateTime($attendee->ceremonies->scheduled_datetime);
-    $scheduled_datetime->setTimezone(new DateTimeZone('America/Vancouver'));
-
+    $scheduled_datetime = new DateTime($attendee->ceremonies->scheduled_datetime, new DateTimeZone('America/Vancouver'));
 
     // token is valid and active
     return array(
@@ -259,6 +272,17 @@ class AttendeesHelper
     switch ($status) {
 
       case 'assigned':
+
+        // check attendee status
+        $status = $this->getStatus($attendable);
+
+        // check that attendee can be assigned
+        if ($status === 'attending' || $status === 'declined' || $status === 'invited') {
+          return response()->json([
+                'errors' => "Attendee cannot be assigned to this ceremony",
+            ], 500);
+        }
+
         // clear all existing assignments
         $attendable->attendee()->delete();
         // assign attendee to ceremony
@@ -306,8 +330,7 @@ class AttendeesHelper
         // - set expiration in two weeks (2 x 604800 seconds)
         $token = Str::random(60);
         // set expiry date for +14 days
-        $expiry = new DateTime();
-        $expiry->setTimezone(new DateTimeZone('America/Vancouver'));
+        $expiry = new DateTime("now", new DateTimeZone('America/Vancouver'));
         $expiry->add(new DateInterval('P14D'));
         Cache::put($attendee->id, $token, $expiry);
 
@@ -322,8 +345,15 @@ class AttendeesHelper
         * Remove the attendee record and any attachments
       */
 
-        // get all attendee records for attendable record
-        $attendees = Attendee::where('attendable_id', '=', $attendable->id)->get();
+      Log::info('Reset Attendees', array('context' => get_class($attendable)));
+
+        // get all attendee records for attendable
+        $attendees = Attendee::where([
+          ['attendable_id', '=', $attendable->id],
+          ['attendable_type', '=', get_class($attendable)]
+        ])->get();
+
+
 
         // clear all accommodations attached to attendees
         foreach ($attendees as $attendee) {
