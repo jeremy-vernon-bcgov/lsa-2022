@@ -2,6 +2,8 @@
 namespace App\Classes;
 use App\Models\Recipient;
 use App\Models\Award;
+use App\Models\Attendee;
+use App\Models\Ceremony;
 use App\Models\PecsfCharity;
 use App\Models\PecsfRegion;
 use Illuminate\Http\Response;
@@ -24,14 +26,14 @@ class ReportsHelper
 
     // return CSV data stream for download
     return response()->stream(function() use($rows){
-        $file = fopen('php://output', 'w+');
-        // process data rows
-        foreach ($rows as $key => $row) {
-          // create header row on first record
-          if ($key === 0) fputcsv($file, array_keys($row));
-          fputcsv($file, $row);
-        }
-        fclose($file);
+      $file = fopen('php://output', 'w+');
+      // process data rows
+      foreach ($rows as $key => $row) {
+        // create header row on first record
+        if ($key === 0) fputcsv($file, array_keys($row));
+        fputcsv($file, $row);
+      }
+      fclose($file);
 
     }, 200, $headers);
   }
@@ -246,16 +248,15 @@ class ReportsHelper
   }
 
 
-
   /**
   * Prepare recipient data for reporting
   *
   * @return Array
   */
-  public function filterRecipientData($recipient){
+  public function filterRecipientData($recipient, bool $includeAward=true){
 
     // extract award and options
-    $award = $this->getRecipientAwards($recipient);
+    $award = $includeAward ? $this->getRecipientAwards($recipient) : null;
 
     return array(
       'employee_number' => strval($recipient['employee_number']),
@@ -312,10 +313,10 @@ class ReportsHelper
       'ceremony_opt_out' => $recipient['ceremony_opt_out'] ? 'Yes' : 'No',
       'survey_participation' => $recipient['survey_participation'] ? 'Yes' : 'No',
 
-      'award' => $award['name'],
-      'watch_options' => $award['type'] === 'watch' ? $award['options'] : '',
-      'bracelet_options' => $award['type'] === 'bracelet' ? $award['options'] : '',
-      'other_options' => $award['type'] === '' ? $award['options'] : '',
+      'award' => $award ? $award['name'] : '',
+      'watch_options' => $award && $award['type'] === 'watch' ? $award['options'] : '',
+      'bracelet_options' => $award && $award['type'] === 'bracelet' ? $award['options'] : '',
+      'other_options' => $award && $award['type'] === '' ? $award['options'] : '',
 
       'admin_notes' => $recipient['admin_notes'],
 
@@ -324,6 +325,31 @@ class ReportsHelper
     );
   }
 
+
+  /**
+  * Prepare attendee data for reporting
+
+  *
+  * @return Array
+  */
+  public function filterAttendeeData(Array $attendee){
+
+    // extract attendee's accommodations names and types
+    $accommodations = array_map(function(Array $arr) {
+      return $arr['full_name'].' ('.$arr['type'].') ';
+    }, $attendee['accommodations']);
+
+    Log::info('accomods', array('context' => $accommodations, 'source' => $attendee['accommodations']));
+
+    return array(
+      'attendee_id' => strval($attendee['id']),
+      'status' => $attendee['status'],
+      'location_name' => $attendee['ceremonies']['location_name'],
+      'scheduled_datetime' => $attendee['ceremonies']['scheduled_datetime'],
+      'accommodations' => implode(',', $accommodations),
+      'guest' => $attendee['status'] === 'attending' && !empty($attendee['guest']) ? 'Yes' : 'No',
+    );
+  }
 
   /**
   * Extract PECSF award options from given award selections
@@ -343,8 +369,8 @@ class ReportsHelper
 
       // index selected options by ID
       $options = isset($optionData->selections)
-        ? $optionData->selections
-        : array();
+      ? $optionData->selections
+      : array();
 
       $indexedOptions = array();
       foreach ($options as $option) {
@@ -416,4 +442,32 @@ class ReportsHelper
         return $results;
       }
 
+
+      /**
+      * Tally attendee stats by ceremony night
+      *
+      * @return Array
+      */
+      public function getAttendees(Array $recipients){
+
+        // get attendee records
+        $attendees = Attendee::with(['ceremonies', 'accommodations', 'attendable'])
+        ->leftJoin('guests', 'guests.recipient_id', '=', 'attendees.attendable_id')
+        ->select(
+          'attendees.*',
+          'guests.id AS guest'
+        )
+        ->get()
+        ->toArray();
+
+        $results = [];
+
+        // iterate over attendees
+        // - include recipient data
+        foreach ($attendees as $attendee) {
+          $recipient = $this->filterRecipientData($recipients[$attendee['attendable_id']]);
+          $results[] = array_merge($this->filterAttendeeData($attendee), $recipient);
+        }
+        return $results;
+      }
     }

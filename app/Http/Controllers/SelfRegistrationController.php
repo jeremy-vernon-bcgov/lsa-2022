@@ -40,7 +40,7 @@ class SelfRegistrationController extends Controller
       }
 
       $recipientHelper = new RecipientsHelper();
-      $recipientHelper->storeIdentification($request);
+      return $recipientHelper->storeIdentification($request);
     }
 
     /**
@@ -52,7 +52,7 @@ class SelfRegistrationController extends Controller
     */
     public function storeMilestone(Request $request, Recipient $recipient) {
       $recipientHelper = new RecipientsHelper();
-      $recipientHelper->storeMilestone($request, $recipient);
+      return $recipientHelper->storeMilestone($request, $recipient);
     }
 
     /**
@@ -64,8 +64,8 @@ class SelfRegistrationController extends Controller
     */
     public function storeAward(Request $request, Recipient $recipient) {
       $recipientHelper = new RecipientsHelper();
-      $recipientHelper->storeMilestone($request, $recipient);
-      }
+      return $recipientHelper->storeMilestone($request, $recipient);
+    }
 
 
       /**
@@ -77,7 +77,7 @@ class SelfRegistrationController extends Controller
       */
       public function storeServicePins(Request $request, Recipient $recipient) {
         $recipientHelper = new RecipientsHelper();
-        $recipientHelper->storeServicePins($request, $recipient);
+        return $recipientHelper->storeServicePins($request, $recipient);
       }
 
       /**
@@ -90,7 +90,7 @@ class SelfRegistrationController extends Controller
       */
       public function storeDeclarations(Request $request, Recipient $recipient, bool $sendEmail=true) {
         $recipientHelper = new RecipientsHelper();
-        $recipientHelper->storeDeclarations($request, $recipient, $sendEmail);
+        return $recipientHelper->storeDeclarations($request, $recipient, $sendEmail);
       }
 
       /**
@@ -102,8 +102,7 @@ class SelfRegistrationController extends Controller
       */
       public function storePersonalContact(Request $request, Recipient $recipient) {
         $recipientHelper = new RecipientsHelper();
-        $recipientHelper->storePersonalContact($request, $recipient);
-
+        return $recipientHelper->storePersonalContact($request, $recipient);
       }
 
       /**

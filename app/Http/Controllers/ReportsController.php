@@ -22,7 +22,7 @@ class ReportsController extends Controller
   *
   * @return \Illuminate\Http\Response
   */
-  public function recipientsSummary(String $format)
+  public function recipientsList(String $format)
   {
 
     $this->authorize('export', Recipient::class);
@@ -81,66 +81,101 @@ class ReportsController extends Controller
           'recipients.id',
           'award_recipient.award_id AS award',
           'award_recipient.options AS options')
-        ->where('recipients.is_declared', 1)
-        ->get();
+          ->where('recipients.is_declared', 1)
+          ->get();
 
-        // calculate award totals for output
-        $processor = new ReportsHelper();
-        $totals = $processor->getAwardTotals($selections, $awards);
+          // calculate award totals for output
+          $processor = new ReportsHelper();
+          $totals = $processor->getAwardTotals($selections, $awards);
 
-        if ($format === 'pdf') {
-          $pdf = PDF::loadView('documents.awardsSummaryList', compact('totals'));
-          $pdf->setPaper('A4', 'landscape');
-          return $pdf->download('awards-summary-list.pdf');
+          if ($format === 'pdf') {
+            $pdf = PDF::loadView('documents.awardsSummaryList', compact('totals'));
+            $pdf->setPaper('A4', 'landscape');
+            return $pdf->download('awards-summary-list.pdf');
+          }
+          elseif ($format === 'csv') {
+            return $processor->csv($totals, 'lsa-awards-summary.csv');
+          }
+          else {
+            return $totals;
+          }
         }
-        elseif ($format === 'csv') {
-          return $processor->csv($totals, 'lsa-awards-summary.csv');
+
+        /**
+        * PECSF Donations summary report
+        *
+        * @return \Illuminate\Http\Response
+        */
+        public function pecsfSummary(string $format)
+        {
+          $this->authorize('report', Award::class);
+          $processor = new ReportsHelper();
+          $selections = $processor->getPECSFSelections();
+
+          if ($format === 'pdf') {
+            $pdf = PDF::loadView('documents.pecsfSummaryList', compact('selections'));
+            $pdf->setPaper('tabloid', 'landscape');
+            return $pdf->download('pecsf-summary-list.pdf');
+          }
+          elseif ($format === 'csv') {
+            return $processor->csv($selections, 'lsa-pecsf-summary.csv');
+          }
+          else {
+            return $selections;
+          }
+
         }
-        else {
-          return $totals;
+
+
+        /**
+        * Attendees Data Export: Exports all attendee/ceremony data [CSV]
+        *
+        * @return \Illuminate\Http\Response
+        */
+        public function attendeesList(String $format)
+        {
+
+          $this->authorize('export', Recipient::class);
+          $authUser = auth()->user();
+
+          // get recipients authorized for admin user
+          $recipients = Recipient::with([
+            'personalAddress',
+            'supervisorAddress',
+            'officeAddress',
+            'awards',
+            'attendee'])
+            ->declared($authUser)
+            ->userOrgs($authUser)
+            ->metadata()
+            ->get()
+            ->keyBy('id')
+            ->toArray();
+
+            // prepare attendee data for reporting
+            $processor = new ReportsHelper();
+            $attendees = $processor->getAttendees($recipients);
+
+          // stream CSV data
+          return $processor->csv($attendees, 'lsa-attendees.csv');
+
+        }
+
+        /**
+        * Generate Recipient Reports
+        *
+        * @param \Illuminate\Http\Request $request
+        * @param \App\Model\Recipient $recipient
+        * @return \Illuminate\Http\Response
+        */
+
+        public function generateAllRecipientReport() {
+
+          $this->authorize('viewAny', Recipient::class);
+
+          $pdf = PDF::loadView('documents.recipientsByMinistry');
+          return $pdf->download('recipients-by-ministry.pdf');
+
+        }
+
       }
-    }
-
-    /**
-    * PECSF Donations summary report
-    *
-    * @return \Illuminate\Http\Response
-    */
-    public function pecsfSummary(string $format)
-    {
-      $this->authorize('report', Award::class);
-      $processor = new ReportsHelper();
-      $selections = $processor->getPECSFSelections();
-
-      if ($format === 'pdf') {
-        $pdf = PDF::loadView('documents.pecsfSummaryList', compact('selections'));
-        $pdf->setPaper('tabloid', 'landscape');
-        return $pdf->download('pecsf-summary-list.pdf');
-      }
-      elseif ($format === 'csv') {
-        return $processor->csv($selections, 'lsa-pecsf-summary.csv');
-      }
-      else {
-        return $selections;
-      }
-
-    }
-
-    /**
-    * Generate Recipient Reports
-    *
-    * @param \Illuminate\Http\Request $request
-    * @param \App\Model\Recipient $recipient
-    * @return \Illuminate\Http\Response
-    */
-
-    public function generateAllRecipientReport() {
-
-      $this->authorize('viewAny', Recipient::class);
-
-      $pdf = PDF::loadView('documents.recipientsByMinistry');
-      return $pdf->download('recipients-by-ministry.pdf');
-
-    }
-
-}

@@ -35,11 +35,13 @@ class Attendee extends Model
       return $this->belongsToMany(Accommodation::class);
     }
 
-    // filter recipients
+    // filter recipients and include referenced data
     public function scopeRecipients($query)
     {
       return $query
-      ->leftJoin('guests', 'guests.recipient_id', '=', 'attendees.attendable_id')
+      ->leftJoin('guests', function($join) {
+        $join->on('guests.recipient_id', '=', 'attendees.attendable_id');
+      })
       ->select(
         'attendees.*',
         'guests.id AS guest'

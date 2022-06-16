@@ -75,7 +75,7 @@ Route::middleware('auth:sanctum')->group(function() {
 Route::controller(SelfRegistrationController::class)->group(function() {
 
     /** Recipient self-registration workflow routes */
-    Route::get('/recipients/{guid}', 'showByGUID');
+    Route::get('/recipients/guid/{guid}', 'showByGUID');
     Route::get('/recipients/employee_number/{employee_number}', 'checkRecipientByEmployeeId');
     Route::get('/recipients/archived/{employee_number}', 'showArchivedRecipientByEmployeeId');
 
@@ -131,7 +131,8 @@ Route::controller(AccommodationController::class)->group(function() {
 Route::controller(ReportsController::class)->group(function() {
     Route::get('/reports/awards/summary/{format}', 'awardsSummary');
     Route::get('/reports/awards/pecsf/{format}', 'pecsfSummary');
-    Route::get('/reports/recipients/summary/{format}', 'recipientsSummary');
+    Route::get('/reports/recipients/summary/{format}', 'recipientsList');
+    Route::get('/reports/attendees/summary/{format}', 'attendeesList');
 });
 
 /** Testing routes */

@@ -47,7 +47,7 @@ class AttendeeController extends Controller
     $recipient = Recipient::where('recipients.id', $attendee->attendable_id)->firstOrFail();
 
     // include guest record (if exists)
-    $guest = isset($recipient->guest->id)
+    $guest = $attendee->status === 'attending' && isset($recipient->guest->id)
       ? Attendee::where([
           ['attendable_id', '=', $recipient->guest->id],
           ['attendable_type', '=', 'App\Models\Guest']

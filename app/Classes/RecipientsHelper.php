@@ -88,6 +88,11 @@ class RecipientsHelper
   */
   public function update(Request $request, Recipient $recipient)
   {
+    // set default preferred_email
+    $preferred_email = $request->input('preferred_email')
+      ? $request->input('preferred_email')
+      : 'government';
+
     // update recipient identification details
     $recipient->employee_number = $request->input('employee_number');
     $recipient->first_name = $request->input('first_name');
@@ -96,7 +101,7 @@ class RecipientsHelper
     $recipient->government_phone_number = $request->input('government_phone_number');
     $recipient->personal_email = $request->input('personal_email');
     $recipient->organization_id = $request->input('organization_id');
-    $recipient->preferred_email = $request->input('preferred_email');
+    $recipient->preferred_email = $preferred_email;
     $recipient->branch_name = $request->input('branch_name');
 
     // attach office address info
@@ -116,7 +121,7 @@ class RecipientsHelper
   * @param \App\Model\Recipient $recipient
   * @return \Illuminate\Http\Response
   */
-  public function getByGUID(Recipient $recipient) {
+  public function getByGUID(String $guid) {
     return Recipient::where('guid', $guid)->with([
       'personalAddress',
       'supervisorAddress',

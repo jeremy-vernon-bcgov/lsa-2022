@@ -147,6 +147,6 @@ class RecipientPolicy
   */
   public function export(User $user)
   {
-    return $user->hasRole('admin') || $user->hasRole('super-admin');
+    return $user->can('view recipients');
   }
 }

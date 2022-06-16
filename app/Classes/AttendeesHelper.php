@@ -63,6 +63,22 @@ class AttendeesHelper
   }
 
   /**
+  * Get declined ceremony for attendee
+  *
+  * @return Array
+  */
+
+  public function getDeclinedAttendee($attendable) {
+    $attendees = $attendable->attendee()->get()->toArray();
+    return current(array_filter($attendees, function($attendee) {
+      return isset($attendee['status'])
+      && (
+        'declined' == $attendee['status']
+      );
+    }));
+  }
+
+  /**
   * Get top level status for attendee
   *
   * @return Array
@@ -232,8 +248,6 @@ class AttendeesHelper
     // lookup guest by recipient
     $guests = Guest::where('recipient_id', '=', $recipient->id)->get();
 
-    Log::info('RSVP', array('guests' => $guests));
-
     foreach ($guests as $guest) {
       // get all attendee records for guest record
       $attendees = Attendee::where('attendable_id', '=', $guest->id)->get();
@@ -315,10 +329,12 @@ class AttendeesHelper
         }
       break;
 
+
       case 'invited':
+
         // get assigned ceremony (must be unique)
         $assignedAttendee = $this->getAssignedAttendee($attendable);
-        $ceremony = Ceremony::with('locationAddress')->find($assignedAttendee['ceremonies_id']);
+        $ceremony = Ceremony::find($assignedAttendee['ceremonies_id']);
 
         // clear all existing attendees
         $attendable->attendee()->delete();
@@ -341,6 +357,72 @@ class AttendeesHelper
 
       break;
 
+
+      case 'attending':
+
+        // get assigned ceremony (must be unique)
+        $declinedAttendee = $this->getDeclinedAttendee($attendable);
+        Log::info('attendee', array('context' => $declinedAttendee));
+        $ceremony = Ceremony::find($declinedAttendee['ceremonies_id']);
+
+        // get attendance record for requested ceremony
+        $attendee = Attendee::where([
+          'attendable_id' => $attendable->id,
+          'ceremonies_id' => $ceremony->id
+        ])->first();
+
+        // check that attendee can be set to attend the ceremony
+        if ($attendee->status !== 'declined') {
+          return response()->json([
+                'errors' => "Attendee has not declined this ceremony RSVP",
+            ], 500);
+        }
+
+        $attendee->status = 'attending';
+        $attendee->save();
+
+        // send RSVP confirmation email
+        $mailer = new MailHelper();
+        $mailer->sendRSVPConfirmation($attendable, $attendee);
+
+      break;
+
+      case 'declined':
+
+        // get assigned ceremony (must be unique)
+        $attendingAttendee = $this->getAttendingAttendee($attendable);
+        Log::info('attendee', array('context' => $attendingAttendee));
+        $ceremony = Ceremony::with('locationAddress')->find($attendingAttendee['ceremonies_id']);
+
+        // get attendance record for requested ceremony
+        $attendee = Attendee::where([
+          'attendable_id' => $attendable->id,
+          'ceremonies_id' => $ceremony->id
+        ])->first();
+
+        Log::info('attendee', array('context' => $attendee));
+
+        // check that attendee can be set to attend the ceremony
+        if ($attendee->status !== 'attending') {
+          return response()->json([
+                'errors' => "Attendee has not declined this ceremony RSVP",
+            ], 500);
+        }
+
+        $attendee->status = 'declined';
+        $attendee->save();
+
+        // remove accommodations and guests
+        $attendee->accommodations()->detach();
+        $this->removeGuests($attendable);
+
+        // send RSVP confirmation email
+        $mailer = new MailHelper();
+        $mailer->sendRSVPConfirmation($attendable, $attendee);
+
+
+      break;
+
       case 'reset':
       /*
         * Remove the attendee record and any attachments
@@ -353,8 +435,6 @@ class AttendeesHelper
           ['attendable_id', '=', $attendable->id],
           ['attendable_type', '=', get_class($attendable)]
         ])->get();
-
-
 
         // clear all accommodations attached to attendees
         foreach ($attendees as $attendee) {

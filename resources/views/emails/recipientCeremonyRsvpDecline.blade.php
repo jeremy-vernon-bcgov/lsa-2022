@@ -2,10 +2,6 @@
 @section('title', 'Ceremony Invitation')
 @section('content')
 
-      <div class="coat-of-arms">
-           <img class="coat-of-arms" src="https://longserviceawards.gww.gov.bc.ca/wp-content/uploads/2022/05/coat-of-arms.png">
-      </div>
-
       <p>This is an automated email. No response is required.</p>
 
       <p>{{ $first_name }} {{ $last_name }},</p>
