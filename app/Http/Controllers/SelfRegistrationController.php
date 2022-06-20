@@ -64,7 +64,7 @@ class SelfRegistrationController extends Controller
     */
     public function storeAward(Request $request, Recipient $recipient) {
       $recipientHelper = new RecipientsHelper();
-      return $recipientHelper->storeMilestone($request, $recipient);
+      return $recipientHelper->storeAward($request, $recipient);
     }
 
 
