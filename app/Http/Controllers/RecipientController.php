@@ -110,11 +110,11 @@ class RecipientController extends Controller
       $recipient = $recipientHelper->storeAward($request, $recipient);
       $recipient = $recipientHelper->storePersonalContact($request, $recipient);
       $recipient = $recipientHelper->storeServicePins($request, $recipient);
-      $recipient = $recipientHelper->storeDeclarations($request, $recipient);
+      $recipient = $recipientHelper->storeDeclarations($request, $recipient, false);
       $recipient = $recipientHelper->storeAdmin($request, $recipient);
       $recipient->save();
 
-      return $this->get($recipient->id);
+      return $recipientHelper->get($recipient->id);
     }
 
     /**
