@@ -12,15 +12,15 @@
         <a href="mailto:LongServiceAwards@gov.bc.ca?subject=RSVP%20to%20ceremony">Long Service Awards</a>
         team as soon as possible.</p>
 
-      <p>The ceremony will take place on <strong>{{ $scheduled_date }}</strong> at
-        <strong>
+      <p>The ceremony will take place on {{ $scheduled_date }} at
+
           @if (!empty($location_name) && !empty($street_address) && !empty($community) && !empty($province))
             {{ $location_name }}, {{ $street_address }}, {{ $community }}, {{ $province }}
           @else
             (TBD)
           @endif
-        </strong>
-        Dress: Business attire. <b>Doors open at {{ $scheduled_time }}</b>.</p>
+
+        Dress: Business attire. Doors open at {{ $scheduled_time }}.</p>
 
       <p>For information about travel reimbursement and taking time off, visit the
         <a href="https://longserviceawards.gww.gov.bc.ca/travel/">Long Service Awards website</a>
