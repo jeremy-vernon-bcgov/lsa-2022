@@ -85,7 +85,7 @@ class   RecipientCeremonyInvitationConfirm extends Mailable
         'street_address' => $street_address,
         'community' => $community,
         'province' => $province,
-        'scheduled_date' => $scheduled_datetime->format('l, F j Y'),
+        'scheduled_date' => $scheduled_datetime->format('l, F j, Y'),
         'scheduled_time' => $scheduled_datetime->format('g:i a'),
       ];
 

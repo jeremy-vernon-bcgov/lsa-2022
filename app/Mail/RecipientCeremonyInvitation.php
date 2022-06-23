@@ -58,7 +58,7 @@ class   RecipientCeremonyInvitation extends Mailable
     $this->attendee = $attendee;
     $this->ceremony = $ceremony;
     $this->token = $token;
-    $this->expiry = $expiry->format('g:i a \o\n l, F j Y');
+    $this->expiry = $expiry->format('g:i a \o\n l, F j, Y');
   }
 
   /**
@@ -93,7 +93,7 @@ class   RecipientCeremonyInvitation extends Mailable
     ->view('emails.recipientCeremonyInvitation', [
       'first_name' => $this->recipient->first_name,
       'last_name' => $this->recipient->last_name,
-      'scheduled_date' => $scheduled_datetime->format('l, F j Y'),
+      'scheduled_date' => $scheduled_datetime->format('l, F j, Y'),
       'scheduled_time' => $scheduled_datetime->format('g:i a'),
       'location_name' => $location_name,
       'street_address' => $street_address,

@@ -99,6 +99,18 @@ class AttendeeController extends Controller
     $recipient_count = (clone $attendees)
     ->where('attendable_type', '=', 'App\Models\Recipient')
     ->count();
+    $attending_count = (clone $attendees)
+    ->where([
+      ['status', '=', 'attending'],
+      ['attendable_type', '=', 'App\Models\Recipient']
+    ])
+    ->count();
+    $declined_count = (clone $attendees)
+    ->where([
+      ['status', '=', 'declined'],
+      ['attendable_type', '=', 'App\Models\Recipient']
+    ])
+    ->count();
 
     return array(
       'ceremony' => $ceremony,
@@ -106,7 +118,9 @@ class AttendeeController extends Controller
       'guests' => $guests,
       'total_guests' => $guest_count,
       'total_recipients' => $recipient_count,
-      'total_attendees' => $recipient_count + $guest_count
+      'total_attendees' => $recipient_count + $guest_count,
+      'total_attending' => $attending_count,
+      'total_declined' => $declined_count,
     );
 
   }
