@@ -86,7 +86,7 @@ class   RecipientCeremonyInvitationConfirm extends Mailable
         'community' => $community,
         'province' => $province,
         'scheduled_date' => $scheduled_datetime->format('l, F j Y'),
-        'scheduled_time' => $scheduled_datetime->format('g:ia'),
+        'scheduled_time' => $scheduled_datetime->format('g:i a'),
       ];
 
       // set PDF options

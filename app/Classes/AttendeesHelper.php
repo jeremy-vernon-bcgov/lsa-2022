@@ -152,9 +152,9 @@ class AttendeesHelper
     // token is valid and active
     return array(
       'recipient' => $attendee->attendable,
-      'scheduled_datetime_formatted' => $scheduled_datetime->format('g:ia \o\n l, F j Y'),
+      'scheduled_datetime_formatted' => $scheduled_datetime->format('g:i a \o\n l, F j Y'),
       'scheduled_datetime' => $attendee->ceremonies->scheduled_datetime,
-      'expiration' => $expiry->format('g:ia \o\n l, F j Y')
+      'expiration' => $expiry->format('g:i a \o\n l, F j Y')
     );
 
   }
