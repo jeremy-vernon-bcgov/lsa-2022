@@ -20,8 +20,7 @@
             (TBD)
           @endif
         </strong>
-        and business attire is recommended.
-        <b>Doors open at {{ $scheduled_time }}</b>. Your invitation is not required for entry to the ceremony.</p>
+        Dress: Business attire. <b>Doors open at {{ $scheduled_time }}</b>.</p>
 
       <p>For information about travel reimbursement and taking time off, visit the
         <a href="https://longserviceawards.gww.gov.bc.ca/travel/">Long Service Awards website</a>
@@ -31,11 +30,11 @@
         <a href="mailto:longserviceawards@gov.bc.ca?subject=Question%20about%20LSA%20ceremony">
           Long Service Awards team</a>.</p>
 
-      <p>Please find attached a confirmation of this award.</p>
+      <p>Please find confirmation of this award attached.</p>
 
-      <p>We look forward to welcoming you to {{ $location_name }} in the fall!
+      <p>We look forward to celebrating your important milestone at the ceremony.</p>
 
-      <p>Thank you,<br />Long Service Awards Team</p>
+      <p>Thank you,<br /><br />Long Service Awards Team</p>
 
 
 @endsection

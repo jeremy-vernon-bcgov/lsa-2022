@@ -27,7 +27,7 @@
         </tbody>
       </table>
 
-      <p>This invitation is for the intended recipient and one guest.</p>
+      <p>This invitation is for the intended recipient and a guest.</p>
 
       <p>Dress: Business attire</p>
 

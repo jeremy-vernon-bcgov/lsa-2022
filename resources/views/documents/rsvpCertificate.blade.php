@@ -3,6 +3,7 @@
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
 
@@ -49,7 +50,7 @@
 
   h3 {
     font-family: 'Cormorant-Garamond-Regular';
-    font-size: 22pt;
+    font-size: 22px;
     font-weight: bold;
   }
 
@@ -105,15 +106,13 @@
 
   </style>
 
-
-
-  <title>Printable Keepsake Invitation</title>
+  <title>Long Service Awards: Printable Keepsake Invitation</title>
 </head>
 <body>
   <div class="certificate-body">
 
     <div class="coat-of-arms">
-      <img class="coat-of-arms" src="https://longserviceawards.gww.gov.bc.ca/wp-content/uploads/2022/05/coat-of-arms.png">
+      <img class="coat-of-arms" src="https://longserviceawards.gww.gov.bc.ca/wp-content/uploads/2022/06/coat-of-arms-web.png">
     </div>
     <div class="template-text">
 

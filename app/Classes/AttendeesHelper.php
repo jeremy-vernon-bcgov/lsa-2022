@@ -152,9 +152,9 @@ class AttendeesHelper
     // token is valid and active
     return array(
       'recipient' => $attendee->attendable,
-      'scheduled_datetime_formatted' => $scheduled_datetime->format('g:ia \o\n l jS F Y'),
+      'scheduled_datetime_formatted' => $scheduled_datetime->format('g:ia \o\n l, F j Y'),
       'scheduled_datetime' => $attendee->ceremonies->scheduled_datetime,
-      'expiration' => $expiry->format('g:ia \o\n l jS F Y')
+      'expiration' => $expiry->format('g:ia \o\n l, F j Y')
     );
 
   }
@@ -182,8 +182,7 @@ class AttendeesHelper
 
     // iterate over accommodation types
     foreach ($accommodations as $type => $selections) {
-      Log::info('Set Accommodations',
-      array('type' => $type, 'data' => $selections));
+      //Log::info('Set Accommodations', array('type' => $type, 'data' => $selections));
 
       // detach existing accommodations and update new ones
       $attendee->accommodations()->syncWithoutDetaching($selections);

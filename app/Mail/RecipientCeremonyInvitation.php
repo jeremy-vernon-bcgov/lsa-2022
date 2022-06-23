@@ -58,7 +58,7 @@ class   RecipientCeremonyInvitation extends Mailable
     $this->attendee = $attendee;
     $this->ceremony = $ceremony;
     $this->token = $token;
-    $this->expiry = $expiry->format('g:ia T \o\n l jS F Y');
+    $this->expiry = $expiry->format('g:ia \o\n l, F j Y');
   }
 
   /**
@@ -89,11 +89,11 @@ class   RecipientCeremonyInvitation extends Mailable
     $attendingURL = "$baseURL/attending/$id/$token";
 
     return $this
-    ->subject('Invitation to Long Service Awards Ceremony')
+    ->subject('Invitation to the Long Service Awards Ceremony')
     ->view('emails.recipientCeremonyInvitation', [
       'first_name' => $this->recipient->first_name,
       'last_name' => $this->recipient->last_name,
-      'scheduled_date' => $scheduled_datetime->format('l jS F Y'),
+      'scheduled_date' => $scheduled_datetime->format('l, F j Y'),
       'scheduled_time' => $scheduled_datetime->format('g:ia'),
       'location_name' => $location_name,
       'street_address' => $street_address,
