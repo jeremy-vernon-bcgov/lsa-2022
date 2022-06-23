@@ -334,7 +334,7 @@ class AttendeesHelper
 
         // get assigned ceremony (must be unique)
         $assignedAttendee = $this->getAssignedAttendee($attendable);
-        $ceremony = Ceremony::find($assignedAttendee['ceremonies_id']);
+        $ceremony = Ceremony::with('locationAddress')->find($assignedAttendee['ceremonies_id']);
 
         // clear all existing attendees
         $attendable->attendee()->delete();
@@ -362,8 +362,7 @@ class AttendeesHelper
 
         // get assigned ceremony (must be unique)
         $declinedAttendee = $this->getDeclinedAttendee($attendable);
-        Log::info('attendee', array('context' => $declinedAttendee));
-        $ceremony = Ceremony::find($declinedAttendee['ceremonies_id']);
+        $ceremony = Ceremony::with('locationAddress')->find($declinedAttendee['ceremonies_id']);
 
         // get attendance record for requested ceremony
         $attendee = Attendee::where([

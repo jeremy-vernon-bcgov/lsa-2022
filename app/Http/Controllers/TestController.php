@@ -74,10 +74,10 @@ class TestController extends Controller
         ], 500);
       }
 
-Log::info('Recipient', array('recipient' => $recipient));
+      // Log::info('Recipient', array('recipient' => $recipient));
       // get assigned ceremony (must be unique)
       $assignedAttendee = $attendeeHelper->getAssignedAttendee($recipient);
-      Log::info('Assigned Attendee', array('attendee' => $assignedAttendee));
+      // Log::info('Assigned Attendee', array('attendee' => $assignedAttendee));
       $attendee = Attendee::find($assignedAttendee['id']);
       $attendee->status = 'invited';
       $ceremony = Ceremony::with('locationAddress')->find($assignedAttendee['ceremonies_id']);
