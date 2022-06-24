@@ -8,10 +8,10 @@
 
       <p>Thank you for confirming that you will not be attending your Long Service Award ceremony.</p>
 
-      <p>Long Service Awards are presented the year you register. <b>Your award will be mailed to
+      <p>Long Service Awards are presented the year you register. Your award will be mailed to
         your organization following your organizations 2022 ceremony, and your
         <a href="https://longserviceawards.gww.gov.bc.ca/contacts/">ministry/organization
-        contact</a> will make arrangements to have your award presented to you.</b></p>
+        contact</a> will make arrangements to have your award presented to you.</p>
 
       <p>Note: You can defer your attendance at the ceremony for one year. You will need to register
         again in March/April 2023 to take advantage of the one-year deferral.</p>
