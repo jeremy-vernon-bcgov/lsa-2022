@@ -4,6 +4,9 @@ use App\Models\Attendee;
 use App\Models\Ceremony;
 use App\Models\Recipient;
 use App\Models\Guest;
+use App\Models\Organization;
+use App\Models\Community;
+use App\Models\Accommodation;
 use App\Classes\MailHelper;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
@@ -154,7 +157,10 @@ class AttendeesHelper
       'recipient' => $attendee->attendable,
       'scheduled_datetime_formatted' => $scheduled_datetime->format('g:i a \o\n l, F j, Y'),
       'scheduled_datetime' => $attendee->ceremonies->scheduled_datetime,
-      'expiration' => $expiry->format('g:i a \o\n l, F j, Y')
+      'expiration' => $expiry->format('g:i a \o\n l, F j, Y'),
+      'organizations' => Organization::all(),
+      'communities' => Community::all(),
+      'accommodations' => Accommodation::all()
     );
 
   }
