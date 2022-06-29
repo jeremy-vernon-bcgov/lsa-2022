@@ -31,7 +31,7 @@
 
   body {
     margin: 0px;
-    background-image: url('https://longserviceawards.gww.gov.bc.ca/wp-content/uploads/2022/05/certificate-border-background.png');
+    background-image: url('https://longserviceawards.gww.gov.bc.ca/rsvp/assets/certificate-background.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -112,7 +112,7 @@
   <div class="certificate-body">
 
     <div class="coat-of-arms">
-      <img class="coat-of-arms" src="https://longserviceawards.gww.gov.bc.ca/wp-content/uploads/2022/06/coat-of-arms-web.png">
+      <img class="coat-of-arms" src="https://longserviceawards.gww.gov.bc.ca/rsvp/assets/coat-of-arms.png">
     </div>
     <div class="template-text">
 
