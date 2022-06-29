@@ -31,7 +31,7 @@
 
   body {
     margin: 0px;
-    background-image: url('https://longserviceawards.gww.gov.bc.ca/wp-content/uploads/2022/06/lsa_certificate-bg.png');
+    background-image: url('https://longserviceawards.gww.gov.bc.ca/wp-content/uploads/2022/06/lsa_certificate-background.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
